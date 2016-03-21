@@ -545,13 +545,23 @@ toObj2.name="DragParticle_active";
 function CreatePiece(piece_color:String,piecetype:String,piece_at:String):void
 {
 var toObj : GameObject;
+var rotation : Vector3;
+
 var fromObj = GameObject.Find("chessboard_min2/"+piecetype);
 var piece_position= PiecePosition(piecetype,piece_at);
 
-toObj=Instantiate(fromObj, piece_position, fromObj.transform.rotation );
-toObj.name="piece_"+piece_at;
-toObj.GetComponent.<Renderer>().material=(GameObject.Find( ((piece_color=="b") ? "black_rook_scaled_a8" : "white_rook_scaled_h1"  ))).GetComponent.<Renderer>().material;
+// if it's a black and a pawn, reverse the rotation
+if (piece_color == "b" && piecetype == "pawn") {
+	rotation = fromObj.transform.rotation.eulerAngles;
+	rotation.y = 180;
+} else {
+	rotation = fromObj.transform.rotation.eulerAngles;
+}
 
+toObj=Instantiate(fromObj, piece_position, Quaternion.Euler(rotation));
+toObj.name="piece_"+piece_at;
+// Modify the color relative to its color
+toObj.GetComponent.<Renderer>().material=(GameObject.Find( ((piece_color=="b") ? "black_rook_scaled_a8" : "white_rook_scaled_h1"  ))).GetComponent.<Renderer>().material;
 toObj.GetComponent.<Renderer>().enabled=true;
 }
 
