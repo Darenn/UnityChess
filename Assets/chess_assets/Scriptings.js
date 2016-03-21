@@ -343,14 +343,14 @@ if((!drawAnim) || (drag1_at.length==0) || C0.c0_moving || ((mouse_at.length>0) &
 	}
 
 if((drag1_at.length>0) && (!C0.c0_moving))
-	{
-		// We need to actually hit an object
+{
+	// We need to actually hit an object
     var hit : RaycastHit;
 
-    // Debug.DrawRay(Camera.main.ScreenPointToRay(Input.mousePosition), hit);
+    // Debug.DrawRay(Camera.main.transform.position, cam);
 
 	if(Physics.Raycast( Camera.main.ScreenPointToRay(Input.mousePosition),  hit, 1000)  && (!(hit.rigidbody==null)))
-		{
+	{
 		var at="";
 		for(var h=0;h<8;h++)
 		 for(var v=8;v>0;v--)
