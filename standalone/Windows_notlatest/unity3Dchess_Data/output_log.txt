@@ -1,0 +1,20 @@
+Mono path[0] = 'C:/Documents and Settings/LTC/My Documents/UnityChess/standalone/Windows/unity3Dchess_Data/Managed'
+Mono path[1] = 'C:/Documents and Settings/LTC/My Documents/UnityChess/standalone/Windows/unity3Dchess_Data/Mono'
+Direct3D:
+    Version:  Direct3D 9.0c [igxprd32.dll 6.14.10.4926]
+    Renderer: Mobile Intel(R) 945 Express Chipset Family
+    Vendor:   Intel
+    VRAM:     128 MB
+    Caps:     Shader=20 DepthRT=0 NativeDepth=0 NativeShadow=0 DF16=0 DF24=0 INTZ=0 RAWZ=0 NULL=0 RESZ=0 SlowINTZ=0
+desktop: 1024x600 60Hz; virtual: 1024x600 at 0,0
+<I> Initializing (RawInput).
+<RI> Input initialized.
+Non platform assembly: data-0949F1A0 (this message is harmless)
+Non platform assembly: data-09501C70 (this message is harmless)
+Non platform assembly: data-09505768 (this message is harmless)
+Non platform assembly: data-0951CFF8 (this message is harmless)
+Non platform assembly: data-09524440 (this message is harmless)
+Platform assembly: C:\Documents and Settings\LTC\My Documents\UnityChess\standalone\Windows\unity3Dchess_Data\Managed\System.dll (this message is harmless)
+Platform assembly: C:\Documents and Settings\LTC\My Documents\UnityChess\standalone\Windows\unity3Dchess_Data\Managed\Boo.Lang.dll (this message is harmless)
+Platform assembly: C:\Documents and Settings\LTC\My Documents\UnityChess\standalone\Windows\unity3Dchess_Data\Managed\UnityScript.Lang.dll (this message is harmless)
+Platform assembly: C:\Documents and Settings\LTC\My Documents\UnityChess\standalone\Windows\unity3Dchess_Data\Managed\Mono.Security.dll (this message is harmless)
