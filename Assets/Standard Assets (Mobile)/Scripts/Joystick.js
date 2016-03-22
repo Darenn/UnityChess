@@ -85,7 +85,7 @@ function Start()
 
 function Disable()
 {
-	gameObject.active = false;
+    gameObject.setActive(true);
 	enumeratedJoysticks = false;
 }
 
