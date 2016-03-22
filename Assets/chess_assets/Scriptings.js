@@ -244,7 +244,8 @@ function Start ()
 {
 	// TODO
 	newGameButton.onClick.AddListener(function() { HandleNewGameEvent(); });
-
+	takeBackButton.onClick.AddListener(function() { 
+  
 
 
 
