@@ -1,5 +1,5 @@
 #pragma strict
-//#pragma downcast
+#pragma downcast
 
 /**
  * Store and give a minimum handle on 
@@ -9,13 +9,8 @@
 class ScriptManager extends MonoBehaviour
 {
 	// TODO - public in Editor ?
-	private var socketControllerScript : GameObject; // Script4
 	private var gameControllerScript : GameObject;   // Script2
-	private var stockfishCES : GameObject; 			 // Script6
-	private var craftyCES : GameObject; 			 // Script3
-	private var jesterCES : GameObject; 			 // Script7
 	private var valilCES : GameObject; 				 // Script1
-	private var rybkaCES : GameObject;  			 // Script5
 	
 	private var scriptHashtable : Hashtable;
 	
@@ -57,37 +52,14 @@ class ScriptManager extends MonoBehaviour
 	/**
 	 * TODO
 	 */
-	public function HideAllScript() : void {
-		
-		var gobjet : GameObject;
-		for(var key : String in scriptHashtable.Keys)
-		{	
-			gobjet = scriptHashtable[key] as GameObject;
-			gobjet.GetComponent(Renderer).enabled = false;
-		}
-	}
-	
-	/**
-	 * TODO
-	 */
 	private function GetAllGameObject() : void {
 		
 		// TODO - Change Script name in Editor
-		valilCES = GameObject.Find("Script1");
-		gameControllerScript = GameObject.Find("Script2");
-		craftyCES = GameObject.Find("Script3");
-		socketControllerScript = GameObject.Find("Script4");
-		rybkaCES = GameObject.Find("Script5");
-		stockfishCES = GameObject.Find("Script6");
-		jesterCES = GameObject.Find("Script7");
+		valilCES = GameObject.Find("ValilCES");
+		gameControllerScript = GameObject.Find("GameController");
 		
 		AddToHashtable("valilCES", valilCES);
-		AddToHashtable("craftyCES", craftyCES);
-		AddToHashtable("rybkaCES", rybkaCES);
-		AddToHashtable("jesterCES", jesterCES);
-		AddToHashtable("stockfishCES", stockfishCES);
 		AddToHashtable("gameControllerScript", gameControllerScript);
-		AddToHashtable("socketControllerScript", socketControllerScript);
 	}
 	
 	/**

@@ -58,7 +58,7 @@ public class Ch_socket : MonoBehaviour {
 		
 	void Let3DknowAccess()
 		{
-		(GameObject.Find("Script2")).SendMessage("TcpAccess", (FicsAccessible?"YES":"NO"));
+		(GameObject.Find("SocketController")).SendMessage("TcpAccess", (FicsAccessible?"YES":"NO"));
 		if(!FicsAccessible) status = -1;
 		}
 	
@@ -290,7 +290,7 @@ public class Ch_socket : MonoBehaviour {
 	
 	void Status2MainScript()
 		{
-		(GameObject.Find("Script2")).SendMessage("TcpStatus", status.ToString());
+		(GameObject.Find("SocketController")).SendMessage("TcpStatus", status.ToString());
 		}
 		
 	void Movement(string move)

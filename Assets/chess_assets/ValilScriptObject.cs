@@ -22,20 +22,19 @@ public ChessEngine Engine1 = new ChessEngine(true);
 	void Start () {
 		
 	//Application.ExternalEval("JSAlive()");
-	((TextMesh)GetComponent(typeof(TextMesh))).text="Waiting...";
 
 	}
 	// on Javascript sends a request...
 	public void JSRequest(string req_string)
 		{
-			((TextMesh)GetComponent(typeof(TextMesh))).text="Calculating request...";
+			// ((TextMesh)GetComponent(typeof(TextMesh))).text="Calculating request...";
 			Request=req_string;
 			Answer="";
 		}
     // on Javascript sets deep level...
 	public void JSSetDeep(string set_deep)
 		{
-			((TextMesh)GetComponent(typeof(TextMesh))).text="Level set to " + set_deep;
+			// ((TextMesh)GetComponent(typeof(TextMesh))).text="Level set to " + set_deep;
 			Deep=System.Convert.ToInt32(set_deep);
 		}				
 		
@@ -48,11 +47,11 @@ public ChessEngine Engine1 = new ChessEngine(true);
 			Request="";
 			if(Answer.Length>0) answ=Answer.Substring(0,2)+"-"+Answer.Substring(2,2);
 			if(Answer.Length>4) answ+="="+(Answer.Substring(4,1)).ToUpper();
-			((TextMesh)GetComponent(typeof(TextMesh))).text=answ;
+			// ((TextMesh)GetComponent(typeof(TextMesh))).text=answ;
 			
 			//Application.ExternalCall("JSAnswer", answ);
 			
-			(GameObject.Find("Script2")).SendMessage("EngineAnswer",answ);
+			(GameObject.Find("GameController")).SendMessage("EngineAnswer",answ);
 		}
 	
 	}

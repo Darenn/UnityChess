@@ -60,34 +60,6 @@ var chess_strength=3;						// Set strength of chess engine...
 
 public var C0:c0_4unity_chess = new c0_4unity_chess();
 
-var jsJesterAccessible=false;				// Script sets true on jsJester is accessible...
-var usejsJester=false;						// toggled by user if use...
-
-var CraftyAccessible=false;				// Script sets true on Crafty is accessible...
-var useCrafty=false;						// toggled by user if use...
-
-var RybkaAccessible=false;				// Script sets true on Rybka is accessible...
-var useRybka=false;						// toggled by user if use...
-
-var StockfishAccessible=false;			// Script sets true on Rybka is accessible...
-var useStockfish=false;					// toggled by user if use...
-
-var TcpAccessible=true;					// Script sets true if chess server is accessible...
-var playTcp=true;							// toggled by user if play...
-var statusTcp=0;							// status of connection...
-var TcpMessage="";							// Output on GUI of tcp-connection...
-var TcpMess_scrollPosition: Vector2 = Vector2.zero;
-var TcpResign=false;						// Resign flag on button pressed...
-var TcpDraw=false;							// Draw flag on button pressed...
-var TcpNextGame=false;					// When next-game button should be displayed...
-var TcpModeCmd=false;					// On [Esc] turn on/off cmd mode...
-var TcpCmd="";								// It's possible to send a message to oponent...
-
-var TcpTakeBackWas=false;		// just if user want's it's possible to set board
-var TcpPreMNr=0;					// just to keep last move Nr. for games on chess server
-var TcpPreMCol="";
-
-
 /**
  *
  *
@@ -105,15 +77,13 @@ function Awake()
  * Initialize attributes
  */
 function Start ()
-{
-	scriptManager.HideAllScript();
-	
+{	
 	// Set the light intensity
 	lightController.EnableLight();
 	lightController.SetLightIntensity(LAMP_INTENSITY);
 	
 	// TMP - TO REMOVE
-	var cameraSide = (GameObject.Find("CameraSide")).GetComponent.<Camera>();
+	var cameraSide = Camera.main;
 	var cameraTop = (GameObject.Find("CameraTop")).GetComponent.<Camera>();
 	
 	// TMP - TO REMOVE
@@ -128,65 +98,14 @@ function Start ()
  */
 function Update ()
 {
-	LookTcp();
-
-	
 	if(FirstStart) // could be right in Start(), anyway it's the same..., sometimes good to wait a bit while all the objects are being created...
 		{
 		PlanesOnBoard();					// Planes needed for mouse drag... (a ray from camera to this rigibody object is catched)...
 		TransformVisualAllToH1();		// The board contains blank-pieces (to clone from) just on some squares. Moving all of them to h1... 
 
-		//1.FEN startup test (ok):	
-		//C0.c0_start_FEN="8/p3r1k1/6p1/3P2Bp/p4N1P/p5P1/5PK1/8 w - - 0 1";
-		//C0.c0_set_start_position("");
-		//print(C0.c0_get_FEN());
-			
-		//C0.c0_start_FEN="7k/Q7/2P2K2/8/8/8/8/8 w - - 0 70";		// a checkmate position just for tests...
-
 		C0.c0_side=1;							// This side is white.   For black set -1
 		C0.c0_waitmove=true;					// Waiting for mouse drag...
 		C0.c0_set_start_position("");		// Set the initial position... 
-		
-		//2.PGN functions test (ok):
-		//PGN0="1.d4 d5 2.c4 e6 3.Nf3 Nf6 4.g3 Be7 5.Bg2 0-0 6.0-0 dxc4 7.Qc2 a6 8.Qxc4 b5 9.Qc2 Bb7 10.Bd2 Be4 11.Qc1 Bb7 12.Qc2 Ra7 13.Rc1 Be4 14.Qb3 Bd5 15.Qe3 Nbd7 16.Ba5 Bd6 17.Nc3 Bb7 18.Ng5 Bxg2 19.Kxg2 Qa8+ 20.Qf3 Qxf3+ 21.Kxf3 e5 22.e3 Be7 23.Ne2 Re8 24.Kg2 Nd5 25.Nf3 Bd6 26.dxe5 Nxe5 27.Nxe5 Rxe5 28.Nd4 Ra8 29.Nc6 Re6 30.Rc2 Nb6 31.b3 Kf8 32.Rd1 Ke8 33.Nd4 Rf6 34.e4 Rg6 35.e5 Be7 36.Rxc7 Nd5 37.Rb7 Bd8 38.Nf5 Nf4+ 39.Kf3 Bxa5 40.gxf4 Bb4 41.Rdd7 Rc8 42.Rxf7 Rc3+ 43.Ke4 1-0";
-		//var mlist= C0.c0_get_moves_from_PGN(PGN0); print(mlist);
-		//var PGN1=C0.c0_put_to_PGN(mlist); print(PGN1);
-		
-		//3.Fischerrandom support test (ok):
-		//var PGN0="[White Aronian, Levon][Black Rosa, Mike][Result 0:1][SetUp 1][FEN bbrkqnrn/pppppppp/8/8/8/8/PPPPPPPP/BBRKQNRN w GCgc - 0 0] 1. c4 e5 2. Nhg3 Nhg6 3. b3 f6 4. e3 b6 5. Qe2 Ne6 6. Qh5 Rh8 7. Nf5 Ne7 8. Qxe8+ Kxe8 9. N1g3 h5 10. Nxe7 Kxe7 11. d4 d6 12. h4 Kf7 13. d5 Nf8 14. f4 c6 15. fxe5 dxe5 16. e4 Bd6 17. Bd3 Ng6 18. O-O Nxh4 19. Be2 Ng6 20. Nf5 Bc5+ 21. Kh2 Nf4 22. Rc2 cxd5 23. exd5 h4 24. Bg4 Rce8 25. Bb2 g6 26. Nd4 exd4 27.Rxf4 Bd6 0-1";
-		//var mlist= C0.c0_get_moves_from_PGN(PGN0); print(mlist);
-		//var PGN1=C0.c0_put_to_PGN(mlist); print(PGN1);
-		
-		//4.Other functions, and, of course, access variables directly C0.<variable>=...
-		//C0.c0_position=...  -position of pieces on board...
-		//C0.c0_moveslist=... -moveslist is the list of moves made on board currently...
-		
-		// Make a first move e4...
-		//C0.c0_set_start_position("");
-		//C0.c0_move_to("e2","e4");
-		
-		// Show the last move made...
-		//print(C0.c0_D_last_move_was());
-		// And take it back...
-		//C0.c0_take_back();
-		
-			// To see possible movements...
-		//print(C0.c0_get_next_moves());
-		
-		//Other functions:
-		//Is e2-e4 a legal move in current position...
-		//print(C0.c0_D_can_be_moved("a2","a4"));
-		//Is there stalemate to the white king right now? ("b"/"w"- the parameter)
-		//print(C0.c0_D_is_pate_to_king("w"));
-		//Is there check to the white king right now? 
-		//print(C0.c0_D_is_check_to_king("w"));
-		//Is there checkmate to the white king right now? 
-		//print(C0.c0_D_is_mate_to_king("w"));
-		
-		// What a piece on the square g7?
-		//print(C0.c0_D_what_at("g7"));
-		// Is the square g6 empty? (no piece on it)
-		//print(C0.c0_D_is_empty("g6"));
 
 		}
 
@@ -216,45 +135,6 @@ else
 function OnGUI () {
 	
 	var e : Event = Event.current;
-	
-	if(e.isKey && (Input.anyKey) && (e.keyCode.ToString()=="Escape") )
-	{
-		// Turn on/off cmd mode...
-		TcpModeCmd = !TcpModeCmd;
-		scriptManager.GetScript("socketControllerScript").SendMessage("AutoMode",  (TcpModeCmd ? "OFF" : "ON" )); 
-	}
-		
-	if(playTcp && TcpModeCmd)
-	{
-		GUI.Label (Rect (14, Screen.height-70, 16, 24), "$");
-		TcpCmd = GUI.TextArea(Rect (30, Screen.height-70, 200, 24), TcpCmd);
-	}
-		
-	if(TcpMessage.length > 0)
-	{
-		if(statusTcp==21)
-		{
-			GUI.Box (Rect (Screen.width - 190, 140, 185, 280), TcpMessage);
-			
-			if(TcpNextGame)
-			{
-				if(GUI.Button (Rect (Screen.width - 100, 340, 80, 30), "Next>")) TcpNextGameStarter();
-			}
-		}
-		else
-		{
-			GUI.Box (Rect ((Screen.width / 2 - 310), 25, 620, Screen.height - 50), "Unity3D connection to chess server");
-			
-			TcpMess_scrollPosition = GUI.BeginScrollView (Rect ((Screen.width / 2 - 305), 50, 610, Screen.height - 100),
-									 TcpMess_scrollPosition, Rect ((Screen.width / 2 - 305), 50, 800, 2000));
-				
-			TcpMessage = GUI.TextArea (Rect ((Screen.width / 2 - 305), 50, 800, Screen.height + 2000 - 100), TcpMessage);
-
-			GUI.EndScrollView ();
-			message2show = "Wait...";
-		}
-	}
-	
 	
 	if(message2show.length > 0)
 	{
@@ -287,106 +167,71 @@ function OnGUI () {
 		GUI.Label (Rect (Screen.width - 90, 170-65, 90, 22), "Knight");
 		toPromote = GUI.VerticalSlider (Rect (Screen.width - 110, 115-65, 80, 72), toPromote, 0, 3);
 		
-		// chess server mode, just play as it is
-		if(playTcp)			
+		if(GUI.Button (Rect (20, 240, 100, 30), "Take Back")) TakeBackFlag=true;
+	
+		if(GUI.Button (Rect (20, 280, 100, 30), "New Game")) 
 		{
-			if(GUI.Button (Rect (20, 240, 100, 30), "Resign")) TcpResign=true;
-			if(GUI.Button (Rect (20, 280, 100, 30), "Offer/Acc.Draw")) TcpDraw=true;
+		    NewGameFlag = true;
+		    Debug.Log("Button pushed");
 		}
-		else					// various options...
-		{
-			if(GUI.Button (Rect (20, 240, 100, 30), "Take Back")) TakeBackFlag=true;
-		
-			if(GUI.Button (Rect (20, 280, 100, 30), "New Game")) 
-			{
-			    NewGameFlag = true;
-			    Debug.Log("Button pushed");
-			}
 
-			GUI.Box (Rect (Screen.width - 130, 140, 120, 60), "Chess strength");
-			chess_strength = GUI.HorizontalSlider (Rect (Screen.width - 120, 170, 100, 30), chess_strength, 1, 6);
-			
-			if(jsJesterAccessible)
-			{
-			GUI.Box (Rect (Screen.width - 130, 205, 120, 30), "");
-			usejsJester = GUI.Toggle (Rect (Screen.width - 110, 210, 90, 20), usejsJester, "script-code");
-			}
-			if(CraftyAccessible)
-			{
-			GUI.Box (Rect (Screen.width - 130, 240, 120, 30), "");
-			useCrafty = GUI.Toggle (Rect (Screen.width - 110, 245, 90, 20), useCrafty, "Use Crafty");
-			}
-			if(RybkaAccessible)
-			{
-			GUI.Box (Rect (Screen.width - 130, 275, 120, 30), "");
-			useRybka = GUI.Toggle (Rect (Screen.width - 110, 280, 90, 20), useRybka, "or Rybka");
-			}	
-			if(StockfishAccessible)
-			{
-			GUI.Box (Rect (Screen.width - 130, 310, 120, 30), "");
-			useStockfish = GUI.Toggle (Rect (Screen.width - 110, 315, 90, 20), useStockfish, "or Stockfish");
-			}	
-			if(TcpAccessible)
-			{
-			GUI.Box (Rect (Screen.width - 130, 345, 120, 30), "");
-			playTcp = GUI.Toggle (Rect (Screen.width - 116, 350, 106, 20), playTcp, "freechess.org");
-			}
-		}
+		GUI.Box (Rect (Screen.width - 130, 140, 120, 60), "Chess strength");
+		chess_strength = GUI.HorizontalSlider (Rect (Screen.width - 120, 170, 100, 30), chess_strength, 1, 6);
 	}
 }
 
 function Revert_at(ats:String):String
 {
-var horiz=System.Convert.ToChar( System.Convert.ToInt32("a"[0]) + (System.Convert.ToInt32("h"[0]) - System.Convert.ToInt32(ats[0])) );
-var vert=(9 - System.Convert.ToInt32( ats.Substring(1,1) ) ).ToString();
-return horiz+vert;
+	var horiz=System.Convert.ToChar( System.Convert.ToInt32("a"[0]) + (System.Convert.ToInt32("h"[0]) - System.Convert.ToInt32(ats[0])) );
+	var vert=(9 - System.Convert.ToInt32( ats.Substring(1,1) ) ).ToString();
+	return horiz+vert;
 }
 
 function MouseMovement():void
 {
-var pObj = GameObject.Find("MoveParticle_active");
-if((!drawAnim) || (drag1_at.length==0) || C0.c0_moving || ((mouse_at.length>0) && (!(drag1_at==mouse_at))))
+	var pObj = GameObject.Find("MoveParticle_active");
+	if((!drawAnim) || (drag1_at.length==0) || C0.c0_moving || ((mouse_at.length>0) && (!(drag1_at==mouse_at))))
 	{
-	if(!(pObj==null)) pObj.GetComponent.<Renderer>().enabled=false;
-	mouse_at="";
+		if(!(pObj==null)) pObj.GetComponent.<Renderer>().enabled=false;
+		mouse_at="";
 	}
 
-if((drag1_at.length>0) && (!C0.c0_moving))
-{
-	// We need to actually hit an object
-    var hit : RaycastHit;
-
-    // Debug.DrawRay(Camera.main.transform.position, cam);
-
-	if(Physics.Raycast( Camera.main.ScreenPointToRay(Input.mousePosition),  hit, 1000)  && (!(hit.rigidbody==null)))
+	if((drag1_at.length>0) && (!C0.c0_moving))
 	{
-		var at="";
-		for(var h=0;h<8;h++)
-		 for(var v=8;v>0;v--)
-		{
-		var id="plane_"+System.Convert.ToChar(System.Convert.ToInt32("a"[0])+h)+v.ToString();		// Is this square mouse is over?
-		var qObj=GameObject.Find(id);
-		if((!(qObj==null)) && (qObj.transform.position==hit.rigidbody.position)) at=id.Substring(6,2);
-		}	
+		// We need to actually hit an object
+	    var hit : RaycastHit;
 
-		if(at.length>0) 
-		{
-		if(C0.c0_side<0) at=Revert_at(at);
+	    // Debug.DrawRay(Camera.main.transform.position, cam);
 
-		if((mouse_at.length==0) || (!(at==mouse_at)))
+		if(Physics.Raycast( Camera.main.ScreenPointToRay(Input.mousePosition),  hit, 1000)  && (!(hit.rigidbody==null)))
+		{
+			var at="";
+			for(var h=0;h<8;h++)
+				for(var v=8;v>0;v--)
 			{
-			if(C0.c0_D_can_be_moved(drag1_at,at))
+				var id="plane_"+System.Convert.ToChar(System.Convert.ToInt32("a"[0])+h)+v.ToString();		// Is this square mouse is over?
+				var qObj=GameObject.Find(id);
+				if((!(qObj==null)) && (qObj.transform.position==hit.rigidbody.position)) at=id.Substring(6,2);
+			}	
+
+			if(at.length>0) 
+			{
+			if(C0.c0_side<0) at=Revert_at(at);
+
+			if((mouse_at.length==0) || (!(at==mouse_at)))
 				{
-				mouse_at=at;
-																		// Particle on legal movement...
-				pObj.transform.position = PiecePosition("MoveParticle",at);
-				if(drawAnim) pObj.GetComponent.<Renderer>().enabled=true;
+				if(C0.c0_D_can_be_moved(drag1_at,at))
+					{
+					mouse_at=at;
+																			// Particle on legal movement...
+					pObj.transform.position = PiecePosition("MoveParticle",at);
+					if(drawAnim) pObj.GetComponent.<Renderer>().enabled=true;
+					}
 				}
 			}
-		}
 
+			}
 		}
-	}
 }
 
 
@@ -456,11 +301,7 @@ function DragDetect():void
 					
 					if((drag1_at.length>0) && C0.c0_D_can_be_moved(drag1_at,at))
 						{
-						if(playTcp)
-							{
-							scriptManager.GetScript("socketControllerScript").SendMessage("Movement",
-								drag1_at + "-" + at + ((Piece2promote=="Q") ? "" : "="+Piece2promote));
-							}
+						
 						C0.c0_move_to(drag1_at,at);
 						C0.c0_sidemoves=-C0.c0_sidemoves;
 						}
@@ -778,73 +619,38 @@ function DoEngineMovements():void
 {
     C0.c0_waitmove=(C0.c0_sidemoves==C0.c0_side);
 
-    /*if(!gameover && engineStatus == 0 && move_animator < 4) 
-    {
-        gameover = true;
-        message2show = "Check+";
-        message2show = "Checkmate! 0:1";
-    }*/
     
-if((!gameover) && (engineStatus==0) && (move_animator<4))
-{
-	if(C0.c0_D_is_check_to_king("w") || C0.c0_D_is_check_to_king("b"))
-		{
-		message2show = "Check+";
-		if( C0.c0_D_is_mate_to_king("w") ) { message2show = "Checkmate! 0:1"; gameover=true; }
-		if( C0.c0_D_is_mate_to_king("b") ) { message2show = "Checkmate! 1:0"; gameover=true; }
-		}
-	else
-		{
-		if(((C0.c0_sidemoves>0) && C0.c0_D_is_pate_to_king("w")) || ((C0.c0_sidemoves<0) && C0.c0_D_is_pate_to_king("b")))
-			{ message2show = "Stalemate, draw 1/2-1/2"; gameover=true; }
-		}
-}
-
-if((!gameover) && (C0.c0_moves2do.length==0) && (engineStatus==0))
+	if((!gameover) && (engineStatus==0) && (move_animator<4))
 	{
-	if(C0.c0_waitmove) message2show="Your move..."; 
-	else if(!(C0.c0_sidemoves==C0.c0_side))
+		if(C0.c0_D_is_check_to_king("w") || C0.c0_D_is_check_to_king("b"))
 		{
-		if(statusTcp==21)
-			{
-			message2show="Oponent's move";
-			}
+			message2show = "Check+";
+			if( C0.c0_D_is_mate_to_king("w") ) { message2show = "Checkmate! 0:1"; gameover=true; }
+			if( C0.c0_D_is_mate_to_king("b") ) { message2show = "Checkmate! 1:0"; gameover=true; }
+		}
 		else
-			{
+		{
+			if(((C0.c0_sidemoves>0) && C0.c0_D_is_pate_to_king("w")) || ((C0.c0_sidemoves<0) && C0.c0_D_is_pate_to_king("b")))
+				{ message2show = "Stalemate, draw 1/2-1/2"; gameover=true; }
+		}
+	}
+
+	if((!gameover) && (C0.c0_moves2do.length==0) && (engineStatus==0))
+	{
+		if(C0.c0_waitmove) message2show="Your move..."; 
+		else if(!(C0.c0_sidemoves==C0.c0_side))
+		{
 			message2show="Calculating...";
 			engineStatus=1;
-			}
 		}
 	}
-if(engineStatus==2)
+	
+	if(engineStatus==2)
 	{
-	// Request to other components can be sent via slow SendMessage function., Here it's good, not often.
-	if(usejsJester)
-		{
-		(scriptManager.GetScript("jesterCES")).SendMessage("SetDeepLevel",chess_strength.ToString());
-		(scriptManager.GetScript("jesterCES")).SendMessage("SetMovesList",C0.c0_moveslist);
-		}
-	else if(useCrafty)
-		{
-		(scriptManager.GetScript("craftyCES")).SendMessage("SetDeepLevel",chess_strength.ToString());
-		(scriptManager.GetScript("craftyCES")).SendMessage("SetRequestFEN",C0.c0_get_FEN());
-		}
-	else if(useRybka)
-		{
-		(scriptManager.GetScript("rybkaCES")).SendMessage("SetDeepLevel",chess_strength.ToString());
-		(scriptManager.GetScript("rybkaCES")).SendMessage("SetRequestFEN",C0.c0_get_FEN());
-		}
-	else if(useStockfish)
-		{
-		(scriptManager.GetScript("stockfishCES")).SendMessage("SetDeepLevel",chess_strength.ToString());
-		(scriptManager.GetScript("stockfishCES")).SendMessage("SetRequestFEN",C0.c0_get_FEN());
-		}
-	else
-	{
+		// Request to other components can be sent via slow SendMessage function., Here it's good, not often.
 		scriptManager.GetScript("valilCES").SendMessage("JSSetDeep",chess_strength.ToString());
 		scriptManager.GetScript("valilCES").SendMessage("JSRequest",C0.c0_get_FEN());
-	}
-	engineStatus=3;
+		engineStatus=3;
 	} 
 }
 
@@ -959,194 +765,6 @@ var dt_int= System.Convert.ToInt32( ((pt<0)? dt : dt.Substring(0,pt)) );
 return Mathf.Max(min_interval,dt_int);
 }
 
-function jsJesterAccess(status:String):void
-{
- jsJesterAccessible=(status=="YES");
- if(!jsJesterAccessible)
-	{
-	usejsJester=false;
-	if(engineStatus>0)
-		{ 
-		engineStatus=0;			// actually pass to the next chess engine...
-		message2show = "jsJestercall error"; 
-		}
-	}
-}
-
-function CraftyAccess(status:String):void
-{
- CraftyAccessible=(status=="YES");
- if(!CraftyAccessible)
-	{
-	useCrafty=false;
-	if(engineStatus>0)
-		{ 
-		engineStatus=0;			// actually pass to the next chess engine...
-		message2show = "Craftycall error"; 
-		}
-	}
-}
-
-function RybkaAccess(status:String):void
-{
- RybkaAccessible=(status=="YES");
- if(!RybkaAccessible)
-	{
-	useRybka=false;
-	if(engineStatus>0)
-		{ 
-		engineStatus=0;			// actually pass to the next chess engine...
-		message2show = "Rybkacall error"; 
-		}
-	}
-}
-
-function StockfishAccess(status:String):void
-{
- StockfishAccessible=(status=="YES");
- if(!StockfishAccessible)
-	{
-	useStockfish=false;
-	if(engineStatus>0)
-		{ 
-		engineStatus=0;			// actually pass to the next chess engine...
-		message2show = "Stockfishcall error"; 
-		}
-	}
-}
-// TCP connection related functions...
-//
-function TcpAccess(status:String):void
-{
- TcpAccessible=(status=="YES");
- if(!TcpAccessible) { PlayTcp=false; TcpMessage=""; }
-}
-		// to send message from other object...
-function TcpAddMessage(mess:String):void
-{
-					// If a game is active then show a small GUI window of TCP connection (let the chess board be main)
-	
- if((mess.Length>=4) && (mess.Substring(0,4)=="<12>"))		// style 12 not used, but user can set it ....
-		{
-		var a1=mess.IndexOf(")");
-		if( (a1>=0) &&  (!(C0.c0_sidemoves==C0.c0_side)))
-			{
-			// Initiate move by oponent if information is provided...
-			var move_given=mess.Substring(a1+2);
-			move_given=move_given.Substring(0,move_given.IndexOf(" "));
-			move_given=move_given.Replace(" ","");
-			var move=C0.c0_from_Crafty_standard(move_given,(C0.c0_sidemoves>0?"w":"b"));
-			if(move.length>0)
-				{
-				C0.c0_become_from_engine = ((move.length>4)?move.Substring(5,1):"Q");
-				message2show = "Op.Move: "+move;
-				C0.c0_move_to(move.Substring(0,2),move.Substring(2,2));
-				C0.c0_sidemoves=-C0.c0_sidemoves;
-				}
-			}	
-		TcpMessage +=mess;
-		
-		if(TcpTakeBackWas)			// It's better not to use this routine, anyway is possible...
-		{
-													// fics provided current FEN of position... (No castling indicators, just postition for extremal setup)...
-		var fFEN=mess.Substring(5,71);
-		fFEN=convertFENnormal(fFEN);
-		if(!(fFEN==(C0.c0_get_FEN()).Substring(0,fFEN.Length)))		// if position is wrong obviously...
-			{
-			// This sets position on board...(not quite correctly, anyway is possible)
-			C0.c0_start_FEN=fFEN+" " +(mess.Substring(78,1)=="W" ? "w":"b") + " QKqk";
-			C0.c0_moveslist="";
-
-			C0.c0_side=-C0.c0_side;	// will swap the board...
-			NewGameFlag=true;			// starts new game+sets postion...
-			gameover=true;
-			}
-		}
-			
-		}
-		
- if((statusTcp==20) || (statusTcp==21))		// If a game is active then show a small GUI window of TCP connection (let the chess board be main)
-	{
-	if(!TcpNextGame)			// Show options to start new or exit chess server...
-	{
-	mess=mess.Replace("'","");
-	if((mess.Length>5) && (mess.Substring(0,5)=="Game "))
-		{
-		a1=mess.IndexOf("(");
-		if(a1>=0) TcpMessage="\n"+mess.Substring(0,a1)+"\n"+mess.Substring(a1);
-		else TcpMessage=mess;
-		}
-	else
-		{
-		if(mess.IndexOf("has lost")>=0) gameover=true;			// Lost connections...
-		if(mess.IndexOf("}")>=0)
-			{
-			mess=mess.Substring(mess.IndexOf("}")+1);
-			if((mess.IndexOf("1-0")>=0) || (mess.IndexOf("0-1")>=0)  || (mess.IndexOf("1/2")>=0) || (mess.IndexOf("*")>=0))
-				{
-				gameover=true;
-				}
-			}
-		if(gameover && (!NewGameFlag)) TcpNextGame=true;
-		
-		var addmess=	 ((mess.IndexOf("|")<0)?  mess : mess.Substring(mess.LastIndexOf("|")+1));		
-		
-		if(addmess.Replace(" ","")=="\n") addmess="";
-		if((addmess.IndexOf("h   g   f   e")>=0) || (addmess.IndexOf("e   f   g   h")>=0)) addmess="";
-		
-		addmess=TcpFormatizeToWidth(addmess,36);	// visual word wraps...
-		
-		TcpMessage +=addmess;
-		
-		a1=mess.IndexOf( ((C0.c0_side>0) ? "Black" : "White" ) + " Moves :" );
-		if( (a1>=0) &&  (!(C0.c0_sidemoves==C0.c0_side)))
-			{
-			// Initiate move by oponent if information is provided...
-			move_given=mess.Substring(a1+13);
-			move_given=move_given.Substring(0,move_given.IndexOf("("));
-			move_given=move_given.Replace(" ","");
-			move=C0.c0_from_Crafty_standard(move_given,(C0.c0_sidemoves>0?"w":"b"));
-			if(move.length>0)
-				{
-				C0.c0_become_from_engine = ((move.length>4)?move.Substring(5,1):"Q");
-				message2show = "Op.Move: "+move;
-				C0.c0_move_to(move.Substring(0,2),move.Substring(2,2));
-				C0.c0_sidemoves=-C0.c0_sidemoves;
-				}
-			}
-
-		a1=mess.IndexOf("Move # :");
-		if(a1>=0)
-			{
-			var MoveNrStr=mess.Substring(a1+8);
-			a1=MoveNrStr.IndexOf("(");
-			var MoveColor=MoveNrStr.Substring(a1+1,5);
-			MoveNrStr=MoveNrStr.Substring(0,a1);
-			var MoveNr=System.Convert.ToInt32(MoveNrStr);
-			if( (MoveNr<TcpPreMNr) || ((MoveNr==TcpPreMNr) && (MoveColor=="White") && (TcpPreMCol=="Black") ) )
-				{
-				if(TcpTakeBackWas)			// It's better not to use this routine, anyway is possible...
-					{
-					//Ups, takebacks were or something went wrong...
-					TcpCmd="set style 12"+"\n";			// this at least will set up board...
-					}
-				}
-			TcpPreMNr=MoveNr; TcpPreMCol=MoveColor;
-			}
-		}
-	}
-	}
-else
-	{
-	 if(TcpMessage.Length>4000)			// cut some if too long...
-		{
-		TcpMessage=TcpMessage.Substring(3000);
-		TcpMessage=TcpMessage.Substring(TcpMessage.IndexOf("\n"));
-		}
-	 TcpMessage+=mess;
-	}
-}
-
 //Converts fics notation fen to normal fen... (just pieces, no castlings. fics notation is quite differrent)
 function convertFENnormal( ficsFEN )
 {
@@ -1158,108 +776,7 @@ function convertFENnormal( ficsFEN )
 		}
 	return ficsFEN;
 }
-		// Our color of pieces...
-function TcpOurColor(piece_color:String):void
-{
-TcpTakeBackWas=false; TcpPreMNr=0; TcpPreMCol="Black";
-C0.c0_side=( (piece_color=="black") ? 1 : -1);
-NewGameFlag=true;		// will swap the board...
-gameover=true;
-}
 
-		// to set current TCP status from other object...
-function TcpStatus(cur_status:String):void
-{
- var pre_status=statusTcp;
- statusTcp=System.Convert.ToInt32(cur_status);
- if((statusTcp>=20) && (pre_status<20))
-		{
-		var at1=TcpMessage.LastIndexOf("Game ");
-		TcpMessage="\n"+ ( (at1<0) ? "Starting game!"+"\n" : TcpMessage.Substring(at1) );
-		var at2=TcpMessage.IndexOf(")");
-		if(at2>=0) TcpMessage=TcpMessage.Substring(0,at2+1);
-		a1=TcpMessage.IndexOf("(");
-		if(a1>=0) TcpMessage=TcpMessage.Substring(0,a1)+"\n"+TcpMessage.Substring(a1);
-		}
-}
-		// actions on frames-per-second...
-function LookTcp():void
-{
-if(TcpResign)
-	{
-	scriptManager.GetScript("socketControllerScript").SendMessage("SendLinesOUT","resign");
-	TcpResign=false;
-	}
-if(TcpDraw)
-	{
-	scriptManager.GetScript("socketControllerScript").SendMessage("SendLinesOUT","draw");
-	TcpDraw=false;
-	}
-if(TcpAccessible && playTcp)
-	{
-	if(statusTcp==0)
-		{
-		// Start TCP...
-		scriptManager.GetScript("socketControllerScript").SendMessage("ConnectServer","");
-
-		drawAnim=false;	// anyway too slow...
-		}
-	}
-TcpCmdOnSend();	// send command if there is...
-}
-
-function TcpNextGameStarter()
-	{
-	TcpNextGame=false;
-	gameover=false;
-	C0.c0_start_FEN="";		// in case takebacks were..
-	scriptManager.GetScript("socketControllerScript").SendMessage("StartNextGame","");
-	}
-
-// Just for visal representation of messages...
-function TcpFormatizeToWidth(str:String,wlen:int):String
-{
-var str2="";
-
-if(str.length>0)
-{
-var str1=str.Replace("\n"," ");
-str1=str1.Replace("  "," ");
-
-for(; str1.length>0; )
-	{
-	if((str1.length>wlen) || (str1.LastIndexOf(" ")>=0))		// if can divide...
-		{
-		var str3=str1.Substring(0,Mathf.Min(wlen,str1.length));
-		var at2=str3.LastIndexOf(" ");
-		if(at2<0) at2=str1.LastIndexOf(" ");
-
-		str2+=str1.Substring(0,at2)+"\n";			// divide by replacing " " with cr-ret
-		str1=str1.Substring(at2+1);
-		}
-	else
-		{
-		str2+=str1;			//  just add remaining
-		str1="";
-		}
-	}
-if((str2.length>0) && (!(str2.Substring(str2.length-1,1)=="\n"))) str2+="\n";
-}
-return str2;
-}
-									
-function TcpCmdOnSend():void
-{
- if(TcpCmd.IndexOf("\n")>=0)
-	{
-	TcpCmd=TcpCmd.Replace("\n","");
-	if(!TcpTakeBackWas) TcpTakeBackWas=((TcpCmd.ToUpper()).IndexOf("TAKEBACK")>=0);		// attention, the position may change...
-	if((TcpCmd.Replace(" ","")).length>0)						// Send command...
-		{
-		scriptManager.GetScript("socketControllerScript").SendMessage("SendLinesOUT", "CMD: "+TcpCmd); TcpCmd="";
-		}
-	}
-}
 
 // On monobehaviour ends, this is called....
 function OnApplicationQuit():void { }
