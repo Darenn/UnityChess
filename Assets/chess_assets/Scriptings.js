@@ -6,10 +6,6 @@ import c0_4unity_chess;
  * Main script
  * Member variables declarations
  */
- 
-// GUI elements
-public var newGameButton : UnityEngine.UI.Button;
-public var takeBackButton : UnityEngine.UI.Button;
 
 // Main camera
 public var mainCamera : Camera;
@@ -17,9 +13,10 @@ public var mainCamera : Camera;
 // Member scripts
 private var vrMenuController : VRMenuController;
 private var lightController : LightController;
+private var scriptManager : ScriptManager;
 private var flagManager : FlagManager;
 
-// Private member variables
+// Member variables
 private final var LAMP_INTENSITY = 0.750f;
 
 
@@ -99,6 +96,7 @@ function Awake()
 {
 	vrMenuController = GetComponent(VRMenuController);
 	lightController = GetComponent(LightController);
+	scriptManager = GetComponent(ScriptManager);
 	flagManager = GetComponent(FlagManager);
 }
 
@@ -108,7 +106,7 @@ function Awake()
  */
 function Start ()
 {
-	HideUselessObjects();
+	scriptManager.HideAllScript();
 	
 	// Set the light intensity
 	lightController.EnableLight();
@@ -121,21 +119,6 @@ function Start ()
 	// TMP - TO REMOVE
 	cameraSide.enabled = true;
 	cameraTop.enabled  = false;
-}
-
-/**
- * Hide all useless game object of the scene
- * (especially label)
- */
-function HideUselessObjects()
-{
-	GameObject.Find("Script1").GetComponent.<Renderer>().enabled = false;
-	GameObject.Find("Script2").GetComponent.<Renderer>().enabled = false;
-	GameObject.Find("Script3").GetComponent.<Renderer>().enabled = false;
-	GameObject.Find("Script4").GetComponent.<Renderer>().enabled = false;
-	GameObject.Find("Script5").GetComponent.<Renderer>().enabled = false;
-	GameObject.Find("Script6").GetComponent.<Renderer>().enabled = false;
-	GameObject.Find("Script7").GetComponent.<Renderer>().enabled = false;
 }
 
 /**
@@ -238,7 +221,7 @@ function OnGUI () {
 	{
 		// Turn on/off cmd mode...
 		TcpModeCmd = !TcpModeCmd;
-		(GameObject.Find("Script4")).SendMessage("AutoMode",  (TcpModeCmd ? "OFF" : "ON" )); 
+		scriptManager.GetScript("socketControllerScript").SendMessage("AutoMode",  (TcpModeCmd ? "OFF" : "ON" )); 
 	}
 		
 	if(playTcp && TcpModeCmd)
@@ -475,7 +458,7 @@ function DragDetect():void
 						{
 						if(playTcp)
 							{
-							(GameObject.Find("Script4")).SendMessage("Movement",
+							scriptManager.GetScript("socketControllerScript").SendMessage("Movement",
 								drag1_at + "-" + at + ((Piece2promote=="Q") ? "" : "="+Piece2promote));
 							}
 						C0.c0_move_to(drag1_at,at);
@@ -819,31 +802,31 @@ if(engineStatus==2)
 	// Request to other components can be sent via slow SendMessage function., Here it's good, not often.
 	if(usejsJester)
 		{
-		(GameObject.Find("Script7")).SendMessage("SetDeepLevel",chess_strength.ToString());
-		(GameObject.Find("Script7")).SendMessage("SetMovesList",C0.c0_moveslist);
+		(scriptManager.GetScript("jesterCES")).SendMessage("SetDeepLevel",chess_strength.ToString());
+		(scriptManager.GetScript("jesterCES")).SendMessage("SetMovesList",C0.c0_moveslist);
 		}
 	else if(useCrafty)
 		{
-		(GameObject.Find("Script3")).SendMessage("SetDeepLevel",chess_strength.ToString());
-		(GameObject.Find("Script3")).SendMessage("SetRequestFEN",C0.c0_get_FEN());
+		(scriptManager.GetScript("craftyCES")).SendMessage("SetDeepLevel",chess_strength.ToString());
+		(scriptManager.GetScript("craftyCES")).SendMessage("SetRequestFEN",C0.c0_get_FEN());
 		}
 	else if(useRybka)
 		{
-		(GameObject.Find("Script5")).SendMessage("SetDeepLevel",chess_strength.ToString());
-		(GameObject.Find("Script5")).SendMessage("SetRequestFEN",C0.c0_get_FEN());
+		(scriptManager.GetScript("rybkaCES")).SendMessage("SetDeepLevel",chess_strength.ToString());
+		(scriptManager.GetScript("rybkaCES")).SendMessage("SetRequestFEN",C0.c0_get_FEN());
 		}
 	else if(useStockfish)
 		{
-		(GameObject.Find("Script6")).SendMessage("SetDeepLevel",chess_strength.ToString());
-		(GameObject.Find("Script6")).SendMessage("SetRequestFEN",C0.c0_get_FEN());
+		(scriptManager.GetScript("stockfishCES")).SendMessage("SetDeepLevel",chess_strength.ToString());
+		(scriptManager.GetScript("stockfishCES")).SendMessage("SetRequestFEN",C0.c0_get_FEN());
 		}
 	else
-		{
-		(GameObject.Find("Script1")).SendMessage("JSSetDeep",chess_strength.ToString());
-		(GameObject.Find("Script1")).SendMessage("JSRequest",C0.c0_get_FEN());
-		}
-	engineStatus=3;
+	{
+		scriptManager.GetScript("valilCES").SendMessage("JSSetDeep",chess_strength.ToString());
+		scriptManager.GetScript("valilCES").SendMessage("JSRequest",C0.c0_get_FEN());
 	}
+	engineStatus=3;
+	} 
 }
 
 // this call receives answer from the chess engine... (from other object)
@@ -1185,12 +1168,12 @@ function LookTcp():void
 {
 if(TcpResign)
 	{
-	(GameObject.Find("Script4")).SendMessage("SendLinesOUT","resign");
+	scriptManager.GetScript("socketControllerScript").SendMessage("SendLinesOUT","resign");
 	TcpResign=false;
 	}
 if(TcpDraw)
 	{
-	(GameObject.Find("Script4")).SendMessage("SendLinesOUT","draw");
+	scriptManager.GetScript("socketControllerScript").SendMessage("SendLinesOUT","draw");
 	TcpDraw=false;
 	}
 if(TcpAccessible && playTcp)
@@ -1198,7 +1181,7 @@ if(TcpAccessible && playTcp)
 	if(statusTcp==0)
 		{
 		// Start TCP...
-		(GameObject.Find("Script4")).SendMessage("ConnectServer","");
+		scriptManager.GetScript("socketControllerScript").SendMessage("ConnectServer","");
 
 		drawAnim=false;	// anyway too slow...
 		}
@@ -1211,7 +1194,7 @@ function TcpNextGameStarter()
 	TcpNextGame=false;
 	gameover=false;
 	C0.c0_start_FEN="";		// in case takebacks were..
-	(GameObject.Find("Script4")).SendMessage("StartNextGame","");
+	scriptManager.GetScript("socketControllerScript").SendMessage("StartNextGame","");
 	}
 
 // Just for visal representation of messages...
@@ -1254,7 +1237,7 @@ function TcpCmdOnSend():void
 	if(!TcpTakeBackWas) TcpTakeBackWas=((TcpCmd.ToUpper()).IndexOf("TAKEBACK")>=0);		// attention, the position may change...
 	if((TcpCmd.Replace(" ","")).length>0)						// Send command...
 		{
-		(GameObject.Find("Script4")).SendMessage("SendLinesOUT", "CMD: "+TcpCmd); TcpCmd="";
+		(scriptManager.GetScript("socketControllerScript").SendMessage("SendLinesOUT", "CMD: "+TcpCmd); TcpCmd="";
 		}
 	}
 }
