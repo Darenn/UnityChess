@@ -669,30 +669,48 @@ function piecelongtype(figure1:String,color1:String):String
 	return ret;
 }
 
-private function doAttackAnimation(attacker : GameObject, attacked : GameObject) {
+private function doAttackAnimation(attacker : GameObject, attacked : GameObject) {	
 	// Active the preparing animation for the other piece
-	anim = attacker.GetComponent(Animator);
-	if (anim != null) {
-		anim.SetBool("IsMoving", false);
-		anim.SetBool("IsPreparing", true);
+	var animAttacker : Animator = attacker.GetComponent(Animator);
+	var animAttacked : Animator = attacked.GetComponent(Animator);
+
+	if(animAttacked == null || animAttacker == null) {
+		Debug.Log("Animator not found");
+		Destroy (attacked);
+		return;
 	}
+	
+	// store the rotation of the attacker to reset it later
+	var currentRotationAttacker : Quaternion = attacker.transform.rotation;
+	// each piece look at each other
+	attacker.transform.LookAt(attacked.transform.position);
+	attacked.transform.LookAt(attacker.transform.position);
+	
+	// Active the preparing animation for the other piece
+	animAttacked.SetBool("IsMoving", false);
+	animAttacked.SetBool("IsPreparing", true);
 	// Active the preparing animation for the piece attacking
-	anim = attacked.GetComponent(Animator);
-	if (anim != null) {
-		anim.SetBool("IsMoving", false);
-		anim.SetBool("IsPreparing", true);
-	}
-	Debug.Log("I'm here !");
+	animAttacker.SetBool("IsMoving", false);
+	animAttacker.SetBool("IsPreparing", true);
+	// Wait some time before attack
 	isWaiting = true;
-	yield WaitForSeconds(4);
-	isWaiting = false;
-	Debug.Log("I'm here now !");
+	yield WaitForSeconds(timeBeforeAttack);
+	
+	// attack
+	animAttacker.SetTrigger("Attack");
+	animAttacked.SetTrigger("IsAttacked");
+	yield WaitForSeconds(timeBeforeDestroy);
 	Destroy (attacked);
+	animAttacker.SetBool("IsPreparing", false);
+	// Reset the rotation of the attacker
+	attacker.transform.rotation = currentRotationAttacker;
+	isWaiting = false;
 }
 
-public var speed : float = 1; // speed of animations
-public var distanceOfAttack : float = 30; // distance where the piece will attack
-public var timeBeforeAttack : float = 10; // in ms
+public var speed : float = 1.5; // speed of animations
+public var distanceOfAttack : float = 0.9; // distance where the piece will attack in px
+public var timeBeforeAttack : float = 4; // in seconds
+public var timeBeforeDestroy : float = 3; // in seconds
 public var drawAnim : Boolean = false; // if animations are activated
 
 private var isAnimating : Boolean = false;
@@ -749,7 +767,8 @@ function DoPieceMovements(): IEnumerable
 				//mObj.transform.position.y+=(move_animator-(5-(move_animator>5?5:move_animator))+3)*0.2;
 			
 			// If a piece was captured and moving near
-			if((!drawAnim) || (Vector3.Distance(mObj.transform.position, mto) <= distanceOfAttack))	{
+			if((Vector3.Distance(mObj.transform.position, mto) <= distanceOfAttack))	{
+				Debug.Log("Distance : " + Vector3.Distance(mObj.transform.position, mto));
 				var dObj : GameObject = GameObject.Find("piece_"+ move_to);
 				if(dObj == null) { // we just move near
 					if((piecetype=="pawn") && (!(move_from.Substring(0,1)==move_to.Substring(0,1)))) {
