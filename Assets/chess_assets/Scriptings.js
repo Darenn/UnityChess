@@ -675,15 +675,20 @@ for(var c0_i=0;c0_Zposition.length>c0_i; c0_i+=5)
 
 function piecelongtype(figure1:String,color1:String):String
 {
-var ret="";
-if(figure1=="p") ret="pawn";
-else if(figure1=="N") ret=(((color1=="w") && (C0.c0_side>0)) || ((color1=="b") && (C0.c0_side<0))  ? "knight":"oponents_knight");
-else if(figure1=="B") ret="bishop";
-else if(figure1=="R") ret="rook";
-else if(figure1=="Q") ret="queen";
-else if(figure1=="K") ret="king";
-return ret;
+	var ret="";
+	if(figure1=="p") ret="pawn";
+	else if(figure1=="N") ret=(((color1=="w") && (C0.c0_side>0)) || ((color1=="b") && (C0.c0_side<0))  ? "knight":"oponents_knight");
+	else if(figure1=="B") ret="bishop";
+	else if(figure1=="R") ret="rook";
+	else if(figure1=="Q") ret="queen";
+	else if(figure1=="K") ret="king";
+	return ret;
 }
+
+public var speed : float = 1; // speed of animations
+public var distanceOfAttack : float = 30; // distance where the piece will attack
+
+private var isAnimating : Boolean = false;
 
 function DoPieceMovements():void
 {
@@ -697,98 +702,92 @@ function DoPieceMovements():void
 	}
 	
 	// if there are moves to do
-	if(C0.c0_moves2do.length>0) {
-		Debug.Log("Il y a un mouvement Ã  faire");
+	if(C0.c0_moves2do.length > 0) {
+		Debug.Log("Il y a un mouvement à faire");
+		Debug.Log(C0.c0_moves2do);
 		// if there is an animation to do
-		if(move_animator>0) {
-			// locate where is the piece from, and where it goes
-			Debug.Log("move_animator>0");
-			var move_from=C0.c0_moves2do.Substring(0,2);
-			var move_to=C0.c0_moves2do.Substring(2,2);
-			var bc=(((C0.c0_moves2do.length>4) && (C0.c0_moves2do.Substring(4,1)=="[")) ? C0.c0_moves2do.Substring(5,1) : " ");
+		if(isAnimating) {
+			// locate where is the piece from, and where it goes with chess coordonnates (a2)
+			var move_from : String =C0.c0_moves2do.Substring(0,2);
+			var move_to : String =C0.c0_moves2do.Substring(2,2);
+			var bc : String =(((C0.c0_moves2do.length>4) && (C0.c0_moves2do.Substring(4,1)=="[")) ? C0.c0_moves2do.Substring(5,1) : " ");
 			
 			// get the piece relative to the from position
-			var mObj:GameObject;
-			mObj=GameObject.Find("piece_"+move_from);
+			var mObj : GameObject = GameObject.Find("piece_"+move_from);
 			
 			// launch the run animation on the piece
 			anim = mObj.GetComponent(Animator);
 			if (anim != null) {
-				Debug.Log("Je bouge" + "piece_"+move_from);
+				Debug.Log("!!!!!!Je bouge" + "piece_"+move_from);
 				if (!anim.GetBool("IsMoving"))
 					anim.SetBool("IsMoving", true);
 			}
 			
 			
-			var pieceat=((("QRBN").IndexOf(bc)>=0) ? "p" : (C0.c0_D_what_at(move_to)).Substring(1,1));
+			var pieceat : String = ((("QRBN").IndexOf(bc)>=0) ? "p" : (C0.c0_D_what_at(move_to)).Substring(1,1));
 			
 			// get the piece color et the piece type
-			var piececolor=(C0.c0_D_what_at(move_to)).Substring(0,1);
-			var piecetype=piecelongtype(pieceat,piececolor);
+			var piececolor : String = (C0.c0_D_what_at(move_to)).Substring(0,1);
+			var piecetype : String = piecelongtype(pieceat,piececolor);
 
-			var mfrom=PiecePosition(piecetype,move_from);
-			var mto=PiecePosition(piecetype,move_to);
+			var mfrom : Vector3 = PiecePosition(piecetype,move_from);
+			var mto : Vector3 = PiecePosition(piecetype,move_to);
 			
-			// piece moves constantly towards the square
-			mObj.transform.position =  mfrom + ((mto - mfrom)/10 * (11-move_animator));
+			// The step size is equal to speed times frame time.
+			var step : float = speed * Time.deltaTime;
+		
+			// Move our position a step closer to the target.
+			mObj.transform.position = Vector3.MoveTowards(mObj.transform.position, mto, step);
 			
-			// a little jump for knight and castling rook
+			// TODO jump for knight and castling rook
 			if((piecetype.IndexOf("knight")>=0)  || ((bc=="0") && (piecetype=="rook")))
-				mObj.transform.position.y+=(move_animator-(5-(move_animator>5?5:move_animator))+3)*0.2;
-	
-			move_animator--;
-			if((!drawAnim) || (move_animator==3))		// If a piece was captured and moving near...
-				{
-				Debug.Log("(!drawAnim) || (move_animator==3)");
-				var dObj:GameObject;
-				dObj=GameObject.Find("piece_"+ move_to);
-				if(dObj==null)
-					{
-					if((piecetype=="pawn") && (!(move_from.Substring(0,1)==move_to.Substring(0,1))))	// en-passant...
-						{
-						dObj=GameObject.Find("piece_"+ move_to.Substring(0,1)+move_from.Substring(1,1));
-						if(!(dObj==null)) Destroy (dObj);
-						}
+				//mObj.transform.position.y+=(move_animator-(5-(move_animator>5?5:move_animator))+3)*0.2;
+			
+			// If a piece was captured and moving near
+			if((!drawAnim) || (Vector3.Distance(mObj.transform.position, mto) <= distanceOfAttack))	{
+				var dObj : GameObject = GameObject.Find("piece_"+ move_to);
+				if(dObj==null) {
+				// en passant
+					if((piecetype=="pawn") && (!(move_from.Substring(0,1)==move_to.Substring(0,1)))) {
+						dObj = GameObject.Find("piece_"+ move_to.Substring(0,1)+move_from.Substring(1,1));
+						if(!(dObj==null)) 
+							Destroy (dObj);
 					}
-				else Destroy (dObj);
+				} else {
+					Destroy (dObj);
 				}
+			}
+			
 			// if finished the move
-			if(move_animator==0)
-				{
-				Debug.Log("move_animator==0");
+			if(mObj.transform.position == mto) {
+				isAnimating = false;
 				mObj.name="piece_"+move_to;
+				
+				// Stop the run animation
 				anim = GameObject.Find("piece_"+move_to).GetComponent(Animator);
 				if (anim != null) {
-					Debug.Log("Je stop" + "piece_"+move_from);
 					anim.SetBool("IsMoving", false);
 				}
 
-					// If a pawn becomes a better piece...
-				if(("QRBN").IndexOf(bc)>=0)
-					{
+				// If a pawn becomes a better piece...
+				if(("QRBN").IndexOf(bc)>=0) {
 					Destroy (mObj);
 					CreatePiece(piececolor,piecelongtype(bc,piececolor),move_to); 		// promotion...
-					}
-				C0.c0_moves2do=(C0.c0_moves2do).Substring( ((bc==" ")? 4 : 7) );
-
-				if(C0.c0_moves2do.length==0) {
-					C0.c0_moving=false;
-					Debug.Log("C0.c0_moves2do.length==0");
-					}	
 				}
-			}
-		else
-			{
-			Debug.Log("C0.c0_moves2do.length==0 Else");
-			move_animator=(drawAnim ? GetTimeDelta(10,4): 1);
-			anim = GameObject.Find("piece_"+drag1_at).GetComponent(Animator);
-			if (anim != null) {
-				Debug.Log("Je fais bouger " + "piece_"+move_from);
-				anim.SetBool("IsMoving", true);
-			}					// 4 seconds animation anyway...
-			drag1_animator=0;
-			}
+				C0.c0_moves2do=(C0.c0_moves2do).Substring( ((bc==" ")? 4 : 7) );
+				
+				// if there is no more move to do, we are not moving
+				if(C0.c0_moves2do.length == 0) {
+					C0.c0_moving=false;
+				}	
+			} 
+		} else {
+				isAnimating = true;
+				//move_animator=(drawAnim ? GetTimeDelta(10,4): 1);
+				// 4 seconds animation anyway...
+				drag1_animator=0;
 		}
+	}
 }
 
 // this routine starts chess engine if needed...
