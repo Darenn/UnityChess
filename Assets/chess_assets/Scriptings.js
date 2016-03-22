@@ -1,6 +1,28 @@
 import System;
 import c0_4unity_chess;
 
+
+/**
+ *
+ *
+ *
+ */
+public var newGameButton : UnityEngine.UI.Button;
+public var takeBackButton : UnityEngine.UI.Button;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // This is the main scripting part...
 var Name="Various javascripts";
 var FirstStart=true;
@@ -70,10 +92,10 @@ function OnGUI () {
 
 	var e : Event = Event.current;
 	if(e.isKey && (Input.anyKey) && (e.keyCode.ToString()=="Escape") )
-		{
-		TcpModeCmd=!TcpModeCmd;		// Turn on/off cmd mode...
-		(GameObject.Find("Script4")).SendMessage("AutoMode",  (TcpModeCmd ? "OFF" : "ON" )); 
-		}
+	{
+	TcpModeCmd=!TcpModeCmd;		// Turn on/off cmd mode...
+	(GameObject.Find("Script4")).SendMessage("AutoMode",  (TcpModeCmd ? "OFF" : "ON" )); 
+	}
 		
 	if(playTcp && TcpModeCmd)
 		{
@@ -137,7 +159,29 @@ function OnGUI () {
 		{
 		if(GUI.Button (Rect (20, 240, 100, 30), "Take Back")) TakeBackFlag=true;
 		
-		if(GUI.Button (Rect (20, 280, 100, 30), "New Game")) NewGameFlag=true;
+
+
+
+
+
+		    // Spatial GUI button handle
+            //if()
+
+		if(GUI.Button (Rect (20, 280, 100, 30), "New Game")) 
+		{
+		    NewGameFlag = true;
+		    Debug.Log("Button pushed");
+		}
+
+
+
+
+
+
+
+
+
+
 		
 		GUI.Box (Rect (Screen.width - 130, 140, 120, 60), "Chess strength");
 		chess_strength = GUI.HorizontalSlider (Rect (Screen.width - 120, 170, 100, 30), chess_strength, 1, 6);
@@ -172,8 +216,40 @@ function OnGUI () {
 		}
 }
 
+/**
+ *
+ *
+ */
+function HandleNewGameEvent()
+{
+	// TODO
+    Debug.Log("CECI EST UN TEST");
+}
+
+/**
+ *
+ *
+ *
+ */
+function HandleTakeBackEvent()
+{
+    // TODO
+}
+
+/**
+ *
+ *
+ */
 function Start ()
 {
+	// TODO
+	newGameButton.onClick.AddListener(function() { HandleNewGameEvent(); });
+
+
+
+
+
+    // TODOD : INDENTATION !!!!
 // Hide objects that are not visually needed... 
 //(script 3d objects are just for scripting purposes, to hold chess programs and activate them frequently (frames per second)...
 GameObject.Find("Script1").GetComponent.<Renderer>().enabled = false;
