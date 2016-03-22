@@ -1,5 +1,5 @@
-﻿#pragma strict
-#pragma downcast
+#pragma strict
+//#pragma downcast
 
 /**
  * Store and give a minimum handle on 
@@ -51,19 +51,19 @@ class ScriptManager extends MonoBehaviour
 			return null;
 		}
 		
-		return (GameObject)(scriptHashtable[key]);
+		return scriptHashtable[key];
 	}
 	
 	/**
 	 * TODO
 	 */
 	public function HideAllScript() : void {
-	
-		var object : GameObject;
 		
+		var gobjet : GameObject;
 		for(var key : String in scriptHashtable.Keys)
 		{	
-			(GameObject)(scriptHashtable[key]).GetComponent.<Renderer>().enabled = false;
+			gobjet = scriptHashtable[key] as GameObject;
+			gobjet.GetComponent(Renderer).enabled = false;
 		}
 	}
 	

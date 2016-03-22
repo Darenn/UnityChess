@@ -1256,7 +1256,7 @@ function TcpCmdOnSend():void
 	if(!TcpTakeBackWas) TcpTakeBackWas=((TcpCmd.ToUpper()).IndexOf("TAKEBACK")>=0);		// attention, the position may change...
 	if((TcpCmd.Replace(" ","")).length>0)						// Send command...
 		{
-		(scriptManager.GetScript("socketControllerScript").SendMessage("SendLinesOUT", "CMD: "+TcpCmd); TcpCmd="";
+		scriptManager.GetScript("socketControllerScript").SendMessage("SendLinesOUT", "CMD: "+TcpCmd); TcpCmd="";
 		}
 	}
 }
