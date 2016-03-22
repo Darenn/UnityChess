@@ -229,6 +229,21 @@ function HandleTakeBackEvent()
 }
 
 /**
+ *
+ *
+ */
+function HideUselessObjects()
+{
+	GameObject.Find("Script1").GetComponent.<Renderer>().enabled = false;
+	GameObject.Find("Script2").GetComponent.<Renderer>().enabled = false;
+	GameObject.Find("Script3").GetComponent.<Renderer>().enabled = false;
+	GameObject.Find("Script4").GetComponent.<Renderer>().enabled = false;
+	GameObject.Find("Script5").GetComponent.<Renderer>().enabled = false;
+	GameObject.Find("Script6").GetComponent.<Renderer>().enabled = false;
+	GameObject.Find("Script7").GetComponent.<Renderer>().enabled = false;
+}
+
+/**
  * Initialize attributes
  */
 function Start ()
@@ -237,19 +252,7 @@ function Start ()
 	newGameButton.onClick.AddListener(function() { HandleNewGameEvent(); });
 	takeBackButton.onClick.AddListener(function() { HandleTakeBackEvent(); });
   
-
-
-
-    // TODOD : INDENTATION !!!!
-// Hide objects that are not visually needed... 
-//(script 3d objects are just for scripting purposes, to hold chess programs and activate them frequently (frames per second)...
-GameObject.Find("Script1").GetComponent.<Renderer>().enabled = false;
-GameObject.Find("Script2").GetComponent.<Renderer>().enabled = false;
-GameObject.Find("Script3").GetComponent.<Renderer>().enabled = false;
-GameObject.Find("Script4").GetComponent.<Renderer>().enabled = false;
-GameObject.Find("Script5").GetComponent.<Renderer>().enabled = false;
-GameObject.Find("Script6").GetComponent.<Renderer>().enabled = false;
-GameObject.Find("Script7").GetComponent.<Renderer>().enabled = false;
+	HideUselessObjects();
 
 ActivateCamera(true);					// Initial - set side camera as main
 SetLamps(true);							// Initiol - set bright Light1
