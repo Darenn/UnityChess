@@ -621,19 +621,24 @@ return ret;
 
 function DoPieceMovements():void
 {
+	var anim : Animator;
+	// a piece is dragged
 	if(drag1_animator>0)
 		{
+		Debug.Log("piece_"+drag1_at+" is dragged");
 		GameObject.Find("piece_"+drag1_at).transform.position.y-=(5.5-drag1_animator)*0.06;
 		drag1_animator--;
 		}
 	if(C0.c0_moves2do.length>0)
 		{
+		Debug.Log("Il y a un mouvement à faire");
 		if(move_animator>0)
 			{
+			Debug.Log("move_animator>0");
 			var move_from=C0.c0_moves2do.Substring(0,2);
 			var move_to=C0.c0_moves2do.Substring(2,2);
 			var bc=(((C0.c0_moves2do.length>4) && (C0.c0_moves2do.Substring(4,1)=="[")) ? C0.c0_moves2do.Substring(5,1) : " ");
-
+	
 			var mObj:GameObject;
 			mObj=GameObject.Find("piece_"+move_from);
 			
@@ -652,6 +657,7 @@ function DoPieceMovements():void
 			move_animator--;
 			if((!drawAnim) || (move_animator==3))		// If a piece was captured and moving near...
 				{
+				Debug.Log("(!drawAnim) || (move_animator==3)");
 				var dObj:GameObject;
 				dObj=GameObject.Find("piece_"+ move_to);
 				if(dObj==null)
@@ -664,10 +670,16 @@ function DoPieceMovements():void
 					}
 				else Destroy (dObj);
 				}
-
+			// if finished the move
 			if(move_animator==0)
 				{
+				Debug.Log("move_animator==0");
 				mObj.name="piece_"+move_to;
+				anim = GameObject.Find("piece_"+move_to).GetComponent(Animator);
+				if (anim != null) {
+					Debug.Log("Je stop" + "piece_"+move_from);
+					anim.SetBool("IsMoving", false);
+					}
 
 					// If a pawn becomes a better piece...
 				if(("QRBN").IndexOf(bc)>=0)
@@ -677,12 +689,21 @@ function DoPieceMovements():void
 					}
 				C0.c0_moves2do=(C0.c0_moves2do).Substring( ((bc==" ")? 4 : 7) );
 
-				if(C0.c0_moves2do.length==0) C0.c0_moving=false;
+				if(C0.c0_moves2do.length==0) {
+					C0.c0_moving=false;
+					Debug.Log("C0.c0_moves2do.length==0");
+					}	
 				}
 			}
 		else
 			{
-			move_animator=(drawAnim ? GetTimeDelta(10,4): 1);					// 4 seconds animation anyway...
+			Debug.Log("C0.c0_moves2do.length==0 Else");
+			move_animator=(drawAnim ? GetTimeDelta(10,4): 1);
+			anim = GameObject.Find("piece_"+drag1_at).GetComponent(Animator);
+			if (anim != null) {
+				Debug.Log("Je fais bouger " + "piece_"+move_from);
+				anim.SetBool("IsMoving", true);
+			}					// 4 seconds animation anyway...
 			drag1_animator=0;
 			}
 		}
