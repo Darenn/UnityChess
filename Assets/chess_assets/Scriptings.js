@@ -5,10 +5,13 @@ import c0_4unity_chess;
 /**
  * Main script
  * Member variables declarations
+ * 1 - GUI elements
+ * 2 - Camera
  */
 public var newGameButton : UnityEngine.UI.Button;
 public var takeBackButton : UnityEngine.UI.Button;
 
+public var mainCamera : Camera;
 
 
 
@@ -78,6 +81,208 @@ var TcpTakeBackWas=false;		// just if user want's it's possible to set board
 var TcpPreMNr=0;					// just to keep last move Nr. for games on chess server
 var TcpPreMCol="";
 
+/**
+ * Initialize attributes
+ */
+function Start ()
+{
+	// TODO
+	newGameButton.onClick.AddListener(function() { HandleNewGameEvent(); });
+	takeBackButton.onClick.AddListener(function() { HandleTakeBackEvent(); });
+  
+	HideUselessObjects();
+	
+	// Set the side camera as main camera
+	ActivateCamera(true);
+	
+	// Set the light to 1
+	SetLamps(true);
+}
+
+/**
+ * This function is called if a mouse-click 
+ * is detected on the button NewGameButton
+ * It set the button flag to true
+ */
+function HandleNewGameEvent()
+{
+    Debug.Log("New Game Button pressed");
+    NewGameFlag = true;
+}
+
+/**
+ * This function is called if a mouse-click 
+ * is detected on the button TakeBackButton
+ * It set the button flag to true
+ */
+function HandleTakeBackEvent()
+{
+    Debug.Log("Take Back Button pressed");
+    TakeBackFlag = true;
+}
+
+/**
+ * Hide all useless game object of the scene
+ * (especially label)
+ */
+function HideUselessObjects()
+{
+	GameObject.Find("Script1").GetComponent.<Renderer>().enabled = false;
+	GameObject.Find("Script2").GetComponent.<Renderer>().enabled = false;
+	GameObject.Find("Script3").GetComponent.<Renderer>().enabled = false;
+	GameObject.Find("Script4").GetComponent.<Renderer>().enabled = false;
+	GameObject.Find("Script5").GetComponent.<Renderer>().enabled = false;
+	GameObject.Find("Script6").GetComponent.<Renderer>().enabled = false;
+	GameObject.Find("Script7").GetComponent.<Renderer>().enabled = false;
+}
+
+/**
+ *
+ *
+ *
+ */
+function Update ()
+{
+	ActivateCamera(false);				    // check for camera settings - if swap requested by user..
+	SetLamps(false);						// check for lights slider settings...
+	LookTcp();
+
+	
+	if(FirstStart) // could be right in Start(), anyway it's the same..., sometimes good to wait a bit while all the objects are being created...
+		{
+		PlanesOnBoard();					// Planes needed for mouse drag... (a ray from camera to this rigibody object is catched)...
+		TransformVisualAllToH1();		// The board contains blank-pieces (to clone from) just on some squares. Moving all of them to h1... 
+
+		//1.FEN startup test (ok):	
+		//C0.c0_start_FEN="8/p3r1k1/6p1/3P2Bp/p4N1P/p5P1/5PK1/8 w - - 0 1";
+		//C0.c0_set_start_position("");
+		//print(C0.c0_get_FEN());
+			
+		//C0.c0_start_FEN="7k/Q7/2P2K2/8/8/8/8/8 w - - 0 70";		// a checkmate position just for tests...
+
+		C0.c0_side=1;							// This side is white.   For black set -1
+		C0.c0_waitmove=true;					// Waiting for mouse drag...
+		C0.c0_set_start_position("");		// Set the initial position... 
+		
+		//2.PGN functions test (ok):
+		//PGN0="1.d4 d5 2.c4 e6 3.Nf3 Nf6 4.g3 Be7 5.Bg2 0-0 6.0-0 dxc4 7.Qc2 a6 8.Qxc4 b5 9.Qc2 Bb7 10.Bd2 Be4 11.Qc1 Bb7 12.Qc2 Ra7 13.Rc1 Be4 14.Qb3 Bd5 15.Qe3 Nbd7 16.Ba5 Bd6 17.Nc3 Bb7 18.Ng5 Bxg2 19.Kxg2 Qa8+ 20.Qf3 Qxf3+ 21.Kxf3 e5 22.e3 Be7 23.Ne2 Re8 24.Kg2 Nd5 25.Nf3 Bd6 26.dxe5 Nxe5 27.Nxe5 Rxe5 28.Nd4 Ra8 29.Nc6 Re6 30.Rc2 Nb6 31.b3 Kf8 32.Rd1 Ke8 33.Nd4 Rf6 34.e4 Rg6 35.e5 Be7 36.Rxc7 Nd5 37.Rb7 Bd8 38.Nf5 Nf4+ 39.Kf3 Bxa5 40.gxf4 Bb4 41.Rdd7 Rc8 42.Rxf7 Rc3+ 43.Ke4 1-0";
+		//var mlist= C0.c0_get_moves_from_PGN(PGN0); print(mlist);
+		//var PGN1=C0.c0_put_to_PGN(mlist); print(PGN1);
+		
+		//3.Fischerrandom support test (ok):
+		//var PGN0="[White Aronian, Levon][Black Rosa, Mike][Result 0:1][SetUp 1][FEN bbrkqnrn/pppppppp/8/8/8/8/PPPPPPPP/BBRKQNRN w GCgc - 0 0] 1. c4 e5 2. Nhg3 Nhg6 3. b3 f6 4. e3 b6 5. Qe2 Ne6 6. Qh5 Rh8 7. Nf5 Ne7 8. Qxe8+ Kxe8 9. N1g3 h5 10. Nxe7 Kxe7 11. d4 d6 12. h4 Kf7 13. d5 Nf8 14. f4 c6 15. fxe5 dxe5 16. e4 Bd6 17. Bd3 Ng6 18. O-O Nxh4 19. Be2 Ng6 20. Nf5 Bc5+ 21. Kh2 Nf4 22. Rc2 cxd5 23. exd5 h4 24. Bg4 Rce8 25. Bb2 g6 26. Nd4 exd4 27.Rxf4 Bd6 0-1";
+		//var mlist= C0.c0_get_moves_from_PGN(PGN0); print(mlist);
+		//var PGN1=C0.c0_put_to_PGN(mlist); print(PGN1);
+		
+		//4.Other functions, and, of course, access variables directly C0.<variable>=...
+		//C0.c0_position=...  -position of pieces on board...
+		//C0.c0_moveslist=... -moveslist is the list of moves made on board currently...
+		
+		// Make a first move e4...
+		//C0.c0_set_start_position("");
+		//C0.c0_move_to("e2","e4");
+		
+		// Show the last move made...
+		//print(C0.c0_D_last_move_was());
+		// And take it back...
+		//C0.c0_take_back();
+		
+			// To see possible movements...
+		//print(C0.c0_get_next_moves());
+		
+		//Other functions:
+		//Is e2-e4 a legal move in current position...
+		//print(C0.c0_D_can_be_moved("a2","a4"));
+		//Is there stalemate to the white king right now? ("b"/"w"- the parameter)
+		//print(C0.c0_D_is_pate_to_king("w"));
+		//Is there check to the white king right now? 
+		//print(C0.c0_D_is_check_to_king("w"));
+		//Is there checkmate to the white king right now? 
+		//print(C0.c0_D_is_mate_to_king("w"));
+		
+		// What a piece on the square g7?
+		//print(C0.c0_D_what_at("g7"));
+		// Is the square g6 empty? (no piece on it)
+		//print(C0.c0_D_is_empty("g6"));
+
+		}
+
+	DoPieceMovements();							// All the movements of pieces (constant frames per second for rigidbody x,y,z)...
+	DoEngineMovements();							// If chess engine should do a move...
+	MouseMovement();								// Mouse movement events, suggest legal moves...
+	RollBackAction();									// If a takeback should be performed/ or new game started..
+
+
+if(FirstStart)
+	{
+	position2board();					// Set current position on the board visually...
+	HideBlankPieces();				// Hide blank-pieces...
+	CreateActiveParticles();		// Active particles are just copies, to keep acurate position on screen...
+	FirstStart=false;
+	}
+else
+	{
+	DragDetect();						// If mouse pressed on any square...
+	}
+}
+
+/**
+ * 
+ *
+ * @param first if it is the first call
+ * @return void
+ */
+function ActivateCamera(first : boolean) : void
+{
+	var cameraSide = (GameObject.Find("CameraSide")).GetComponent.<Camera>();
+	var cameraTop = (GameObject.Find("CameraTop")).GetComponent.<Camera>();
+
+	if(first)
+	{
+		cameraSide.enabled=setCamSide;
+		cameraTop.enabled=setCamTop;
+	}
+	else
+	{
+	if((!cameraTop.enabled) && setCamSide) { setCamTop=false; cameraTop.enabled=true; cameraSide.enabled=false; }
+	if((!cameraSide.enabled) && setCamTop) { setCamSide=false; cameraSide.enabled=true; cameraTop.enabled=false; }
+	}
+
+	if(!(CamXpre==CameraX))
+	{
+	GameObject.Find("CameraSide").transform.position.x += 1.5 * (CamXpre-CameraX);
+	GameObject.Find("CameraTop").transform.position.x += 0.1 * (CamXpre-CameraX);
+	CamXpre=CameraX;
+	}
+
+	if(!(C0.c0_side==CamSidepre))
+	{
+	CamSidepre=C0.c0_side;
+	}
+}
+
+function SetLamps(first:boolean):void
+{
+	var l1=(GameObject.Find("Light1")).GetComponent.<Light>();
+	var l2=(GameObject.Find("Light2")).GetComponent.<Light>();
+	if(first)
+		{
+		l1.intensity=0.738;			// Otherwise scene editing is unpleasant...
+		}
+	else
+		{
+		var n_l1=l1.enabled;
+		var n_l2=l2.enabled;
+		if(lightsValue==0) { n_l1=true; n_l2=false; }
+		if(lightsValue==1) { n_l1=false; n_l2=true; }
+		if(lightsValue==2) { n_l1=true; n_l2=true;  }
+		if(!(l1.enabled==n_l1)) l1.enabled=n_l1;
+		if(!(l2.enabled==n_l2)) l2.enabled=n_l2;
+				// adjust lights intensity a bit on too much light set...
+		if((lightsValue>1) && (l1.intensity>0.6)) l1.intensity*=0.5;
+		if((lightsValue<2) && (l1.intensity<0.6)) l1.intensity*=2;
+		}
+}
 
 /**
  * Function called when there is an event
@@ -203,197 +408,6 @@ function OnGUI () {
 			}
 		}
 	}
-}
-
-
-/**
- * This function is called if a mouse-click 
- * is detected on the button NewGameButton
- * It set the button flag to true
- */
-function HandleNewGameEvent()
-{
-    Debug.Log("New Game Button pressed");
-    NewGameFlag = true;
-}
-
-/**
- * This function is called if a mouse-click 
- * is detected on the button TakeBackButton
- * It set the button flag to true
- */
-function HandleTakeBackEvent()
-{
-    Debug.Log("Take Back Button pressed");
-    TakeBackFlag = true;
-}
-
-/**
- *
- *
- */
-function HideUselessObjects()
-{
-	GameObject.Find("Script1").GetComponent.<Renderer>().enabled = false;
-	GameObject.Find("Script2").GetComponent.<Renderer>().enabled = false;
-	GameObject.Find("Script3").GetComponent.<Renderer>().enabled = false;
-	GameObject.Find("Script4").GetComponent.<Renderer>().enabled = false;
-	GameObject.Find("Script5").GetComponent.<Renderer>().enabled = false;
-	GameObject.Find("Script6").GetComponent.<Renderer>().enabled = false;
-	GameObject.Find("Script7").GetComponent.<Renderer>().enabled = false;
-}
-
-/**
- * Initialize attributes
- */
-function Start ()
-{
-	// TODO
-	newGameButton.onClick.AddListener(function() { HandleNewGameEvent(); });
-	takeBackButton.onClick.AddListener(function() { HandleTakeBackEvent(); });
-  
-	HideUselessObjects();
-
-ActivateCamera(true);					// Initial - set side camera as main
-SetLamps(true);							// Initiol - set bright Light1
-
-}
-
-// frames per second run part...
-function Update ()
-{
-ActivateCamera(false);				// check for camera settings - if swap requested by user..
-SetLamps(false);						// check for lights slider settings...
-LookTcp();
-
-if(FirstStart) // could be right in Start(), anyway it's the same..., sometimes good to wait a bit while all the objects are being created...
-	{
-	PlanesOnBoard();					// Planes needed for mouse drag... (a ray from camera to this rigibody object is catched)...
-	TransformVisualAllToH1();		// The board contains blank-pieces (to clone from) just on some squares. Moving all of them to h1... 
-
-	//1.FEN startup test (ok):	
-	//C0.c0_start_FEN="8/p3r1k1/6p1/3P2Bp/p4N1P/p5P1/5PK1/8 w - - 0 1";
-	//C0.c0_set_start_position("");
-	//print(C0.c0_get_FEN());
-		
-	//C0.c0_start_FEN="7k/Q7/2P2K2/8/8/8/8/8 w - - 0 70";		// a checkmate position just for tests...
-
-	C0.c0_side=1;							// This side is white.   For black set -1
-	C0.c0_waitmove=true;					// Waiting for mouse drag...
-	C0.c0_set_start_position("");		// Set the initial position... 
-	
-	//2.PGN functions test (ok):
-	//PGN0="1.d4 d5 2.c4 e6 3.Nf3 Nf6 4.g3 Be7 5.Bg2 0-0 6.0-0 dxc4 7.Qc2 a6 8.Qxc4 b5 9.Qc2 Bb7 10.Bd2 Be4 11.Qc1 Bb7 12.Qc2 Ra7 13.Rc1 Be4 14.Qb3 Bd5 15.Qe3 Nbd7 16.Ba5 Bd6 17.Nc3 Bb7 18.Ng5 Bxg2 19.Kxg2 Qa8+ 20.Qf3 Qxf3+ 21.Kxf3 e5 22.e3 Be7 23.Ne2 Re8 24.Kg2 Nd5 25.Nf3 Bd6 26.dxe5 Nxe5 27.Nxe5 Rxe5 28.Nd4 Ra8 29.Nc6 Re6 30.Rc2 Nb6 31.b3 Kf8 32.Rd1 Ke8 33.Nd4 Rf6 34.e4 Rg6 35.e5 Be7 36.Rxc7 Nd5 37.Rb7 Bd8 38.Nf5 Nf4+ 39.Kf3 Bxa5 40.gxf4 Bb4 41.Rdd7 Rc8 42.Rxf7 Rc3+ 43.Ke4 1-0";
-	//var mlist= C0.c0_get_moves_from_PGN(PGN0); print(mlist);
-	//var PGN1=C0.c0_put_to_PGN(mlist); print(PGN1);
-	
-	//3.Fischerrandom support test (ok):
-	//var PGN0="[White Aronian, Levon][Black Rosa, Mike][Result 0:1][SetUp 1][FEN bbrkqnrn/pppppppp/8/8/8/8/PPPPPPPP/BBRKQNRN w GCgc - 0 0] 1. c4 e5 2. Nhg3 Nhg6 3. b3 f6 4. e3 b6 5. Qe2 Ne6 6. Qh5 Rh8 7. Nf5 Ne7 8. Qxe8+ Kxe8 9. N1g3 h5 10. Nxe7 Kxe7 11. d4 d6 12. h4 Kf7 13. d5 Nf8 14. f4 c6 15. fxe5 dxe5 16. e4 Bd6 17. Bd3 Ng6 18. O-O Nxh4 19. Be2 Ng6 20. Nf5 Bc5+ 21. Kh2 Nf4 22. Rc2 cxd5 23. exd5 h4 24. Bg4 Rce8 25. Bb2 g6 26. Nd4 exd4 27.Rxf4 Bd6 0-1";
-	//var mlist= C0.c0_get_moves_from_PGN(PGN0); print(mlist);
-	//var PGN1=C0.c0_put_to_PGN(mlist); print(PGN1);
-	
-	//4.Other functions, and, of course, access variables directly C0.<variable>=...
-	//C0.c0_position=...  -position of pieces on board...
-	//C0.c0_moveslist=... -moveslist is the list of moves made on board currently...
-	
-	// Make a first move e4...
-	//C0.c0_set_start_position("");
-	//C0.c0_move_to("e2","e4");
-	
-	// Show the last move made...
-	//print(C0.c0_D_last_move_was());
-	// And take it back...
-	//C0.c0_take_back();
-	
-		// To see possible movements...
-	//print(C0.c0_get_next_moves());
-	
-	//Other functions:
-	//Is e2-e4 a legal move in current position...
-	//print(C0.c0_D_can_be_moved("a2","a4"));
-	//Is there stalemate to the white king right now? ("b"/"w"- the parameter)
-	//print(C0.c0_D_is_pate_to_king("w"));
-	//Is there check to the white king right now? 
-	//print(C0.c0_D_is_check_to_king("w"));
-	//Is there checkmate to the white king right now? 
-	//print(C0.c0_D_is_mate_to_king("w"));
-	
-	// What a piece on the square g7?
-	//print(C0.c0_D_what_at("g7"));
-	// Is the square g6 empty? (no piece on it)
-	//print(C0.c0_D_is_empty("g6"));
-
-	}
-
-DoPieceMovements();							// All the movements of pieces (constant frames per second for rigidbody x,y,z)...
-DoEngineMovements();							// If chess engine should do a move...
-MouseMovement();								// Mouse movement events, suggest legal moves...
-RollBackAction();									// If a takeback should be performed/ or new game started..
-
-
-if(FirstStart)
-	{
-	position2board();					// Set current position on the board visually...
-	HideBlankPieces();				// Hide blank-pieces...
-	CreateActiveParticles();		// Active particles are just copies, to keep acurate position on screen...
-	FirstStart=false;
-	}
-else
-	{
-	DragDetect();						// If mouse pressed on any square...
-	}
-}
-
-function ActivateCamera(first:boolean):void
-{
-var c1=(GameObject.Find("CameraSide")).GetComponent.<Camera>();
-var c2=(GameObject.Find("CameraTop")).GetComponent.<Camera>();
-
-if(first)
-	{ 
-	c1.enabled=setCamSide;
-	c2.enabled=setCamTop;
-	}
-else
-	{
-	if((!c2.enabled) && setCamSide) { setCamTop=false; c2.enabled=true; c1.enabled=false; }
-	if((!c1.enabled) && setCamTop) { setCamSide=false; c1.enabled=true; c2.enabled=false; }
-	}
-	
-if(!(CamXpre==CameraX))
-	{
-	GameObject.Find("CameraSide").transform.position.x += 1.5 * (CamXpre-CameraX);
-	GameObject.Find("CameraTop").transform.position.x += 0.1 * (CamXpre-CameraX);
-	CamXpre=CameraX;
-	}
-	
-if(!(C0.c0_side==CamSidepre))
-	{
-	CamSidepre=C0.c0_side;
-	}
-}
-
-function SetLamps(first:boolean):void
-{
-	var l1=(GameObject.Find("Light1")).GetComponent.<Light>();
-	var l2=(GameObject.Find("Light2")).GetComponent.<Light>();
-	if(first)
-		{
-		l1.intensity=0.738;			// Otherwise scene editing is unpleasant...
-		}
-	else
-		{
-		var n_l1=l1.enabled;
-		var n_l2=l2.enabled;
-		if(lightsValue==0) { n_l1=true; n_l2=false; }
-		if(lightsValue==1) { n_l1=false; n_l2=true; }
-		if(lightsValue==2) { n_l1=true; n_l2=true;  }
-		if(!(l1.enabled==n_l1)) l1.enabled=n_l1;
-		if(!(l2.enabled==n_l2)) l2.enabled=n_l2;
-				// adjust lights intensity a bit on too much light set...
-		if((lightsValue>1) && (l1.intensity>0.6)) l1.intensity*=0.5;
-		if((lightsValue<2) && (l1.intensity<0.6)) l1.intensity*=2;
-		}
 }
 
 function Revert_at(ats:String):String
