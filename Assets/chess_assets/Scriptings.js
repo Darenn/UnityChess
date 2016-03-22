@@ -5,13 +5,25 @@ import c0_4unity_chess;
 /**
  * Main script
  * Member variables declarations
- * 1 - GUI elements
- * 2 - Camera
  */
+ 
+// GUI elements
 public var newGameButton : UnityEngine.UI.Button;
 public var takeBackButton : UnityEngine.UI.Button;
 
+// Scene objects
+public var firstLamp : Light;
+public var secondLamp : Light;
+
+// Main camera
 public var mainCamera : Camera;
+
+// Member scripts
+private var lightController: LightController;
+
+// Private member variables
+private final var LAMP_INTENSITY = 0.750f;
+
 
 
 
@@ -23,8 +35,8 @@ var Name = "Various javascripts";
 var FirstStart = true;
 var drawAnim= true;						// Animation /or fastest visual performance by redrawing...
 
-var setCamSide=false;
-var setCamTop=true;
+var setCamSide=true;
+var setCamTop=false;
 
 var lightsValue=1;						// One lamp at the beginning...
 
@@ -81,22 +93,38 @@ var TcpTakeBackWas=false;		// just if user want's it's possible to set board
 var TcpPreMNr=0;					// just to keep last move Nr. for games on chess server
 var TcpPreMCol="";
 
+
+/**
+ *
+ *
+ */
+function Awake()
+{
+	lightController = gameObject.AddComponent.<LightController>();
+}
+
+
 /**
  * Initialize attributes
  */
 function Start ()
 {
-	// TODO
+	// Add event listeners on the GUI buttons
 	newGameButton.onClick.AddListener(function() { HandleNewGameEvent(); });
 	takeBackButton.onClick.AddListener(function() { HandleTakeBackEvent(); });
   
 	HideUselessObjects();
 	
-	// Set the side camera as main camera
-	ActivateCamera(true);
+	// Set the light intensity
+	SetLamps(LAMP_INTENSITY);
 	
-	// Set the light to 1
-	SetLamps(true);
+	// TMP - TO REMOVE
+	var cameraSide = (GameObject.Find("CameraSide")).GetComponent.<Camera>();
+	var cameraTop = (GameObject.Find("CameraTop")).GetComponent.<Camera>();
+	
+	// TMP - TO REMOVE
+	cameraSide.enabled = true;
+	cameraTop.enabled  = false;
 }
 
 /**
@@ -143,8 +171,8 @@ function HideUselessObjects()
  */
 function Update ()
 {
-	ActivateCamera(false);				    // check for camera settings - if swap requested by user..
-	SetLamps(false);						// check for lights slider settings...
+			                // check for camera settings - if swap requested by user..
+	SetLamps(0.8f);						// check for lights slider settings...
 	LookTcp();
 
 	
@@ -227,61 +255,15 @@ else
 }
 
 /**
- * 
+ * Set the intensity of lamps with the specified value 
  *
- * @param first if it is the first call
- * @return void
+ * @param intensity The wanted intensity of the scene lamps
+ * @return void 
  */
-function ActivateCamera(first : boolean) : void
+function SetLamps(intensity : float ) : void
 {
-	var cameraSide = (GameObject.Find("CameraSide")).GetComponent.<Camera>();
-	var cameraTop = (GameObject.Find("CameraTop")).GetComponent.<Camera>();
-
-	if(first)
-	{
-		cameraSide.enabled=setCamSide;
-		cameraTop.enabled=setCamTop;
-	}
-	else
-	{
-	if((!cameraTop.enabled) && setCamSide) { setCamTop=false; cameraTop.enabled=true; cameraSide.enabled=false; }
-	if((!cameraSide.enabled) && setCamTop) { setCamSide=false; cameraSide.enabled=true; cameraTop.enabled=false; }
-	}
-
-	if(!(CamXpre==CameraX))
-	{
-	GameObject.Find("CameraSide").transform.position.x += 1.5 * (CamXpre-CameraX);
-	GameObject.Find("CameraTop").transform.position.x += 0.1 * (CamXpre-CameraX);
-	CamXpre=CameraX;
-	}
-
-	if(!(C0.c0_side==CamSidepre))
-	{
-	CamSidepre=C0.c0_side;
-	}
-}
-
-function SetLamps(first:boolean):void
-{
-	var l1=(GameObject.Find("Light1")).GetComponent.<Light>();
-	var l2=(GameObject.Find("Light2")).GetComponent.<Light>();
-	if(first)
-		{
-		l1.intensity=0.738;			// Otherwise scene editing is unpleasant...
-		}
-	else
-		{
-		var n_l1=l1.enabled;
-		var n_l2=l2.enabled;
-		if(lightsValue==0) { n_l1=true; n_l2=false; }
-		if(lightsValue==1) { n_l1=false; n_l2=true; }
-		if(lightsValue==2) { n_l1=true; n_l2=true;  }
-		if(!(l1.enabled==n_l1)) l1.enabled=n_l1;
-		if(!(l2.enabled==n_l2)) l2.enabled=n_l2;
-				// adjust lights intensity a bit on too much light set...
-		if((lightsValue>1) && (l1.intensity>0.6)) l1.intensity*=0.5;
-		if((lightsValue<2) && (l1.intensity<0.6)) l1.intensity*=2;
-		}
+	firstLamp.intensity = intensity;
+	secondLamp.intensity = intensity;
 }
 
 /**
@@ -716,7 +698,7 @@ function DoPieceMovements():void
 	
 	// if there are moves to do
 	if(C0.c0_moves2do.length>0) {
-		Debug.Log("Il y a un mouvement à faire");
+		Debug.Log("Il y a un mouvement Ã  faire");
 		// if there is an animation to do
 		if(move_animator>0) {
 			// locate where is the piece from, and where it goes
