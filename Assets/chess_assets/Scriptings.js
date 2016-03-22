@@ -15,6 +15,7 @@ public var takeBackButton : UnityEngine.UI.Button;
 public var mainCamera : Camera;
 
 // Member scripts
+private var vrMenuController : VRMenuController;
 private var lightController : LightController;
 private var flagManager : FlagManager;
 
@@ -96,6 +97,7 @@ var TcpPreMCol="";
  */
 function Awake()
 {
+	vrMenuController = GetComponent(VRMenuController);
 	lightController = GetComponent(LightController);
 	flagManager = GetComponent(FlagManager);
 }
@@ -106,10 +108,6 @@ function Awake()
  */
 function Start ()
 {
-	// Add event listeners on the GUI buttons
-	newGameButton.onClick.AddListener(function() { HandleNewGameEvent(); });
-	takeBackButton.onClick.AddListener(function() { HandleTakeBackEvent(); });
-  
 	HideUselessObjects();
 	
 	// Set the light intensity
@@ -123,28 +121,6 @@ function Start ()
 	// TMP - TO REMOVE
 	cameraSide.enabled = true;
 	cameraTop.enabled  = false;
-}
-
-/**
- * This function is called if a mouse-click 
- * is detected on the button NewGameButton
- * It set the button flag to true
- */
-function HandleNewGameEvent()
-{
-    Debug.Log("New Game Button pressed");
-    NewGameFlag = true;
-}
-
-/**
- * This function is called if a mouse-click 
- * is detected on the button TakeBackButton
- * It set the button flag to true
- */
-function HandleTakeBackEvent()
-{
-    Debug.Log("Take Back Button pressed");
-    TakeBackFlag = true;
 }
 
 /**
@@ -255,7 +231,7 @@ else
  * on the GUI.
  */
 function OnGUI () {
-
+	
 	var e : Event = Event.current;
 	
 	if(e.isKey && (Input.anyKey) && (e.keyCode.ToString()=="Escape") )
@@ -957,8 +933,11 @@ engineStatus=0;
 // Takeback and new game starting is like RollBack - one/all moves.
 function RollBackAction():void
 {
-if((TakeBackFlag || NewGameFlag) && (!C0.c0_moving) && (C0.c0_moves2do.length==0) &&
-			((C0.c0_sidemoves==C0.c0_side) || gameover) &&  (drag1_animator==0) && (move_animator==0))
+
+	if((vrMenuController.GetTakeBackFlag() || vrMenuController.GetTakeBackFlag()) 
+		&& (!C0.c0_moving) && (C0.c0_moves2do.length==0) &&
+		((C0.c0_sidemoves==C0.c0_side) || gameover) 
+		&&  (drag1_animator==0) && (move_animator==0))
 	{
 	if(gameover) gameover=false;
 	
@@ -969,21 +948,21 @@ if((TakeBackFlag || NewGameFlag) && (!C0.c0_moving) && (C0.c0_moves2do.length==0
 		var qObj=GameObject.Find(id);
 		if(!(qObj==null)) Destroy(qObj);
 		}	
-	if(TakeBackFlag)
-		{
+	if(vrMenuController.GetTakeBackFlag())
+	{
 		C0.c0_take_back();
 		if(!(C0.c0_sidemoves==C0.c0_side)) C0.c0_take_back();
-		TakeBackFlag=false;
-		}
-	if(NewGameFlag)
-		{
+		vrMenuController.SetTakeBackFlag(false);
+	}
+	if(vrMenuController.GetNewGameFlag())
+	{
 		C0.c0_set_start_position("");
 		C0.c0_sidemoves=1;
 		C0.c0_waitmove=false;
 		C0.c0_side=-C0.c0_side;
 		C0.c0_waitmove=(C0.c0_side==C0.c0_sidemoves);
-		NewGameFlag=false;
-		}	
+		vrMenuController.SetNewGameFlag(false);
+	}	
 	
 	position2board();					// Set current position on the board visually...
 	}
