@@ -11,10 +11,6 @@ import c0_4unity_chess;
 public var newGameButton : UnityEngine.UI.Button;
 public var takeBackButton : UnityEngine.UI.Button;
 
-// Scene objects
-public var firstLamp : Light;
-public var secondLamp : Light;
-
 // Main camera
 public var mainCamera : Camera;
 
@@ -100,7 +96,7 @@ var TcpPreMCol="";
  */
 function Awake()
 {
-	lightController = gameObject.AddComponent.<LightController>();
+	lightController = GetComponent(LightController);
 }
 
 
@@ -116,7 +112,8 @@ function Start ()
 	HideUselessObjects();
 	
 	// Set the light intensity
-	SetLamps(LAMP_INTENSITY);
+	lightController.EnableLight();
+	lightController.SetLightIntensity(LAMP_INTENSITY);
 	
 	// TMP - TO REMOVE
 	var cameraSide = (GameObject.Find("CameraSide")).GetComponent.<Camera>();
@@ -171,8 +168,6 @@ function HideUselessObjects()
  */
 function Update ()
 {
-			                // check for camera settings - if swap requested by user..
-	SetLamps(0.8f);						// check for lights slider settings...
 	LookTcp();
 
 	
@@ -252,18 +247,6 @@ else
 	{
 	DragDetect();						// If mouse pressed on any square...
 	}
-}
-
-/**
- * Set the intensity of lamps with the specified value 
- *
- * @param intensity The wanted intensity of the scene lamps
- * @return void 
- */
-function SetLamps(intensity : float ) : void
-{
-	firstLamp.intensity = intensity;
-	secondLamp.intensity = intensity;
 }
 
 /**
