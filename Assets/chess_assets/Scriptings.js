@@ -3,9 +3,8 @@ import c0_4unity_chess;
 
 
 /**
- *
- *
- *
+ * Main script
+ * Member variables declarations
  */
 public var newGameButton : UnityEngine.UI.Button;
 public var takeBackButton : UnityEngine.UI.Button;
@@ -17,16 +16,9 @@ public var takeBackButton : UnityEngine.UI.Button;
 
 
 
-
-
-
-
-
-
-// This is the main scripting part...
-var Name="Various javascripts";
-var FirstStart=true;
-var drawAnim=true;						// Animation /or fastest visual performance by redrawing...
+var Name = "Various javascripts";
+var FirstStart = true;
+var drawAnim= true;						// Animation /or fastest visual performance by redrawing...
 
 var setCamSide=false;
 var setCamTop=true;
@@ -72,7 +64,7 @@ var StockfishAccessible=false;			// Script sets true on Rybka is accessible...
 var useStockfish=false;					// toggled by user if use...
 
 var TcpAccessible=true;					// Script sets true if chess server is accessible...
-var playTcp=false;							// toggled by user if play...
+var playTcp=true;							// toggled by user if play...
 var statusTcp=0;							// status of connection...
 var TcpMessage="";							// Output on GUI of tcp-connection...
 var TcpMess_scrollPosition: Vector2 = Vector2.zero;
@@ -86,159 +78,158 @@ var TcpTakeBackWas=false;		// just if user want's it's possible to set board
 var TcpPreMNr=0;					// just to keep last move Nr. for games on chess server
 var TcpPreMCol="";
 
-// GUI interface on screen...
 
+/**
+ * Function called when there is an event
+ * on the GUI.
+ */
 function OnGUI () {
 
 	var e : Event = Event.current;
+	
 	if(e.isKey && (Input.anyKey) && (e.keyCode.ToString()=="Escape") )
 	{
-	TcpModeCmd=!TcpModeCmd;		// Turn on/off cmd mode...
-	(GameObject.Find("Script4")).SendMessage("AutoMode",  (TcpModeCmd ? "OFF" : "ON" )); 
+		// Turn on/off cmd mode...
+		TcpModeCmd = !TcpModeCmd;
+		(GameObject.Find("Script4")).SendMessage("AutoMode",  (TcpModeCmd ? "OFF" : "ON" )); 
 	}
 		
 	if(playTcp && TcpModeCmd)
-		{
+	{
 		GUI.Label (Rect (14, Screen.height-70, 16, 24), "$");
-		TcpCmd= GUI.TextArea(Rect (30, Screen.height-70, 200, 24), TcpCmd);
-		}
-	if(TcpMessage.length>0)
-		{
-		if(statusTcp==21)
-			{
-			GUI.Box (Rect (Screen.width - 190, 140, 185, 280), TcpMessage);
-			if(TcpNextGame)
-				{
-				if(GUI.Button (Rect (Screen.width - 100, 340, 80, 30), "Next>")) TcpNextGameStarter();
-				}
-			}
-		else
-			{
-			GUI.Box (Rect ((Screen.width/2-310), 25, 620, Screen.height-50), "Unity3D connection to chess server");
+		TcpCmd = GUI.TextArea(Rect (30, Screen.height-70, 200, 24), TcpCmd);
+	}
 		
-			TcpMess_scrollPosition = GUI.BeginScrollView (Rect ((Screen.width/2-305), 50, 610, Screen.height-100),
-				TcpMess_scrollPosition, Rect ((Screen.width/2-305), 50, 800, 2000));
+	if(TcpMessage.length > 0)
+	{
+		if(statusTcp==21)
+		{
+			GUI.Box (Rect (Screen.width - 190, 140, 185, 280), TcpMessage);
+			
+			if(TcpNextGame)
+			{
+				if(GUI.Button (Rect (Screen.width - 100, 340, 80, 30), "Next>")) TcpNextGameStarter();
+			}
+		}
+		else
+		{
+			GUI.Box (Rect ((Screen.width / 2 - 310), 25, 620, Screen.height - 50), "Unity3D connection to chess server");
+			
+			TcpMess_scrollPosition = GUI.BeginScrollView (Rect ((Screen.width / 2 - 305), 50, 610, Screen.height - 100),
+									 TcpMess_scrollPosition, Rect ((Screen.width / 2 - 305), 50, 800, 2000));
 				
-			TcpMessage = GUI.TextArea (Rect ((Screen.width/2-305), 50, 800, Screen.height+2000-100), TcpMessage);
+			TcpMessage = GUI.TextArea (Rect ((Screen.width / 2 - 305), 50, 800, Screen.height + 2000 - 100), TcpMessage);
 
 			GUI.EndScrollView ();
-			message2show="Wait...";
-			}
+			message2show = "Wait...";
 		}
-
-	if(message2show.length>0)
-		{
+	}
+	
+	
+	if(message2show.length > 0)
+	{
 		GUI.Box (Rect (10, 25, 120, 40), message2show);
-		if(engineStatus==1) { engineStatus=2; }
+		if(engineStatus == 1) { engineStatus = 2; }
 		
 		GUI.Box (Rect (10, 70, 120, 255), "");
-
-		drawAnim = GUI.Toggle (Rect (20, 80, 130, 20), drawAnim, "Animation");
 		
+		// Animation checkBox
+		drawAnim = GUI.Toggle (Rect (20, 80, 130, 20), drawAnim, "Animation"); 
+		
+		// Camera choice checkBox
 		setCamSide = GUI.Toggle (Rect (20, 115, 130, 20), setCamSide, "Top camera");
 		setCamTop = GUI.Toggle (Rect (20, 135, 130, 20), setCamTop, "Side camera");
+		
+		// Slider camera position
 		CameraX = GUI.HorizontalSlider (Rect (20, 165, 100, 30), CameraX , -10, 10);
 		
+		// Label "lamps"
 		GUI.Label (Rect (30, 185, 130, 30), "Lamps");
+		
+		// Slider luminosity
 		lightsValue = GUI.HorizontalSlider (Rect (20, 205, 100, 30), lightsValue, 0.0, 2);
 		
-		GUI.Box (Rect (Screen.width - 130, 90-65, 120, 110), "Promotion");	//-65
+		// Right panel
+		GUI.Box (Rect (Screen.width - 130, 90 - 65, 120, 110), "Promotion");
 		GUI.Label (Rect (Screen.width - 90, 110-65, 90, 22), "Queen");
 		GUI.Label (Rect (Screen.width - 90, 130-65, 90, 22), "Rook");
 		GUI.Label (Rect (Screen.width - 90, 150-65, 90, 22), "Bishop");
 		GUI.Label (Rect (Screen.width - 90, 170-65, 90, 22), "Knight");
 		toPromote = GUI.VerticalSlider (Rect (Screen.width - 110, 115-65, 80, 72), toPromote, 0, 3);
 		
-		if(playTcp)			// chess server mode, just play as it is
+		// chess server mode, just play as it is
+		if(playTcp)			
 		{
 			if(GUI.Button (Rect (20, 240, 100, 30), "Resign")) TcpResign=true;
-
 			if(GUI.Button (Rect (20, 280, 100, 30), "Offer/Acc.Draw")) TcpDraw=true;
 		}
 		else					// various options...
 		{
-		if(GUI.Button (Rect (20, 240, 100, 30), "Take Back")) TakeBackFlag=true;
+			if(GUI.Button (Rect (20, 240, 100, 30), "Take Back")) TakeBackFlag=true;
 		
+			if(GUI.Button (Rect (20, 280, 100, 30), "New Game")) 
+			{
+			    NewGameFlag = true;
+			    Debug.Log("Button pushed");
+			}
 
-
-
-
-
-		    // Spatial GUI button handle
-            //if()
-
-		if(GUI.Button (Rect (20, 280, 100, 30), "New Game")) 
-		{
-		    NewGameFlag = true;
-		    Debug.Log("Button pushed");
-		}
-
-
-
-
-
-
-
-
-
-
-		
-		GUI.Box (Rect (Screen.width - 130, 140, 120, 60), "Chess strength");
-		chess_strength = GUI.HorizontalSlider (Rect (Screen.width - 120, 170, 100, 30), chess_strength, 1, 6);
-		
-		if(jsJesterAccessible)
+			GUI.Box (Rect (Screen.width - 130, 140, 120, 60), "Chess strength");
+			chess_strength = GUI.HorizontalSlider (Rect (Screen.width - 120, 170, 100, 30), chess_strength, 1, 6);
+			
+			if(jsJesterAccessible)
 			{
 			GUI.Box (Rect (Screen.width - 130, 205, 120, 30), "");
 			usejsJester = GUI.Toggle (Rect (Screen.width - 110, 210, 90, 20), usejsJester, "script-code");
 			}
-		if(CraftyAccessible)
+			if(CraftyAccessible)
 			{
 			GUI.Box (Rect (Screen.width - 130, 240, 120, 30), "");
 			useCrafty = GUI.Toggle (Rect (Screen.width - 110, 245, 90, 20), useCrafty, "Use Crafty");
 			}
-		if(RybkaAccessible)
+			if(RybkaAccessible)
 			{
 			GUI.Box (Rect (Screen.width - 130, 275, 120, 30), "");
 			useRybka = GUI.Toggle (Rect (Screen.width - 110, 280, 90, 20), useRybka, "or Rybka");
 			}	
-		if(StockfishAccessible)
+			if(StockfishAccessible)
 			{
 			GUI.Box (Rect (Screen.width - 130, 310, 120, 30), "");
 			useStockfish = GUI.Toggle (Rect (Screen.width - 110, 315, 90, 20), useStockfish, "or Stockfish");
 			}	
-		if(TcpAccessible)
+			if(TcpAccessible)
 			{
 			GUI.Box (Rect (Screen.width - 130, 345, 120, 30), "");
 			playTcp = GUI.Toggle (Rect (Screen.width - 116, 350, 106, 20), playTcp, "freechess.org");
 			}
 		}
-		
-		}
+	}
 }
 
+
 /**
- *
- *
+ * This function is called if a mouse-click 
+ * is detected on the button NewGameButton
+ * It set the button flag to true
  */
 function HandleNewGameEvent()
 {
-	// TODO
-    Debug.Log("CECI EST UN TEST");
+    Debug.Log("New Game Button pressed");
+    NewGameFlag = true;
 }
 
 /**
- *
- *
- *
+ * This function is called if a mouse-click 
+ * is detected on the button TakeBackButton
+ * It set the button flag to true
  */
 function HandleTakeBackEvent()
 {
-    // TODO
+    Debug.Log("Take Back Button pressed");
+    TakeBackFlag = true;
 }
 
 /**
- *
- *
+ * Initialize attributes
  */
 function Start ()
 {
