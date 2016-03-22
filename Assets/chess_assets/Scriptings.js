@@ -220,7 +220,7 @@ function OnGUI () {
  *
  *
  */
-function NewGameEvent()
+function HandleNewGameEvent()
 {
 	// TODO
     Debug.Log("CECI EST UN TEST");
@@ -231,7 +231,7 @@ function NewGameEvent()
  *
  *
  */
-function TakeBackEvent()
+function HandleTakeBackEvent()
 {
     // TODO
 }
@@ -243,7 +243,9 @@ function TakeBackEvent()
 function Start ()
 {
 	// TODO
-	newGameButton.onClick.AddListener(function() { NewGameEvent(); });
+	newGameButton.onClick.AddListener(function() { HandleNewGameEvent(); });
+	takeBackButton.onClick.AddListener(function() { HandleTakeBackEvent(); });
+  
 
 
 
