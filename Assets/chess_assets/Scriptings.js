@@ -696,37 +696,53 @@ return ret;
 function DoPieceMovements():void
 {
 	var anim : Animator;
+	
 	// a piece is dragged
-	if(drag1_animator>0)
-		{
+	if(drag1_animator>0) {
 		Debug.Log("piece_"+drag1_at+" is dragged");
 		GameObject.Find("piece_"+drag1_at).transform.position.y-=(5.5-drag1_animator)*0.06;
 		drag1_animator--;
-		}
-	if(C0.c0_moves2do.length>0)
-		{
+	}
+	
+	// if there are moves to do
+	if(C0.c0_moves2do.length>0) {
 		Debug.Log("Il y a un mouvement à faire");
-		if(move_animator>0)
-			{
+		// if there is an animation to do
+		if(move_animator>0) {
+			// locate where is the piece from, and where it goes
 			Debug.Log("move_animator>0");
 			var move_from=C0.c0_moves2do.Substring(0,2);
 			var move_to=C0.c0_moves2do.Substring(2,2);
 			var bc=(((C0.c0_moves2do.length>4) && (C0.c0_moves2do.Substring(4,1)=="[")) ? C0.c0_moves2do.Substring(5,1) : " ");
-	
+			
+			// get the piece relative to the from position
 			var mObj:GameObject;
 			mObj=GameObject.Find("piece_"+move_from);
 			
+			// launch the run animation on the piece
+			anim = mObj.GetComponent(Animator);
+			if (anim != null) {
+				Debug.Log("Je bouge" + "piece_"+move_from);
+				if (!anim.GetBool("IsMoving"))
+					anim.SetBool("IsMoving", true);
+			}
+			
+			
 			var pieceat=((("QRBN").IndexOf(bc)>=0) ? "p" : (C0.c0_D_what_at(move_to)).Substring(1,1));
+			
+			// get the piece color et the piece type
 			var piececolor=(C0.c0_D_what_at(move_to)).Substring(0,1);
 			var piecetype=piecelongtype(pieceat,piececolor);
 
 			var mfrom=PiecePosition(piecetype,move_from);
 			var mto=PiecePosition(piecetype,move_to);
-						// piece moves constantly towards the square...
+			
+			// piece moves constantly towards the square
 			mObj.transform.position =  mfrom + ((mto - mfrom)/10 * (11-move_animator));
-						// a little jump for knight and castling rook...
+			
+			// a little jump for knight and castling rook
 			if((piecetype.IndexOf("knight")>=0)  || ((bc=="0") && (piecetype=="rook")))
-						mObj.transform.position.y+=(move_animator-(5-(move_animator>5?5:move_animator))+3)*0.2;
+				mObj.transform.position.y+=(move_animator-(5-(move_animator>5?5:move_animator))+3)*0.2;
 	
 			move_animator--;
 			if((!drawAnim) || (move_animator==3))		// If a piece was captured and moving near...
@@ -753,7 +769,7 @@ function DoPieceMovements():void
 				if (anim != null) {
 					Debug.Log("Je stop" + "piece_"+move_from);
 					anim.SetBool("IsMoving", false);
-					}
+				}
 
 					// If a pawn becomes a better piece...
 				if(("QRBN").IndexOf(bc)>=0)
