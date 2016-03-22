@@ -15,7 +15,8 @@ public var takeBackButton : UnityEngine.UI.Button;
 public var mainCamera : Camera;
 
 // Member scripts
-private var lightController: LightController;
+private var lightController : LightController;
+private var flagManager : FlagManager;
 
 // Private member variables
 private final var LAMP_INTENSITY = 0.750f;
@@ -27,7 +28,7 @@ private final var LAMP_INTENSITY = 0.750f;
 
 
 
-var Name = "Various javascripts";
+//var Name = "Various javascripts";
 var FirstStart = true;
 var drawAnim= true;						// Animation /or fastest visual performance by redrawing...
 
@@ -97,6 +98,7 @@ var TcpPreMCol="";
 function Awake()
 {
 	lightController = GetComponent(LightController);
+	flagManager = GetComponent(FlagManager);
 }
 
 
