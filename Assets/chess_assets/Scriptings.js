@@ -220,7 +220,11 @@ function OnGUI () {
  *
  *
  */
+<<<<<<< HEAD
 function HandleNewGameEvent()
+=======
+function NewGameEvent()
+>>>>>>> fe59c877a0d1ab0e1386cf95a9e81ac836ec8e13
 {
 	// TODO
     Debug.Log("CECI EST UN TEST");
@@ -231,7 +235,11 @@ function HandleNewGameEvent()
  *
  *
  */
+<<<<<<< HEAD
 function HandleTakeBackEvent()
+=======
+function TakeBackEvent()
+>>>>>>> fe59c877a0d1ab0e1386cf95a9e81ac836ec8e13
 {
     // TODO
 }
@@ -243,10 +251,14 @@ function HandleTakeBackEvent()
 function Start ()
 {
 	// TODO
+<<<<<<< HEAD
 	newGameButton.onClick.AddListener(function() { HandleNewGameEvent(); });
 	takeBackButton.onClick.AddListener(function() { 
   
 
+=======
+	newGameButton.onClick.AddListener(function() { NewGameEvent(); });
+>>>>>>> fe59c877a0d1ab0e1386cf95a9e81ac836ec8e13
 
 
 
