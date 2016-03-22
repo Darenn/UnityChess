@@ -31,7 +31,6 @@ private final var LAMP_INTENSITY = 0.750f;
 
 //var Name = "Various javascripts";
 var FirstStart = true;
-var drawAnim= true;						// Animation /or fastest visual performance by redrawing...
 
 var setCamSide=true;
 var setCamTop=false;
@@ -646,27 +645,49 @@ function piecelongtype(figure1:String,color1:String):String
 	return ret;
 }
 
+private function doAttackAnimation(attacker : GameObject, attacked : GameObject) {
+	// Active the preparing animation for the other piece
+	anim = attacker.GetComponent(Animator);
+	if (anim != null) {
+		anim.SetBool("IsMoving", false);
+		anim.SetBool("IsPreparing", true);
+	}
+	// Active the preparing animation for the piece attacking
+	anim = attacked.GetComponent(Animator);
+	if (anim != null) {
+		anim.SetBool("IsMoving", false);
+		anim.SetBool("IsPreparing", true);
+	}
+	Debug.Log("I'm here !");
+	isWaiting = true;
+	yield WaitForSeconds(4);
+	isWaiting = false;
+	Debug.Log("I'm here now !");
+	Destroy (attacked);
+}
+
 public var speed : float = 1; // speed of animations
 public var distanceOfAttack : float = 30; // distance where the piece will attack
+public var timeBeforeAttack : float = 10; // in ms
+public var drawAnim : Boolean = false; // if animations are activated
 
 private var isAnimating : Boolean = false;
+private var isWaiting : boolean = false; // wait some time to humans
 
-function DoPieceMovements():void
+function DoPieceMovements(): IEnumerable
 {
 	var anim : Animator;
 	
 	// a piece is dragged
 	if(drag1_animator>0) {
-		Debug.Log("piece_"+drag1_at+" is dragged");
 		GameObject.Find("piece_"+drag1_at).transform.position.y-=(5.5-drag1_animator)*0.06;
 		drag1_animator--;
 	}
 	
 	// if there are moves to do
-	if(C0.c0_moves2do.length > 0) {
-		Debug.Log("Il y a un mouvement à faire");
+	if(C0.c0_moves2do.length > 0 && !isWaiting) {
 		Debug.Log(C0.c0_moves2do);
-		// if there is an animation to do
+		// if there is an animation animating
 		if(isAnimating) {
 			// locate where is the piece from, and where it goes with chess coordonnates (a2)
 			var move_from : String =C0.c0_moves2do.Substring(0,2);
@@ -679,7 +700,6 @@ function DoPieceMovements():void
 			// launch the run animation on the piece
 			anim = mObj.GetComponent(Animator);
 			if (anim != null) {
-				Debug.Log("!!!!!!Je bouge" + "piece_"+move_from);
 				if (!anim.GetBool("IsMoving"))
 					anim.SetBool("IsMoving", true);
 			}
@@ -701,21 +721,21 @@ function DoPieceMovements():void
 			mObj.transform.position = Vector3.MoveTowards(mObj.transform.position, mto, step);
 			
 			// TODO jump for knight and castling rook
-			if((piecetype.IndexOf("knight")>=0)  || ((bc=="0") && (piecetype=="rook")))
+			//if((piecetype.IndexOf("knight")>=0)  || ((bc=="0") && (piecetype=="rook")))
 				//mObj.transform.position.y+=(move_animator-(5-(move_animator>5?5:move_animator))+3)*0.2;
 			
 			// If a piece was captured and moving near
 			if((!drawAnim) || (Vector3.Distance(mObj.transform.position, mto) <= distanceOfAttack))	{
 				var dObj : GameObject = GameObject.Find("piece_"+ move_to);
-				if(dObj==null) {
-				// en passant
+				if(dObj == null) { // we just move near
 					if((piecetype=="pawn") && (!(move_from.Substring(0,1)==move_to.Substring(0,1)))) {
 						dObj = GameObject.Find("piece_"+ move_to.Substring(0,1)+move_from.Substring(1,1));
-						if(!(dObj==null)) 
-							Destroy (dObj);
+						if(dObj != null) {
+							//doAttackAnimation(mObj, dObj);
+						}
 					}
 				} else {
-					Destroy (dObj);
+					doAttackAnimation(mObj, dObj);
 				}
 			}
 			
@@ -826,7 +846,7 @@ if(engineStatus==2)
 	}
 }
 
-	// this call receives answer from the chess engine... (from other object)
+// this call receives answer from the chess engine... (from other object)
 function EngineAnswer(answer:String):void
 {
 var move="";
