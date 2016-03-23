@@ -30,7 +30,6 @@ private final var LAMP_INTENSITY = 0.750f;
 var FirstStart = true;
 
 var setCamSide=true;
-var setCamTop=false;
 
 var lightsValue=1;						// One lamp at the beginning...
 
@@ -84,11 +83,9 @@ function Start ()
 	
 	// TMP - TO REMOVE
 	var cameraSide = Camera.main;
-	var cameraTop = (GameObject.Find("CameraTop")).GetComponent.<Camera>();
 	
 	// TMP - TO REMOVE
 	cameraSide.enabled = true;
-	cameraTop.enabled  = false;
 }
 
 /**
@@ -148,7 +145,7 @@ function OnGUI () {
 		
 		// Camera choice checkBox
 		setCamSide = GUI.Toggle (Rect (20, 115, 130, 20), setCamSide, "Top camera");
-		setCamTop = GUI.Toggle (Rect (20, 135, 130, 20), setCamTop, "Side camera");
+//		setCamTop = GUI.Toggle (Rect (20, 135, 130, 20), setCamTop, "Side camera");
 		
 		// Slider camera position
 		CameraX = GUI.HorizontalSlider (Rect (20, 165, 100, 30), CameraX , -10, 10);
@@ -352,7 +349,7 @@ TransformVisualPieceToH1("MoveParticle","c3");
 function TransformVisualPieceToH1(piecetype,piece_from):void
 {
 // Blender complect of pieces is good way to create models and put to Unity3D, just copy to assets folder,
-var Obj = GameObject.Find( ((piecetype.IndexOf("Particle")>=0) ? piecetype :  "chessboard_min2/"+piecetype) );
+var Obj = GameObject.Find( ((piecetype.IndexOf("Particle")>=0) ? piecetype :  "Chessboard/"+piecetype) );
 var a8Obj = GameObject.Find("black_rook_scaled_a8");
 var h1Obj = GameObject.Find("white_rook_scaled_h1");
 var dx=(h1Obj.transform.position.x-a8Obj.transform.position.x)/7;
@@ -369,13 +366,13 @@ function HideBlankPieces():void
 {
 GameObject.Find("black_rook_scaled_a8").GetComponent.<Renderer>().enabled = false;
 GameObject.Find("white_rook_scaled_h1").GetComponent.<Renderer>().enabled=false;
-GameObject.Find("chessboard_min2/pawn").GetComponent.<Renderer>().enabled=false;
-GameObject.Find("chessboard_min2/knight").GetComponent.<Renderer>().enabled=false;
-GameObject.Find("chessboard_min2/oponents_knight").GetComponent.<Renderer>().enabled=false;
-GameObject.Find("chessboard_min2/bishop").GetComponent.<Renderer>().enabled=false;
-GameObject.Find("chessboard_min2/rook").GetComponent.<Renderer>().enabled=false;
-GameObject.Find("chessboard_min2/queen").GetComponent.<Renderer>().enabled=false;
-GameObject.Find("chessboard_min2/king").GetComponent.<Renderer>().enabled=false;
+GameObject.Find("Chessboard/pawn").GetComponent.<Renderer>().enabled=false;
+GameObject.Find("Chessboard/knight").GetComponent.<Renderer>().enabled=false;
+GameObject.Find("Chessboard/oponents_knight").GetComponent.<Renderer>().enabled=false;
+GameObject.Find("Chessboard/bishop").GetComponent.<Renderer>().enabled=false;
+GameObject.Find("Chessboard/rook").GetComponent.<Renderer>().enabled=false;
+GameObject.Find("Chessboard/queen").GetComponent.<Renderer>().enabled=false;
+GameObject.Find("Chessboard/king").GetComponent.<Renderer>().enabled=false;
 
 GameObject.Find("MoveParticle").GetComponent.<Renderer>().enabled=false;
 GameObject.Find("DragParticle").GetComponent.<Renderer>().enabled=false;
@@ -397,7 +394,7 @@ function CreatePiece(piece_color:String,piecetype:String,piece_at:String):void
 var toObj : GameObject;
 var rotation : Vector3;
 
-var fromObj = GameObject.Find("chessboard_min2/"+piecetype);
+var fromObj = GameObject.Find("Chessboard/"+piecetype);
 var piece_position= PiecePosition(piecetype,piece_at);
 
 // if it's a black and a pawn, reverse the rotation
@@ -427,7 +424,7 @@ var drx=-(h1Obj.transform.rotation.x-a8Obj.transform.rotation.x)/7;
 var dry=-(h1Obj.transform.rotation.y-a8Obj.transform.rotation.y)/7;
 var drz=-(h1Obj.transform.rotation.z-a8Obj.transform.rotation.z)/7;
 
-var fromObj = GameObject.Find( ((piecetype.IndexOf("Particle")>=0) ? piecetype :  "chessboard_min2/"+piecetype) );
+var fromObj = GameObject.Find( ((piecetype.IndexOf("Particle")>=0) ? piecetype :  "Chessboard/"+piecetype) );
 
 var h=System.Convert.ToInt32(piece_at[0])-System.Convert.ToInt32("a"[0]);
 var v=System.Convert.ToInt32(piece_at.Substring(1,1));
