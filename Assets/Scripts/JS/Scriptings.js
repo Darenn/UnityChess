@@ -517,7 +517,6 @@ function DoPieceMovements(): IEnumerable
 	
 	// if there are moves to do
 	if(C0.c0_moves2do.length > 0 && !isWaiting) {
-		Debug.Log(C0.c0_moves2do);
 		// if there is an animation animating
 		if(isAnimating) {
 			// locate where is the piece from, and where it goes with chess coordonnates (a2)
@@ -557,7 +556,6 @@ function DoPieceMovements(): IEnumerable
 			
 			// If a piece was captured and moving near
 			if((Vector3.Distance(mObj.transform.position, mto) <= distanceOfAttack))	{
-				Debug.Log("Distance : " + Vector3.Distance(mObj.transform.position, mto));
 				var dObj : GameObject = GameObject.Find("piece_"+ move_to);
 				if(dObj == null) { // we just move near
 					if((piecetype=="pawn") && (!(move_from.Substring(0,1)==move_to.Substring(0,1)))) {
