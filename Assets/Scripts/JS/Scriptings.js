@@ -98,6 +98,8 @@ function Update ()
 	MouseMovement();			// Mouse movement events, suggest legal moves...
 	RollBackAction();			// If a takeback should be performed/ or new game started..
 	DragDetect();				// If mouse pressed on any square...
+	
+	if(engineStatus == 1) { engineStatus = 2; }
 }
 
 /**
@@ -127,58 +129,6 @@ function CreateChessboard() : void
 				chessboardCase.name=id;
 			}
 		 }
-	}
-}
-
-/**
- * Function called when there is an event
- * on the GUI.
- */
-function OnGUI () {
-	
-	// var e : Event = Event.current;
-	
-	if(message2show.length > 0)
-	{
-		// GUI.Box (Rect (10, 25, 120, 40), message2show);
-		if(engineStatus == 1) { engineStatus = 2; }
-		
-		/*GUI.Box (Rect (10, 70, 120, 255), "");
-		
-		// Animation checkBox
-		drawAnim = GUI.Toggle (Rect (20, 80, 130, 20), drawAnim, "Animation"); 
-		
-		// Camera choice checkBox
-		setCamSide = GUI.Toggle (Rect (20, 115, 130, 20), setCamSide, "Top camera");
-		setCamTop = GUI.Toggle (Rect (20, 135, 130, 20), setCamTop, "Side camera");
-		
-		// Slider camera position
-		CameraX = GUI.HorizontalSlider (Rect (20, 165, 100, 30), CameraX , -10, 10);
-		
-		// Label "lamps"
-		GUI.Label (Rect (30, 185, 130, 30), "Lamps");
-		
-		// Slider luminosity
-		lightsValue = GUI.HorizontalSlider (Rect (20, 205, 100, 30), lightsValue, 0.0, 2);
-		
-		// Right panel
-		GUI.Box (Rect (Screen.width - 130, 90 - 65, 120, 110), "Promotion");
-		GUI.Label (Rect (Screen.width - 90, 110-65, 90, 22), "Queen");
-		GUI.Label (Rect (Screen.width - 90, 130-65, 90, 22), "Rook");
-		GUI.Label (Rect (Screen.width - 90, 150-65, 90, 22), "Bishop");
-		GUI.Label (Rect (Screen.width - 90, 170-65, 90, 22), "Knight");
-		toPromote = GUI.VerticalSlider (Rect (Screen.width - 110, 115-65, 80, 72), toPromote, 0, 3);
-		
-		if(GUI.Button (Rect (20, 240, 100, 30), "Take Back")) TakeBackFlag=true;
-	
-		if(GUI.Button (Rect (20, 280, 100, 30), "New Game")) 
-		{
-		    NewGameFlag = true;
-		    Debug.Log("Button pushed");
-		}
-
-		GUI.Box (Rect (Screen.width - 130, 140, 120, 60), "Chess strength");
-		chess_strength = GUI.HorizontalSlider (Rect (Screen.width - 120, 170, 100, 30), chess_strength, 1, 6);*/
 	}
 }
 
