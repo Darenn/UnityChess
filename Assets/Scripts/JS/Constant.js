@@ -17,6 +17,7 @@ public class Constant extends MonoBehaviour
 	public final var KING_NAME   = "king";
 	public final var KNIGHT_NAME = "knight";
 	public final var PAWN_NAME   = "pawn";
+	public final var ROOK_NAME   = "rook";
 	
 	public final var OP_KNIGHT_NAME = "oponents_knight";
 	public final var DRAG_PARTICLE  = "DragParticle";

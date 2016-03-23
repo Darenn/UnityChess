@@ -179,17 +179,56 @@ function InitPieceStartPosition(pieceType : String, pieceFrom : String) : void
 function HideBlankPieces() : void
 {
 	GameObject.Find(constant.BLACK_ROOK).GetComponent.<Renderer>().enabled = false;
-	GameObject.Find(constant.WHITE_ROOK).GetComponent.<Renderer>().enabled=false;
-	GameObject.Find(constant.BOARD_NAME + "pawn").GetComponent.<Renderer>().enabled=false;
-	GameObject.Find(constant.BOARD_NAME + "knight").GetComponent.<Renderer>().enabled=false;
-	GameObject.Find(constant.BOARD_NAME + "oponents_knight").GetComponent.<Renderer>().enabled=false;
-	GameObject.Find(constant.BOARD_NAME + "bishop").GetComponent.<Renderer>().enabled=false;
-	GameObject.Find(constant.BOARD_NAME + "rook").GetComponent.<Renderer>().enabled=false;
-	GameObject.Find(constant.BOARD_NAME + "queen").GetComponent.<Renderer>().enabled=false;
-	GameObject.Find(constant.BOARD_NAME + "king").GetComponent.<Renderer>().enabled=false;
+	GameObject.Find(constant.WHITE_ROOK).GetComponent.<Renderer>().enabled = false;
+	
+	GameObject.Find(constant.BOARD_NAME + constant.OP_KNIGHT_NAME).GetComponent(Renderer).enabled = false;
+	GameObject.Find(constant.BOARD_NAME + constant.KNIGHT_NAME).GetComponent(Renderer).enabled = false;
+	GameObject.Find(constant.BOARD_NAME + constant.BISHOP_NAME).GetComponent(Renderer).enabled = false;
+	GameObject.Find(constant.BOARD_NAME + constant.QUEEN_NAME).GetComponent(Renderer)).enabled = false;
+	GameObject.Find(constant.BOARD_NAME + constant.PAWN_NAME).GetComponent(Renderer).enabled = false;
+	GameObject.Find(constant.BOARD_NAME + constant.ROOK_NAME).GetComponent(Renderer).enabled = false;
+	GameObject.Find(constant.BOARD_NAME + constant.KING_NAME).GetComponent(Renderer).enabled = false;
 
-	GameObject.Find("MoveParticle").GetComponent.<Renderer>().enabled=false;
-	GameObject.Find("DragParticle").GetComponent.<Renderer>().enabled=false;
+	GameObject.Find(constant.MOVE_PARTICLE).GetComponent.<Renderer>().enabled = false;
+	GameObject.Find(constant.DRAG_PARTICLE).GetComponent.<Renderer>().enabled = false;
+}
+
+/**
+ * Create two particle system
+ * TODO - Create a particle controller ?
+ * 
+ * @return void
+ */
+function CreateActiveParticles() : void
+{
+	var particleSystem_1 = GameObject.Find(constant.MOVE_PARTICLE);
+	var particleSystem_2 = GameObject.Find(constant.DRAG_PARTICLE);
+
+	activeParticles_1 = Instantiate(particleSystem_1, 
+		particleSystem_1.transform.position, 
+		particleSystem_1.transform.rotation);
+		
+	activeParticles_2 = Instantiate(particleSystem_2, 
+		particleSystem_2.transform.position, 
+		particleSystem_2.transform.rotation);
+	
+	activeParticles_1.name = constant.MOVE_PARTICLE + "_active";
+	activeParticles_2.name = constant.DRAG_PARTICLE + "_active";
+}
+
+/**
+ *
+ */
+function position2board():void
+{
+var c0_Zposition=C0.c0_position;
+for(var c0_i=0;c0_Zposition.length>c0_i; c0_i+=5)
+	{
+	var c0_Zcolor=c0_Zposition.Substring(c0_i,1);
+	var c0_Zfigure=c0_Zposition.Substring(c0_i+1,1);
+	var c0_Z_at = c0_Zposition.Substring(c0_i+2,2);
+	CreatePiece(c0_Zcolor,piecelongtype(c0_Zfigure,c0_Zcolor),c0_Z_at);
+	}
 }
 
 /**
@@ -332,33 +371,6 @@ function DragDetect():void
 		}
 }
 
-function HideBlankPieces():void
-{
-GameObject.Find("black_rook_scaled_a8").GetComponent.<Renderer>().enabled = false;
-GameObject.Find("white_rook_scaled_h1").GetComponent.<Renderer>().enabled=false;
-GameObject.Find(constant.BOARD_NAME + "pawn").GetComponent.<Renderer>().enabled=false;
-GameObject.Find(constant.BOARD_NAME + "knight").GetComponent.<Renderer>().enabled=false;
-GameObject.Find(constant.BOARD_NAME + "oponents_knight").GetComponent.<Renderer>().enabled=false;
-GameObject.Find(constant.BOARD_NAME + "bishop").GetComponent.<Renderer>().enabled=false;
-GameObject.Find(constant.BOARD_NAME + "rook").GetComponent.<Renderer>().enabled=false;
-GameObject.Find(constant.BOARD_NAME + "queen").GetComponent.<Renderer>().enabled=false;
-GameObject.Find(constant.BOARD_NAME + "king").GetComponent.<Renderer>().enabled=false;
-
-GameObject.Find("MoveParticle").GetComponent.<Renderer>().enabled=false;
-GameObject.Find("DragParticle").GetComponent.<Renderer>().enabled=false;
-}
-
-function CreateActiveParticles():void
-{
-var p1Obj = GameObject.Find("MoveParticle");
-var p2Obj = GameObject.Find("DragParticle");
-
-toObj1=Instantiate(p1Obj, p1Obj.transform.position, p1Obj.transform.rotation); 
-toObj1.name="MoveParticle_active";
-toObj2=Instantiate(p2Obj, p2Obj.transform.position, p2Obj.transform.rotation); 
-toObj2.name="DragParticle_active";
-}
-
 function CreatePiece(piece_color:String,piecetype:String,piece_at:String):void
 {
 var toObj : GameObject;
@@ -412,17 +424,7 @@ var v1=(v-1)*1.04;
 return (fromObj.transform.position+ Vector3(-dx*h1,-dy*0.6*(Mathf.Sqrt(Mathf.Pow(h1,2)+Mathf.Pow(v1,2))),-dz*v1));
 }
 
-function position2board():void
-{
-var c0_Zposition=C0.c0_position;
-for(var c0_i=0;c0_Zposition.length>c0_i; c0_i+=5)
-	{
-	var c0_Zcolor=c0_Zposition.Substring(c0_i,1);
-	var c0_Zfigure=c0_Zposition.Substring(c0_i+1,1);
-	var c0_Z_at = c0_Zposition.Substring(c0_i+2,2);
-	CreatePiece(c0_Zcolor,piecelongtype(c0_Zfigure,c0_Zcolor),c0_Z_at);
-	}
-}
+
 
 function piecelongtype(figure1:String,color1:String):String
 {
