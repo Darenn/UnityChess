@@ -74,7 +74,7 @@ function Start ()
 	lightController.SetLightIntensity(LAMP_INTENSITY);
 	
 	// could be right in Start(), anyway it's the same..., sometimes good to wait a bit while all the objects are being created...
-	PlanesOnBoard();					// Planes needed for mouse drag... (a ray from camera to this rigibody object is catched)...
+	CreateChessboard();
 	TransformVisualAllToH1();		    // The board contains blank-pieces (to clone from) just on some squares. Moving all of them to h1... 
 
 	C0.c0_side=1;						// This side is white.   For black set -1
@@ -88,6 +88,7 @@ function Start ()
 }
 
 /**
+ * Called once per Frame
  * TODO
  */
 function Update ()
@@ -97,6 +98,33 @@ function Update ()
 	MouseMovement();			// Mouse movement events, suggest legal moves...
 	RollBackAction();			// If a takeback should be performed/ or new game started..
 	DragDetect();				// If mouse pressed on any square...
+}
+
+/**
+ * TODO
+ */
+function CreateChessboard() : void
+{
+	var toObj: GameObject;
+	var a8Obj = GameObject.Find("plane_a8");
+	var h1Obj = GameObject.Find("plane_h1");
+	var dx=(h1Obj.transform.position.x-a8Obj.transform.position.x)/7;
+	var dy=(h1Obj.transform.position.y-a8Obj.transform.position.y)/7;
+	var dz=(h1Obj.transform.position.z-a8Obj.transform.position.z)/7;
+	
+	for(var h = 0; h < 8; h++)
+	{
+		 for(var v = 8; v > 0; v--)
+		 {
+			var id = "plane_" + System.Convert.ToChar(System.Convert.ToInt32("a"[0]) + h ) + v.ToString();
+			if((!(id=="plane_a8")) && (!(id=="plane_h1"))) 
+			{
+				toObj=Instantiate(a8Obj, a8Obj.transform.position + Vector3(dx*h,dy*(Mathf.Sqrt(Mathf.Pow(h,2)+Mathf.Pow((8-v),2))),
+						dz*(8-v)),  a8Obj.transform.rotation); 
+				toObj.name=id;
+			}
+		 }
+	}
 }
 
 /**
@@ -237,28 +265,6 @@ function DragDetect():void
 		}
 		}
 		}
-}
-
-function PlanesOnBoard():void
-{
-var toObj: GameObject;
-var a8Obj = GameObject.Find("plane_a8");
-var h1Obj = GameObject.Find("plane_h1");
-var dx=(h1Obj.transform.position.x-a8Obj.transform.position.x)/7;
-var dy=(h1Obj.transform.position.y-a8Obj.transform.position.y)/7;
-var dz=(h1Obj.transform.position.z-a8Obj.transform.position.z)/7;
-
-for(var h=0;h<8;h++)
- for(var v=8;v>0;v--)
- {
-  var id="plane_"+System.Convert.ToChar(System.Convert.ToInt32("a"[0])+h)+v.ToString();
-  if((!(id=="plane_a8"))&&(!(id=="plane_h1"))) 
-	{
-	toObj=Instantiate(a8Obj, a8Obj.transform.position+ Vector3(dx*h,dy*(Mathf.Sqrt(Mathf.Pow(h,2)+Mathf.Pow((8-v),2))),
-			dz*(8-v)),  a8Obj.transform.rotation); 
-    toObj.name=id;
-	}
- }
 }
 
 function TransformVisualAllToH1():void
