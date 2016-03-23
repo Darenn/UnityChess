@@ -184,7 +184,7 @@ function HideBlankPieces() : void
 	GameObject.Find(constant.BOARD_NAME + constant.OP_KNIGHT_NAME).GetComponent(Renderer).enabled = false;
 	GameObject.Find(constant.BOARD_NAME + constant.KNIGHT_NAME).GetComponent(Renderer).enabled = false;
 	GameObject.Find(constant.BOARD_NAME + constant.BISHOP_NAME).GetComponent(Renderer).enabled = false;
-	GameObject.Find(constant.BOARD_NAME + constant.QUEEN_NAME).GetComponent(Renderer)).enabled = false;
+	GameObject.Find(constant.BOARD_NAME + constant.QUEEN_NAME).GetComponent(Renderer).enabled = false;
 	GameObject.Find(constant.BOARD_NAME + constant.PAWN_NAME).GetComponent(Renderer).enabled = false;
 	GameObject.Find(constant.BOARD_NAME + constant.ROOK_NAME).GetComponent(Renderer).enabled = false;
 	GameObject.Find(constant.BOARD_NAME + constant.KING_NAME).GetComponent(Renderer).enabled = false;
