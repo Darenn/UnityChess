@@ -74,7 +74,7 @@ function Start ()
 	lightController.SetLightIntensity(LAMP_INTENSITY);
 	
 	// could be right in Start(), anyway it's the same..., sometimes good to wait a bit while all the objects are being created...
-	CreateChessboard();
+	PlanesOnBoard();					// Planes needed for mouse drag... (a ray from camera to this rigibody object is catched)...
 	TransformVisualAllToH1();		    // The board contains blank-pieces (to clone from) just on some squares. Moving all of them to h1... 
 
 	C0.c0_side=1;						// This side is white.   For black set -1
@@ -88,7 +88,6 @@ function Start ()
 }
 
 /**
- * Called once per Frame
  * TODO
  */
 function Update ()
@@ -101,34 +100,60 @@ function Update ()
 }
 
 /**
- * TODO
+ * Function called when there is an event
+ * on the GUI.
  */
-function CreateChessboard() : void
-{
-	var toObj: GameObject;
-	var a8Obj = GameObject.Find("plane_a8");
-	var h1Obj = GameObject.Find("plane_h1");
-	var dx=(h1Obj.transform.position.x-a8Obj.transform.position.x)/7;
-	var dy=(h1Obj.transform.position.y-a8Obj.transform.position.y)/7;
-	var dz=(h1Obj.transform.position.z-a8Obj.transform.position.z)/7;
+function OnGUI () {
 	
-	for(var h = 0; h < 8; h++)
+	var e : Event = Event.current;
+	
+	if(message2show.length > 0)
 	{
-		 for(var v = 8; v > 0; v--)
-		 {
-			var id = "plane_" + System.Convert.ToChar(System.Convert.ToInt32("a"[0]) + h ) + v.ToString();
-			if((!(id=="plane_a8")) && (!(id=="plane_h1"))) 
-			{
-				toObj=Instantiate(a8Obj, a8Obj.transform.position + Vector3(dx*h,dy*(Mathf.Sqrt(Mathf.Pow(h,2)+Mathf.Pow((8-v),2))),
-						dz*(8-v)),  a8Obj.transform.rotation); 
-				toObj.name=id;
-			}
-		 }
+		GUI.Box (Rect (10, 25, 120, 40), message2show);
+		if(engineStatus == 1) { engineStatus = 2; }
+		
+		GUI.Box (Rect (10, 70, 120, 255), "");
+		
+		// Animation checkBox
+		drawAnim = GUI.Toggle (Rect (20, 80, 130, 20), drawAnim, "Animation"); 
+		
+		// Camera choice checkBox
+		setCamSide = GUI.Toggle (Rect (20, 115, 130, 20), setCamSide, "Top camera");
+		setCamTop = GUI.Toggle (Rect (20, 135, 130, 20), setCamTop, "Side camera");
+		
+		// Slider camera position
+		CameraX = GUI.HorizontalSlider (Rect (20, 165, 100, 30), CameraX , -10, 10);
+		
+		// Label "lamps"
+		GUI.Label (Rect (30, 185, 130, 30), "Lamps");
+		
+		// Slider luminosity
+		lightsValue = GUI.HorizontalSlider (Rect (20, 205, 100, 30), lightsValue, 0.0, 2);
+		
+		// Right panel
+		GUI.Box (Rect (Screen.width - 130, 90 - 65, 120, 110), "Promotion");
+		GUI.Label (Rect (Screen.width - 90, 110-65, 90, 22), "Queen");
+		GUI.Label (Rect (Screen.width - 90, 130-65, 90, 22), "Rook");
+		GUI.Label (Rect (Screen.width - 90, 150-65, 90, 22), "Bishop");
+		GUI.Label (Rect (Screen.width - 90, 170-65, 90, 22), "Knight");
+		toPromote = GUI.VerticalSlider (Rect (Screen.width - 110, 115-65, 80, 72), toPromote, 0, 3);
+		
+		if(GUI.Button (Rect (20, 240, 100, 30), "Take Back")) TakeBackFlag=true;
+	
+		if(GUI.Button (Rect (20, 280, 100, 30), "New Game")) 
+		{
+		    NewGameFlag = true;
+		    Debug.Log("Button pushed");
+		}
+
+		GUI.Box (Rect (Screen.width - 130, 140, 120, 60), "Chess strength");
+		chess_strength = GUI.HorizontalSlider (Rect (Screen.width - 120, 170, 100, 30), chess_strength, 1, 6);
 	}
 }
 
 /**
  * TODO
+
  */
 function Revert_at(ats:String):String
 {
@@ -137,9 +162,6 @@ function Revert_at(ats:String):String
 	return horiz+vert;
 }
 
-/**
- * TODO
- */
 function MouseMovement():void
 {
 	var pObj = GameObject.Find("MoveParticle_active");
@@ -187,9 +209,7 @@ function MouseMovement():void
 		}
 }
 
-/**
- * TODO
- */
+
 function DragDetect():void
 {
 	// Make sure the user pressed the mouse down
@@ -265,6 +285,28 @@ function DragDetect():void
 		}
 		}
 		}
+}
+
+function PlanesOnBoard():void
+{
+var toObj: GameObject;
+var a8Obj = GameObject.Find("plane_a8");
+var h1Obj = GameObject.Find("plane_h1");
+var dx=(h1Obj.transform.position.x-a8Obj.transform.position.x)/7;
+var dy=(h1Obj.transform.position.y-a8Obj.transform.position.y)/7;
+var dz=(h1Obj.transform.position.z-a8Obj.transform.position.z)/7;
+
+for(var h=0;h<8;h++)
+ for(var v=8;v>0;v--)
+ {
+  var id="plane_"+System.Convert.ToChar(System.Convert.ToInt32("a"[0])+h)+v.ToString();
+  if((!(id=="plane_a8"))&&(!(id=="plane_h1"))) 
+	{
+	toObj=Instantiate(a8Obj, a8Obj.transform.position+ Vector3(dx*h,dy*(Mathf.Sqrt(Mathf.Pow(h,2)+Mathf.Pow((8-v),2))),
+			dz*(8-v)),  a8Obj.transform.rotation); 
+    toObj.name=id;
+	}
+ }
 }
 
 function TransformVisualAllToH1():void
