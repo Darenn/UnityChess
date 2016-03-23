@@ -1,2 +1,2 @@
 # ChessProject
-Little Unity chess project (TEST)
+Little Unity chess project by Aredhele and Darenn
