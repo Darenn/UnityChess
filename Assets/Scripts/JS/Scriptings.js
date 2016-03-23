@@ -17,15 +17,9 @@ private var flagManager : FlagManager;
 
 // Member variables
 private final var LAMP_INTENSITY = 0.750f;
+private final var CASE_NUMBER = new Vector2(8, 8);
 
 
-
-
-
-var setCamSide=true;
-var setCamTop=false;
-
-var lightsValue=1;						// One lamp at the beginning...
 
 var toPromote=0;						// Promotion option (0-Q,1-R,2-B,3-N)...
 
@@ -63,7 +57,6 @@ function Awake()
 	flagManager = GetComponent(FlagManager);
 }
 
-
 /**
  * Initialize attributes
  */
@@ -99,34 +92,44 @@ function Update ()
 	RollBackAction();			// If a takeback should be performed/ or new game started..
 	DragDetect();				// If mouse pressed on any square...
 	
-	if(engineStatus == 1) { engineStatus = 2; }
+	if(engineStatus == 1) 
+	{
+		engineStatus = 2; 
+	}
 }
 
 /**
  * Create the chessboard (8x8) from
- * two planes (black and white)
+ * two respective planes (black and white)
  *
  * @return void
  */
 function CreateChessboard() : void
 {
 	var chessboardCase : GameObject;
-	var a8Obj = GameObject.Find("plane_a8");
-	var h1Obj = GameObject.Find("plane_h1");
-	var dx=(h1Obj.transform.position.x-a8Obj.transform.position.x)/7;
-	var dy=(h1Obj.transform.position.y-a8Obj.transform.position.y)/7;
-	var dz=(h1Obj.transform.position.z-a8Obj.transform.position.z)/7;
+	var planeA8 = GameObject.Find("plane_a8");
+	var planeH1 = GameObject.Find("plane_h1");
 	
-	for(var h = 0; h < 8; h++)
+	var dx = (planeH1.transform.position.x - planeA8.transform.position.x) / 7;
+	var dy = (planeH1.transform.position.y - planeA8.transform.position.y) / 7;
+	var dz = (planeH1.transform.position.z - planeA8.transform.position.z) / 7;
+	
+	var position : Vector3;
+	
+	for(var horizontalIndex = 0; horizontalIndex < CASE_NUMBER.x; horizontalIndex++)
 	{
-		 for(var v = 8; v > 0; v--)
+		 for(var verticalIndex = CASE_NUMBER.y; verticalIndex > 0; verticalIndex--)
 		 {
-			var id = "plane_" + System.Convert.ToChar(System.Convert.ToInt32("a"[0]) + h ) + v.ToString();
-			if((!(id=="plane_a8")) && (!(id=="plane_h1"))) 
+			var idPiece = "plane_" + System.Convert.ToChar(System.Convert.ToInt32("a"[0]) + horizontalIndex ) + verticalIndex.ToString();
+			if((!(idPiece == "plane_a8")) && (!(idPiece == "plane_h1"))) 
 			{
-				chessboardCase=Instantiate(a8Obj, a8Obj.transform.position + Vector3(dx*h,dy*(Mathf.Sqrt(Mathf.Pow(h,2)+Mathf.Pow((8-v),2))),
-						dz*(8-v)),  a8Obj.transform.rotation); 
-				chessboardCase.name=id;
+				position = new Vector3(dx * horizontalIndex,
+									   dy * (Mathf.Sqrt(Mathf.Pow(horizontalIndex, 2) + 
+									   		 Mathf.Pow(CASE_NUMBER.y - verticalIndex, 2))),
+									   dz * (CASE_NUMBER.y - verticalIndex)); 
+				
+				chessboardCase = Instantiate(planeA8, planeA8.transform.position + position, planeA8.transform.rotation);
+				chessboardCase.name = idPiece;
 			}
 		 }
 	}
