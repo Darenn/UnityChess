@@ -14,40 +14,25 @@ private var vrMenuController : VRMenuController;
 private var lightController : LightController;
 private var scriptManager : ScriptManager;
 private var flagManager : FlagManager;
-
-// Member variables
-private final var LAMP_INTENSITY = 0.750f;
-private final var CASE_NUMBER = new Vector2(8, 8);
-
+private var constant : Constant;
 
 
 var toPromote=0;						// Promotion option (0-Q,1-R,2-B,3-N)...
-
 var CameraX=0;							// Camera can be horiz-scrolled...
 var CamXpre=0;
 var CamSidepre=1;
-
 var drag1_at="";								// square with a piece dragged after the first drag...
 var drag1_animator:int=0;						// On drag start animation -counter
-
 var move_animator:int=0;					// Animation counter when a piece is moving...
-
 var mouse_at="";							// Keeps last mouse square at... (just for legal moves suggestion by using particle)
-
 var message2show="";						// Message to show on GUI
 var engineStatus=0;
-
 var gameover=false;						// is true when the game is over...
-
-var TakeBackFlag=false;					// true on takeback-button was pressed...
-var NewGameFlag=false;					// true on new game-button was pressed...
-
 var chess_strength=3;						// Set strength of chess engine...
-
 public var C0:c0_4unity_chess = new c0_4unity_chess();
 
 /**
- * TODO
+ * Initialize script objects
  */
 function Awake()
 {
@@ -55,6 +40,7 @@ function Awake()
 	lightController = GetComponent(LightController);
 	scriptManager = GetComponent(ScriptManager);
 	flagManager = GetComponent(FlagManager);
+	constant = GetComponent(Constant);
 }
 
 /**
@@ -64,7 +50,7 @@ function Start ()
 {	
 	// Set the light intensity
 	lightController.EnableLight();
-	lightController.SetLightIntensity(LAMP_INTENSITY);
+	lightController.SetLightIntensity(constant.LAMP_INTENSITY);
 	
 	// could be right in Start(), anyway it's the same..., sometimes good to wait a bit while all the objects are being created...
 	CreateChessboard();
@@ -116,23 +102,66 @@ function CreateChessboard() : void
 	
 	var position : Vector3;
 	
-	for(var horizontalIndex = 0; horizontalIndex < CASE_NUMBER.x; horizontalIndex++)
+	for(var horizontalIndex = 0; horizontalIndex < constant.CASE_NUMBER.x; horizontalIndex++)
 	{
-		 for(var verticalIndex = CASE_NUMBER.y; verticalIndex > 0; verticalIndex--)
+		 for(var verticalIndex = constant.CASE_NUMBER.y; verticalIndex > 0; verticalIndex--)
 		 {
 			var idPiece = "plane_" + System.Convert.ToChar(System.Convert.ToInt32("a"[0]) + horizontalIndex ) + verticalIndex.ToString();
 			if((!(idPiece == "plane_a8")) && (!(idPiece == "plane_h1"))) 
 			{
 				position = new Vector3(dx * horizontalIndex,
 									   dy * (Mathf.Sqrt(Mathf.Pow(horizontalIndex, 2) + 
-									   		 Mathf.Pow(CASE_NUMBER.y - verticalIndex, 2))),
-									   dz * (CASE_NUMBER.y - verticalIndex)); 
+									   		 Mathf.Pow(constant.CASE_NUMBER.y - verticalIndex, 2))),
+									   dz * (constant.CASE_NUMBER.y - verticalIndex)); 
 				
 				chessboardCase = Instantiate(planeA8, planeA8.transform.position + position, planeA8.transform.rotation);
 				chessboardCase.name = idPiece;
 			}
 		 }
 	}
+}
+
+/**
+ * Place all pieces on the chessboard
+ *
+ * @return void
+ */
+function TransformVisualAllToH1() : void
+{
+	TransformVisualPieceToH1("bishop", "f1");
+	TransformVisualPieceToH1("queen",  "d1");
+	TransformVisualPieceToH1("king",   "e1");
+	TransformVisualPieceToH1("knight", "g1");
+	TransformVisualPieceToH1("pawn",   "h2");
+	
+	TransformVisualPieceToH1("oponents_knight","g3");
+	TransformVisualPieceToH1("DragParticle",   "e1");
+	TransformVisualPieceToH1("MoveParticle",   "c3");
+}
+
+/**
+ * Place the specified piece on the chessboard
+ *
+ * @param pieceType The type of the piece (i.e queen)
+ * @param pieceFrom The case location of the piece (i.e f1)
+ * @return void
+ */
+function TransformVisualPieceToH1(pieceType : String, pieceFrom : String) : void
+{
+	// To piece to place on the board
+	var currentPiece = GameObject.Find(constant.BOARD_NAME + pieceType);
+	
+	var a8Obj = GameObject.Find(constant.BLACK_ROOK);
+	var h1Obj = GameObject.Find(constant.WHITE_ROOK);
+	
+	var dx = (h1Obj.transform.position.x-a8Obj.transform.position.x)/7;
+	var dy = (h1Obj.transform.position.y-a8Obj.transform.position.y)/7;
+	var dz = (h1Obj.transform.position.z-a8Obj.transform.position.z)/7;
+
+	var h=System.Convert.ToInt32(pieceFrom[0])-System.Convert.ToInt32("a"[0]);
+	var v=System.Convert.ToInt32(pieceFrom.Substring(1,1));
+
+	currentPiece.transform.position +=Vector3(dx*(7-h),dy*(Mathf.Sqrt(Mathf.Pow((7-h),2)+Mathf.Pow((v-1),2))),dz*(v-1));
 }
 
 /**
@@ -275,48 +304,17 @@ function DragDetect():void
 		}
 }
 
-function TransformVisualAllToH1():void
-{
-//Initial position:  Qd1, Ke1, Bf1, Ng1, Rh1, ph2, oponent'sNg3...
-// Coord-s should be adjusted according to piece type... the problem is that can't move piece to one x,y,z - looks different 
-TransformVisualPieceToH1("bishop","f1");
-TransformVisualPieceToH1("queen","d1");
-TransformVisualPieceToH1("king","e1");
-TransformVisualPieceToH1("knight","g1");
-TransformVisualPieceToH1("oponents_knight","g3");
-TransformVisualPieceToH1("pawn","h2");
-
-TransformVisualPieceToH1("DragParticle","e1");
-TransformVisualPieceToH1("MoveParticle","c3");
-}
-
-function TransformVisualPieceToH1(piecetype,piece_from):void
-{
-// Blender complect of pieces is good way to create models and put to Unity3D, just copy to assets folder,
-var Obj = GameObject.Find( ((piecetype.IndexOf("Particle")>=0) ? piecetype :  "Chessboard/"+piecetype) );
-var a8Obj = GameObject.Find("black_rook_scaled_a8");
-var h1Obj = GameObject.Find("white_rook_scaled_h1");
-var dx=(h1Obj.transform.position.x-a8Obj.transform.position.x)/7;
-var dy=(h1Obj.transform.position.y-a8Obj.transform.position.y)/7;
-var dz=(h1Obj.transform.position.z-a8Obj.transform.position.z)/7;
-
-var h=System.Convert.ToInt32(piece_from[0])-System.Convert.ToInt32("a"[0]);
-var v=System.Convert.ToInt32(piece_from.Substring(1,1));
-
-Obj.transform.position +=Vector3(dx*(7-h),dy*(Mathf.Sqrt(Mathf.Pow((7-h),2)+Mathf.Pow((v-1),2))),dz*(v-1));
-}
-
 function HideBlankPieces():void
 {
 GameObject.Find("black_rook_scaled_a8").GetComponent.<Renderer>().enabled = false;
 GameObject.Find("white_rook_scaled_h1").GetComponent.<Renderer>().enabled=false;
-GameObject.Find("Chessboard/pawn").GetComponent.<Renderer>().enabled=false;
-GameObject.Find("Chessboard/knight").GetComponent.<Renderer>().enabled=false;
-GameObject.Find("Chessboard/oponents_knight").GetComponent.<Renderer>().enabled=false;
-GameObject.Find("Chessboard/bishop").GetComponent.<Renderer>().enabled=false;
-GameObject.Find("Chessboard/rook").GetComponent.<Renderer>().enabled=false;
-GameObject.Find("Chessboard/queen").GetComponent.<Renderer>().enabled=false;
-GameObject.Find("Chessboard/king").GetComponent.<Renderer>().enabled=false;
+GameObject.Find(constant.BOARD_NAME + "pawn").GetComponent.<Renderer>().enabled=false;
+GameObject.Find(constant.BOARD_NAME + "knight").GetComponent.<Renderer>().enabled=false;
+GameObject.Find(constant.BOARD_NAME + "oponents_knight").GetComponent.<Renderer>().enabled=false;
+GameObject.Find(constant.BOARD_NAME + "bishop").GetComponent.<Renderer>().enabled=false;
+GameObject.Find(constant.BOARD_NAME + "rook").GetComponent.<Renderer>().enabled=false;
+GameObject.Find(constant.BOARD_NAME + "queen").GetComponent.<Renderer>().enabled=false;
+GameObject.Find(constant.BOARD_NAME + "king").GetComponent.<Renderer>().enabled=false;
 
 GameObject.Find("MoveParticle").GetComponent.<Renderer>().enabled=false;
 GameObject.Find("DragParticle").GetComponent.<Renderer>().enabled=false;
@@ -338,7 +336,7 @@ function CreatePiece(piece_color:String,piecetype:String,piece_at:String):void
 var toObj : GameObject;
 var rotation : Vector3;
 
-var fromObj = GameObject.Find("Chessboard/"+piecetype);
+var fromObj = GameObject.Find(constant.BOARD_NAME + piecetype);
 var piece_position= PiecePosition(piecetype,piece_at);
 
 // if it's a black and a pawn, reverse the rotation
@@ -368,7 +366,7 @@ var drx=-(h1Obj.transform.rotation.x-a8Obj.transform.rotation.x)/7;
 var dry=-(h1Obj.transform.rotation.y-a8Obj.transform.rotation.y)/7;
 var drz=-(h1Obj.transform.rotation.z-a8Obj.transform.rotation.z)/7;
 
-var fromObj = GameObject.Find( ((piecetype.IndexOf("Particle")>=0) ? piecetype :  "Chessboard/"+piecetype) );
+var fromObj = GameObject.Find( ((piecetype.IndexOf("Particle")>=0) ? piecetype :  constant.BOARD_NAME + piecetype) );
 
 var h=System.Convert.ToInt32(piece_at[0])-System.Convert.ToInt32("a"[0]);
 var v=System.Convert.ToInt32(piece_at.Substring(1,1));
