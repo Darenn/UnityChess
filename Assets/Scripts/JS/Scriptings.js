@@ -8,6 +8,7 @@ import c0_4unity_chess;
 
 // Main camera
 public var mainCamera : Camera;
+public var C0 : c0_4unity_chess = new c0_4unity_chess();
 
 // Member scripts
 private var vrMenuController : VRMenuController;
@@ -25,7 +26,6 @@ var message2show="";						// Message to show on GUI
 var engineStatus=0;
 var gameover=false;						// is true when the game is over...
 var chess_strength=3;						// Set strength of chess engine...
-public var C0:c0_4unity_chess = new c0_4unity_chess();
 
 /**
  * Initialize script objects
@@ -73,10 +73,7 @@ function Update ()
 	RollBackAction();			// If a takeback should be performed/ or new game started..
 	DragDetect();				// If mouse pressed on any square...
 	
-	if(engineStatus == 1) 
-	{
-		engineStatus = 2; 
-	}
+	if(engineStatus == 1) engineStatus = 2; 
 }
 
 /**
@@ -102,19 +99,19 @@ function CreateChessboard() : void
 		 for(var verticalIndex = constant.CASE_NUMBER.y; verticalIndex > 0; verticalIndex--)
 		 {
 			var idPiece = constant.PLANE_BASE + System.Convert.ToChar(System.Convert.ToInt32("a"[0]) 
-						  + horizontalIndex ) 
-						  + verticalIndex.ToString();
+				  + horizontalIndex ) 
+				  + verticalIndex.ToString();
 			
 			if((!(idPiece == constant.PLANE_A8)) && (!(idPiece == constant.PLANE_H1))) 
 			{
 				position = new Vector3(dx * horizontalIndex,
-									   dy * (Mathf.Sqrt(Mathf.Pow(horizontalIndex, 2) + 
-									   		 Mathf.Pow(constant.CASE_NUMBER.y - verticalIndex, 2))),
-									   dz * (constant.CASE_NUMBER.y - verticalIndex)); 
+				    dy * (Mathf.Sqrt(Mathf.Pow(horizontalIndex, 2) + 
+				   	Mathf.Pow(constant.CASE_NUMBER.y - verticalIndex, 2))),
+				    dz * (constant.CASE_NUMBER.y - verticalIndex)); 
 				
 				chessboardCase = Instantiate(planeA8, 
-								 planeA8.transform.position + position, 
-								 planeA8.transform.rotation);
+					 planeA8.transform.position + position, 
+					 planeA8.transform.rotation);
 
 				chessboardCase.name = idPiece;
 			}
@@ -163,9 +160,9 @@ function InitPieceStartPosition(pieceType : String, pieceFrom : String) : void
 	var v = System.Convert.ToInt32(pieceFrom.Substring(1, 1));
 	
 	var position = new Vector3(dx * (7 - h),
-							   dy * (Mathf.Sqrt(Mathf.Pow((7 - h) ,2) + 
-							   		 Mathf.Pow((v - 1) , 2))),
-							   dz * (v - 1));
+	    dy * (Mathf.Sqrt(Mathf.Pow((7 - h) ,2) + 
+	   	Mathf.Pow((v - 1) , 2))),
+	    dz * (v - 1));
 
 	currentPiece.transform.position += position;
 }
@@ -221,14 +218,104 @@ function CreateActiveParticles() : void
  */
 function position2board():void
 {
-var c0_Zposition=C0.c0_position;
-for(var c0_i=0;c0_Zposition.length>c0_i; c0_i+=5)
+	var c0_Zposition = C0.c0_position;
+	
+	for(var c0_i = 0; c0_Zposition.length > c0_i; c0_i += 5)
 	{
-	var c0_Zcolor=c0_Zposition.Substring(c0_i,1);
-	var c0_Zfigure=c0_Zposition.Substring(c0_i+1,1);
-	var c0_Z_at = c0_Zposition.Substring(c0_i+2,2);
-	CreatePiece(c0_Zcolor,piecelongtype(c0_Zfigure,c0_Zcolor),c0_Z_at);
+		var c0_Zcolor  = c0_Zposition.Substring(c0_i, 1);
+		var c0_Zfigure = c0_Zposition.Substring(c0_i + 1, 1);
+		var c0_Z_at    = c0_Zposition.Substring(c0_i + 2, 2);
+		
+		CreatePiece(c0_Zcolor, piecelongtype(c0_Zfigure, c0_Zcolor), c0_Z_at);
 	}
+}
+
+/**
+ * Place a piece by taking care of his color
+ * if the piece is black, it reverse his orientation
+ *
+ * @param
+ * @param
+ * @param
+ * @return
+ */
+function CreatePiece(pieceColor: String , pieceType : String, pieceAt : String) : void
+{
+	var toObj : GameObject;
+	var rotation : Vector3;
+
+	var fromObj = GameObject.Find(constant.BOARD_NAME + pieceType);
+	var piecePosition = PiecePosition(pieceType, pieceAt);
+
+	// If it's a pawn and the pawn is black :
+	// Reverse the rotation
+	if (pieceColor == constant.COLOR_BLACK && 
+	    pieceType == constant.PAWN_NAME)
+	{
+		rotation = fromObj.transform.rotation.eulerAngles;
+		rotation.y = 180;
+	} 
+	else 
+	{
+		rotation = fromObj.transform.rotation.eulerAngles;
+	}
+
+	toObj = Instantiate(fromObj, piecePosition, Quaternion.Euler(rotation));
+	toObj.name="piece_"+pieceAt;
+	
+	// Modify the color relative to its color
+	toObj.GetComponent.<Renderer>().material=(GameObject.Find(
+	 ((pieceColor=="b") ? "black_rook_scaled_a8" : "white_rook_scaled_h1"  ))).GetComponent.<Renderer>().material;
+	toObj.GetComponent.<Renderer>().enabled=true;
+}
+
+/**
+ *
+ *
+ */
+function piecelongtype(figure1 : String, color1 : String) : String
+{
+	var ret="";
+	if(figure1=="p") ret="pawn";
+	else if(figure1=="N") ret=(((color1=="w") && (C0.c0_side>0)) || ((color1=="b") && (C0.c0_side<0))  ? "knight":"oponents_knight");
+	else if(figure1=="B") ret="bishop";
+	else if(figure1=="R") ret="rook";
+	else if(figure1=="Q") ret="queen";
+	else if(figure1=="K") ret="king";
+	return ret;
+}
+
+/**
+ * TODO
+ */
+function PiecePosition(piecetype:String,piece_at:String):Vector3
+{
+var a8Obj = GameObject.Find("black_rook_scaled_a8");
+var h1Obj = GameObject.Find("white_rook_scaled_h1");
+var dx=(h1Obj.transform.position.x-a8Obj.transform.position.x)/7;
+var dy=(h1Obj.transform.position.y-a8Obj.transform.position.y)/7;
+var dz=(h1Obj.transform.position.z-a8Obj.transform.position.z)/7;
+
+var drx=-(h1Obj.transform.rotation.x-a8Obj.transform.rotation.x)/7;
+var dry=-(h1Obj.transform.rotation.y-a8Obj.transform.rotation.y)/7;
+var drz=-(h1Obj.transform.rotation.z-a8Obj.transform.rotation.z)/7;
+
+var fromObj = GameObject.Find( ((piecetype.IndexOf("Particle")>=0) ? piecetype :  constant.BOARD_NAME + piecetype) );
+
+var h=System.Convert.ToInt32(piece_at[0])-System.Convert.ToInt32("a"[0]);
+var v=System.Convert.ToInt32(piece_at.Substring(1,1));
+if(C0.c0_side<0)			// Could also work with cameras, anyway this also isn't a bad solution... (Swap board if black)
+	{
+	h=7-h;
+	v=9-v;
+	}
+	
+// Very according to camera placement...
+//  The thing is that 2D board 8x8 calculation can't be measured with 3D vectors in a simple way. So, constants were used for existing models...
+var h1=(7-h)*0.96;
+var v1=(v-1)*1.04;
+
+return (fromObj.transform.position+ Vector3(-dx*h1,-dy*0.6*(Mathf.Sqrt(Mathf.Pow(h1,2)+Mathf.Pow(v1,2))),-dz*v1));
 }
 
 /**
@@ -369,73 +456,6 @@ function DragDetect():void
 		}
 		}
 		}
-}
-
-function CreatePiece(piece_color:String,piecetype:String,piece_at:String):void
-{
-var toObj : GameObject;
-var rotation : Vector3;
-
-var fromObj = GameObject.Find(constant.BOARD_NAME + piecetype);
-var piece_position= PiecePosition(piecetype,piece_at);
-
-// if it's a black and a pawn, reverse the rotation
-if (piece_color == "b" && piecetype == "pawn") {
-	rotation = fromObj.transform.rotation.eulerAngles;
-	rotation.y = 180;
-} else {
-	rotation = fromObj.transform.rotation.eulerAngles;
-}
-
-toObj=Instantiate(fromObj, piece_position, Quaternion.Euler(rotation));
-toObj.name="piece_"+piece_at;
-// Modify the color relative to its color
-toObj.GetComponent.<Renderer>().material=(GameObject.Find( ((piece_color=="b") ? "black_rook_scaled_a8" : "white_rook_scaled_h1"  ))).GetComponent.<Renderer>().material;
-toObj.GetComponent.<Renderer>().enabled=true;
-}
-
-function PiecePosition(piecetype:String,piece_at:String):Vector3
-{
-var a8Obj = GameObject.Find("black_rook_scaled_a8");
-var h1Obj = GameObject.Find("white_rook_scaled_h1");
-var dx=(h1Obj.transform.position.x-a8Obj.transform.position.x)/7;
-var dy=(h1Obj.transform.position.y-a8Obj.transform.position.y)/7;
-var dz=(h1Obj.transform.position.z-a8Obj.transform.position.z)/7;
-
-var drx=-(h1Obj.transform.rotation.x-a8Obj.transform.rotation.x)/7;
-var dry=-(h1Obj.transform.rotation.y-a8Obj.transform.rotation.y)/7;
-var drz=-(h1Obj.transform.rotation.z-a8Obj.transform.rotation.z)/7;
-
-var fromObj = GameObject.Find( ((piecetype.IndexOf("Particle")>=0) ? piecetype :  constant.BOARD_NAME + piecetype) );
-
-var h=System.Convert.ToInt32(piece_at[0])-System.Convert.ToInt32("a"[0]);
-var v=System.Convert.ToInt32(piece_at.Substring(1,1));
-if(C0.c0_side<0)			// Could also work with cameras, anyway this also isn't a bad solution... (Swap board if black)
-	{
-	h=7-h;
-	v=9-v;
-	}
-	
-// Very according to camera placement...
-//  The thing is that 2D board 8x8 calculation can't be measured with 3D vectors in a simple way. So, constants were used for existing models...
-var h1=(7-h)*0.96;
-var v1=(v-1)*1.04;
-
-return (fromObj.transform.position+ Vector3(-dx*h1,-dy*0.6*(Mathf.Sqrt(Mathf.Pow(h1,2)+Mathf.Pow(v1,2))),-dz*v1));
-}
-
-
-
-function piecelongtype(figure1:String,color1:String):String
-{
-	var ret="";
-	if(figure1=="p") ret="pawn";
-	else if(figure1=="N") ret=(((color1=="w") && (C0.c0_side>0)) || ((color1=="b") && (C0.c0_side<0))  ? "knight":"oponents_knight");
-	else if(figure1=="B") ret="bishop";
-	else if(figure1=="R") ret="rook";
-	else if(figure1=="Q") ret="queen";
-	else if(figure1=="K") ret="king";
-	return ret;
 }
 
 private function doAttackAnimation(attacker : GameObject, attacked : GameObject) {	

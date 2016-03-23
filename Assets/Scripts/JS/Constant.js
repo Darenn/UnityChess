@@ -23,6 +23,8 @@ public class Constant extends MonoBehaviour
 	public final var DRAG_PARTICLE  = "DragParticle";
 	public final var MOVE_PARTICLE  = "MoveParticle";
 	
+	public final var COLOR_BLACK = "b";
+	
 	public final var CASE_NUMBER = new Vector2(8, 8);
 	public final var LAMP_INTENSITY = 0.750f;
 }
