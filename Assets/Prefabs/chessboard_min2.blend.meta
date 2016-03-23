@@ -3,6 +3,36 @@ guid: 73ffd8b6e8b84bc4db85cc1d3c7f5c1a
 ModelImporter:
   serializedVersion: 18
   fileIDToRecycleName:
+    100000: bishop
+    100002: board
+    100004: //RootNode
+    100006: king
+    100008: knight
+    100010: pawn
+    100012: queen
+    100014: rook
+    400000: bishop
+    400002: board
+    400004: //RootNode
+    400006: king
+    400008: knight
+    400010: pawn
+    400012: queen
+    400014: rook
+    2300000: bishop
+    2300002: board
+    2300004: king
+    2300006: knight
+    2300008: pawn
+    2300010: queen
+    2300012: rook
+    3300000: bishop
+    3300002: board
+    3300004: king
+    3300006: knight
+    3300008: pawn
+    3300010: queen
+    3300012: rook
     4300000: board
     4300002: pawn
     4300004: knight
@@ -10,6 +40,8 @@ ModelImporter:
     4300008: queen
     4300010: king
     4300012: rook
+    7400000: Default Take
+    11100000: //RootNode
   materials:
     importMaterials: 1
     materialName: 3
