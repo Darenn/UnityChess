@@ -74,7 +74,7 @@ function Start ()
 	lightController.SetLightIntensity(LAMP_INTENSITY);
 	
 	// could be right in Start(), anyway it's the same..., sometimes good to wait a bit while all the objects are being created...
-	PlanesOnBoard();					// Planes needed for mouse drag... (a ray from camera to this rigibody object is catched)...
+	CreateChessboard();
 	TransformVisualAllToH1();		    // The board contains blank-pieces (to clone from) just on some squares. Moving all of them to h1... 
 
 	C0.c0_side=1;						// This side is white.   For black set -1
@@ -88,6 +88,7 @@ function Start ()
 }
 
 /**
+ * Called once per Frame
  * TODO
  */
 function Update ()
@@ -100,19 +101,49 @@ function Update ()
 }
 
 /**
+ * Create the chessboard (8x8) from
+ * two planes (black and white)
+ *
+ * @return void
+ */
+function CreateChessboard() : void
+{
+	var chessboardCase : GameObject;
+	var a8Obj = GameObject.Find("plane_a8");
+	var h1Obj = GameObject.Find("plane_h1");
+	var dx=(h1Obj.transform.position.x-a8Obj.transform.position.x)/7;
+	var dy=(h1Obj.transform.position.y-a8Obj.transform.position.y)/7;
+	var dz=(h1Obj.transform.position.z-a8Obj.transform.position.z)/7;
+	
+	for(var h = 0; h < 8; h++)
+	{
+		 for(var v = 8; v > 0; v--)
+		 {
+			var id = "plane_" + System.Convert.ToChar(System.Convert.ToInt32("a"[0]) + h ) + v.ToString();
+			if((!(id=="plane_a8")) && (!(id=="plane_h1"))) 
+			{
+				chessboardCase=Instantiate(a8Obj, a8Obj.transform.position + Vector3(dx*h,dy*(Mathf.Sqrt(Mathf.Pow(h,2)+Mathf.Pow((8-v),2))),
+						dz*(8-v)),  a8Obj.transform.rotation); 
+				chessboardCase.name=id;
+			}
+		 }
+	}
+}
+
+/**
  * Function called when there is an event
  * on the GUI.
  */
 function OnGUI () {
 	
-	var e : Event = Event.current;
+	// var e : Event = Event.current;
 	
 	if(message2show.length > 0)
 	{
-		GUI.Box (Rect (10, 25, 120, 40), message2show);
+		// GUI.Box (Rect (10, 25, 120, 40), message2show);
 		if(engineStatus == 1) { engineStatus = 2; }
 		
-		GUI.Box (Rect (10, 70, 120, 255), "");
+		/*GUI.Box (Rect (10, 70, 120, 255), "");
 		
 		// Animation checkBox
 		drawAnim = GUI.Toggle (Rect (20, 80, 130, 20), drawAnim, "Animation"); 
@@ -147,13 +178,12 @@ function OnGUI () {
 		}
 
 		GUI.Box (Rect (Screen.width - 130, 140, 120, 60), "Chess strength");
-		chess_strength = GUI.HorizontalSlider (Rect (Screen.width - 120, 170, 100, 30), chess_strength, 1, 6);
+		chess_strength = GUI.HorizontalSlider (Rect (Screen.width - 120, 170, 100, 30), chess_strength, 1, 6);*/
 	}
 }
 
 /**
  * TODO
-
  */
 function Revert_at(ats:String):String
 {
@@ -162,6 +192,9 @@ function Revert_at(ats:String):String
 	return horiz+vert;
 }
 
+/**
+ * TODO
+ */
 function MouseMovement():void
 {
 	var pObj = GameObject.Find("MoveParticle_active");
@@ -209,7 +242,9 @@ function MouseMovement():void
 		}
 }
 
-
+/**
+ * TODO
+ */
 function DragDetect():void
 {
 	// Make sure the user pressed the mouse down
@@ -285,28 +320,6 @@ function DragDetect():void
 		}
 		}
 		}
-}
-
-function PlanesOnBoard():void
-{
-var toObj: GameObject;
-var a8Obj = GameObject.Find("plane_a8");
-var h1Obj = GameObject.Find("plane_h1");
-var dx=(h1Obj.transform.position.x-a8Obj.transform.position.x)/7;
-var dy=(h1Obj.transform.position.y-a8Obj.transform.position.y)/7;
-var dz=(h1Obj.transform.position.z-a8Obj.transform.position.z)/7;
-
-for(var h=0;h<8;h++)
- for(var v=8;v>0;v--)
- {
-  var id="plane_"+System.Convert.ToChar(System.Convert.ToInt32("a"[0])+h)+v.ToString();
-  if((!(id=="plane_a8"))&&(!(id=="plane_h1"))) 
-	{
-	toObj=Instantiate(a8Obj, a8Obj.transform.position+ Vector3(dx*h,dy*(Mathf.Sqrt(Mathf.Pow(h,2)+Mathf.Pow((8-v),2))),
-			dz*(8-v)),  a8Obj.transform.rotation); 
-    toObj.name=id;
-	}
- }
 }
 
 function TransformVisualAllToH1():void

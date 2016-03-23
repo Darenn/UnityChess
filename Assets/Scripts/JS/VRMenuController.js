@@ -25,6 +25,13 @@ class VRMenuController extends MonoBehaviour
 	}
 	
 	/**
+	 * TODO
+	 */
+	function OnGUI() {
+		// TODO
+	}
+	
+	/**
 	 * Called once per frame
 	 */
 	function Update () {
