@@ -151,6 +151,9 @@ function OnGUI () {
 	}
 }
 
+/**
+ * TODO
+ */
 function Revert_at(ats:String):String
 {
 	var horiz=System.Convert.ToChar( System.Convert.ToInt32("a"[0]) + (System.Convert.ToInt32("h"[0]) - System.Convert.ToInt32(ats[0])) );
@@ -158,6 +161,9 @@ function Revert_at(ats:String):String
 	return horiz+vert;
 }
 
+/**
+ * TODO
+ */
 function MouseMovement():void
 {
 	var pObj = GameObject.Find("MoveParticle_active");
@@ -205,7 +211,9 @@ function MouseMovement():void
 		}
 }
 
-
+/**
+ * TODO
+ */
 function DragDetect():void
 {
 	// Make sure the user pressed the mouse down
