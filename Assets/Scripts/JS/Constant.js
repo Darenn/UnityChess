@@ -11,6 +11,7 @@ public class Constant extends MonoBehaviour
 	public final var PLANE_A8   = "plane_a8";
 	public final var PLANE_H1   = "plane_h1";
 	public final var PLANE_BASE = "plane_";
+	public final var PIECE_BASE = "piece_";
 	
 	public final var BISHOP_NAME = "bishop";
 	public final var QUEEN_NAME  = "queen";
@@ -24,6 +25,7 @@ public class Constant extends MonoBehaviour
 	public final var MOVE_PARTICLE  = "MoveParticle";
 	
 	public final var COLOR_BLACK = "b";
+	public final var COLOR_WHITE = "w";
 	
 	public final var CASE_NUMBER = new Vector2(8, 8);
 	public final var LAMP_INTENSITY = 0.750f;

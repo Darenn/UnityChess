@@ -57,8 +57,7 @@ function Start ()
 	
 	position2board();					// Set current position on the board visually...
 	HideBlankPieces();				    // Hide blank-pieces...
-	CreateActiveParticles();		    // Active particles are just copies, to keep acurate position on screen...
-	FirstStart=false;	
+	CreateActiveParticles();		    // Active particles are just copies, to keep acurate position on screen...	
 }
 
 /**
@@ -214,9 +213,9 @@ function CreateActiveParticles() : void
 }
 
 /**
- *
+ * Create a pieces with their right position
  */
-function position2board():void
+function position2board() : void
 {
 	var c0_Zposition = C0.c0_position;
 	
@@ -234,14 +233,14 @@ function position2board():void
  * Place a piece by taking care of his color
  * if the piece is black, it reverse his orientation
  *
- * @param
- * @param
- * @param
- * @return
+ * @param pieceColor The color of the piece to create
+ * @param pieceType The type of the piece to create 
+ * @param pieceAt The location of the piece
+ * @return void
  */
 function CreatePiece(pieceColor: String , pieceType : String, pieceAt : String) : void
 {
-	var toObj : GameObject;
+	var object : GameObject;
 	var rotation : Vector3;
 
 	var fromObj = GameObject.Find(constant.BOARD_NAME + pieceType);
@@ -261,28 +260,53 @@ function CreatePiece(pieceColor: String , pieceType : String, pieceAt : String) 
 	}
 
 	toObj = Instantiate(fromObj, piecePosition, Quaternion.Euler(rotation));
-	toObj.name="piece_"+pieceAt;
+	toObj.name = constant.PIECE_BASE + pieceAt;
 	
 	// Modify the color relative to its color
-	toObj.GetComponent.<Renderer>().material=(GameObject.Find(
-	 ((pieceColor=="b") ? "black_rook_scaled_a8" : "white_rook_scaled_h1"  ))).GetComponent.<Renderer>().material;
-	toObj.GetComponent.<Renderer>().enabled=true;
+	if(pieceColor == constant.COLOR_BLACK)
+	{
+		toObj.GetComponent(Renderer).material = 
+			GameObject.Find(constant.BLACK_ROOK).GetComponent(Renderer).material;
+	}
+	else
+	{
+		toObj.GetComponent(Renderer).material = 
+			GameObject.Find(constant.WHITE_ROOK).GetComponent(Renderer).material;
+	}
+	
+	toObj.GetComponent(Renderer).enabled = true;
 }
 
 /**
+ * Return the full name of the piece
  *
- *
+ * @param figure The short name of the piece
+ * @param color The color of the piece
+ * @return pieceName The full name of the piece
  */
-function piecelongtype(figure1 : String, color1 : String) : String
+function piecelongtype(figure : String, color : String) : String
 {
-	var ret="";
-	if(figure1=="p") ret="pawn";
-	else if(figure1=="N") ret=(((color1=="w") && (C0.c0_side>0)) || ((color1=="b") && (C0.c0_side<0))  ? "knight":"oponents_knight");
-	else if(figure1=="B") ret="bishop";
-	else if(figure1=="R") ret="rook";
-	else if(figure1=="Q") ret="queen";
-	else if(figure1=="K") ret="king";
-	return ret;
+	var pieceName : String;
+	
+	if(figure == "N")  
+	{
+		if(((color == constant.COLOR_WHITE) && (C0.c0_side > 0)) || 
+		   ((color == constant.COLOR_BLACK) && (C0.c0_side < 0)))
+		{
+			pieceName = constant.KNIGHT_NAME;
+		}
+		else
+		{
+			pieceName = constant.OP_KNIGHT_NAME;
+		}
+	}
+	else if(figure == "p") pieceName = constant.PAWN_NAME;
+	else if(figure == "B") pieceName = constant.BISHOP_NAME;
+	else if(figure == "R") pieceName = constant.ROOK_NAME;
+	else if(figure == "Q") pieceName = constant.QUEEN_NAME;
+	else if(figure == "K") pieceName = constant.KING_NAME;
+	
+	return pieceName;
 }
 
 /**
@@ -290,32 +314,32 @@ function piecelongtype(figure1 : String, color1 : String) : String
  */
 function PiecePosition(piecetype:String,piece_at:String):Vector3
 {
-var a8Obj = GameObject.Find("black_rook_scaled_a8");
-var h1Obj = GameObject.Find("white_rook_scaled_h1");
-var dx=(h1Obj.transform.position.x-a8Obj.transform.position.x)/7;
-var dy=(h1Obj.transform.position.y-a8Obj.transform.position.y)/7;
-var dz=(h1Obj.transform.position.z-a8Obj.transform.position.z)/7;
+	var a8Obj = GameObject.Find("black_rook_scaled_a8");
+	var h1Obj = GameObject.Find("white_rook_scaled_h1");
+	var dx=(h1Obj.transform.position.x-a8Obj.transform.position.x)/7;
+	var dy=(h1Obj.transform.position.y-a8Obj.transform.position.y)/7;
+	var dz=(h1Obj.transform.position.z-a8Obj.transform.position.z)/7;
 
-var drx=-(h1Obj.transform.rotation.x-a8Obj.transform.rotation.x)/7;
-var dry=-(h1Obj.transform.rotation.y-a8Obj.transform.rotation.y)/7;
-var drz=-(h1Obj.transform.rotation.z-a8Obj.transform.rotation.z)/7;
+	var drx=-(h1Obj.transform.rotation.x-a8Obj.transform.rotation.x)/7;
+	var dry=-(h1Obj.transform.rotation.y-a8Obj.transform.rotation.y)/7;
+	var drz=-(h1Obj.transform.rotation.z-a8Obj.transform.rotation.z)/7;
 
-var fromObj = GameObject.Find( ((piecetype.IndexOf("Particle")>=0) ? piecetype :  constant.BOARD_NAME + piecetype) );
+	var fromObj = GameObject.Find( ((piecetype.IndexOf("Particle")>=0) ? piecetype :  constant.BOARD_NAME + piecetype) );
 
-var h=System.Convert.ToInt32(piece_at[0])-System.Convert.ToInt32("a"[0]);
-var v=System.Convert.ToInt32(piece_at.Substring(1,1));
-if(C0.c0_side<0)			// Could also work with cameras, anyway this also isn't a bad solution... (Swap board if black)
-	{
-	h=7-h;
-	v=9-v;
-	}
-	
-// Very according to camera placement...
-//  The thing is that 2D board 8x8 calculation can't be measured with 3D vectors in a simple way. So, constants were used for existing models...
-var h1=(7-h)*0.96;
-var v1=(v-1)*1.04;
+	var h=System.Convert.ToInt32(piece_at[0])-System.Convert.ToInt32("a"[0]);
+	var v=System.Convert.ToInt32(piece_at.Substring(1,1));
+	if(C0.c0_side<0)			// Could also work with cameras, anyway this also isn't a bad solution... (Swap board if black)
+		{
+		h=7-h;
+		v=9-v;
+		}
+		
+	// Very according to camera placement...
+	//  The thing is that 2D board 8x8 calculation can't be measured with 3D vectors in a simple way. So, constants were used for existing models...
+	var h1=(7-h)*0.96;
+	var v1=(v-1)*1.04;
 
-return (fromObj.transform.position+ Vector3(-dx*h1,-dy*0.6*(Mathf.Sqrt(Mathf.Pow(h1,2)+Mathf.Pow(v1,2))),-dz*v1));
+	return (fromObj.transform.position+ Vector3(-dx*h1,-dy*0.6*(Mathf.Sqrt(Mathf.Pow(h1,2)+Mathf.Pow(v1,2))),-dz*v1));
 }
 
 /**
@@ -453,9 +477,9 @@ function DragDetect():void
 						}
 					}
 				}
+			}
 		}
-		}
-		}
+	}
 }
 
 private function doAttackAnimation(attacker : GameObject, attacked : GameObject) {	
@@ -766,4 +790,4 @@ function convertFENnormal( ficsFEN )
 
 
 // On monobehaviour ends, this is called....
-function OnApplicationQuit():void { }
+function OnApplicationQuit() : void { }
