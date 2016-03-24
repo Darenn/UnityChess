@@ -7,7 +7,8 @@ class VRMenuController extends MonoBehaviour
 {
 	public var newGameButton : UnityEngine.UI.Button;
 	public var takeBackButton : UnityEngine.UI.Button;
-	
+	public var debugButton : UnityEngine.UI.Button;
+
 	private var newGameFlag : boolean;
 	private var takeBackFlag : boolean;
 	
@@ -22,7 +23,8 @@ class VRMenuController extends MonoBehaviour
 		// Add event listeners on the GUI buttons
 		newGameButton.onClick.AddListener(function() { HandleNewGameEvent(); });
 		takeBackButton.onClick.AddListener(function() { HandleTakeBackEvent(); });
-	}
+		debugButton.onClick.AddListener(function() { HandleDebugEvent(); });
+	}	
 	
 	/**
 	 * TODO
@@ -58,6 +60,14 @@ class VRMenuController extends MonoBehaviour
 	{
 	    Debug.Log("Take Back Button pressed");
 	    takeBackFlag = true;
+	}
+
+	/**
+	 * Debug purpose only
+	 */
+	function HandleDebugEvent()
+	{
+		Debug.Log("DEBUG ACTIVE");
 	}
 	
 	/**
