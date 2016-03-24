@@ -111,7 +111,7 @@ function CreateChessboard() : void
 					 planeA8.transform.rotation);
 
 				chessboardCase.name = idPiece;
-				//chessboardCase.transform.localScale = new Vector3(0.5, 0.5, 0.5);
+				chessboardCase.transform.localScale = planeA8.transform.lossyScale;
 			}
 		 }
 	}
@@ -261,7 +261,7 @@ function CreatePiece(pieceColor: String , pieceType : String, pieceAt : String) 
 	}
 
 	toObj = Instantiate(fromObj, piecePosition, Quaternion.Euler(rotation));
-	toObj.transform.localScale = new Vector3(0.5, 0.5, 0.5);
+	toObj.transform.localScale = fromObj.transform.lossyScale;
 	toObj.name = constant.PIECE_BASE + pieceAt;
 	
 	// Modify the color relative to its color
