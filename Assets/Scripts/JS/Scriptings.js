@@ -483,12 +483,13 @@ function DragDetect():void
 }
 
 private function doAttackAnimation(attacker : GameObject, attacked : GameObject) {	
-	// Active the preparing animation for the other piece
-	var animAttacker : Animator = attacker.GetComponent(Animator);
-	var animAttacked : Animator = attacked.GetComponent(Animator);
+	
+	// get the controller of the pieces
+	var attackerController : ActionController = attacker.GetComponent(ActionController);
+	var attackedController : ActionController = attacked.GetComponent(ActionController);
 
-	if(animAttacked == null || animAttacker == null) {
-		Debug.Log("Animator not found");
+	if(attackerController == null || attackedController == null) {
+		Debug.Log("Action Controller not found.");
 		Destroy (attacked);
 		return;
 	}
@@ -500,21 +501,22 @@ private function doAttackAnimation(attacker : GameObject, attacked : GameObject)
 	attacked.transform.LookAt(attacker.transform.position);
 	
 	// Active the preparing animation for the other piece
-	animAttacked.SetBool("IsMoving", false);
-	animAttacked.SetBool("IsPreparing", true);
+	attackedController.StopRun();
+	attackedController.Prepare();
 	// Active the preparing animation for the piece attacking
-	animAttacker.SetBool("IsMoving", false);
-	animAttacker.SetBool("IsPreparing", true);
+	attackerController.StopRun();
+	attackerController.Prepare();
 	// Wait some time before attack
 	isWaiting = true;
 	yield WaitForSeconds(timeBeforeAttack);
 	
 	// attack
-	animAttacker.SetTrigger("Attack");
-	animAttacked.SetTrigger("IsAttacked");
+	attackerController.Attack();
+	attackedController.Die();
 	yield WaitForSeconds(timeBeforeDestroy);
 	Destroy (attacked);
-	animAttacker.SetBool("IsPreparing", false);
+	attackerController.StopPrepare();
+	
 	// Reset the rotation of the attacker
 	attacker.transform.rotation = currentRotationAttacker;
 	isWaiting = false;
@@ -531,7 +533,7 @@ private var isWaiting : boolean = false; // wait some time to humans
 
 function DoPieceMovements(): IEnumerable
 {
-	var anim : Animator;
+	var actionController : ActionController;
 	
 	// a piece is dragged
 	if(drag1_animator>0) {
@@ -551,14 +553,11 @@ function DoPieceMovements(): IEnumerable
 			// get the piece relative to the from position
 			var mObj : GameObject = GameObject.Find("piece_"+move_from);
 			
-			// launch the run animation on the piece
-			anim = mObj.GetComponent(Animator);
-			if (anim != null) {
-				if (!anim.GetBool("IsMoving"))
-					anim.SetBool("IsMoving", true);
-			}
-			
-			
+			// Say to the piece to run
+			actionController = mObj.GetComponent(ActionController);
+			if (actionController != null && !actionController.IsRunning()) {
+				actionController.Run();
+			}		
 			var pieceat : String = ((("QRBN").IndexOf(bc)>=0) ? "p" : (C0.c0_D_what_at(move_to)).Substring(1,1));
 			
 			// get the piece color et the piece type
@@ -598,11 +597,11 @@ function DoPieceMovements(): IEnumerable
 				isAnimating = false;
 				mObj.name="piece_"+move_to;
 				
-				// Stop the run animation
-				anim = GameObject.Find("piece_"+move_to).GetComponent(Animator);
-				if (anim != null) {
-					anim.SetBool("IsMoving", false);
-				}
+				// Say to the piece to stop running
+				actionController = mObj.GetComponent(ActionController);
+				if (actionController != null) {
+					actionController.StopRun();
+				}	
 
 				// If a pawn becomes a better piece...
 				if(("QRBN").IndexOf(bc)>=0) {
