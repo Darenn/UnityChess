@@ -595,7 +595,18 @@ function DoPieceMovements(): IEnumerable
 	// a piece is dragged
 	if(drag1_animator>0) {
 		//GameObject.Find("piece_"+drag1_at).transform.position.y-=(5.5-drag1_animator)*0.06;
-		GameObject.Find("piece_"+drag1_at).GetComponent(ActionController).Prepare();
+
+		var animatedObject = GameObject.Find("piece_" + drag1_at).GetComponent(ActionController);
+
+		if(animatedObject != null)
+		{
+			animatedObject.Prepare();
+		}
+		else
+		{
+			Debug.Log("Unable to find animator");
+		}
+
 		drag1_animator--;
 	}
 	
