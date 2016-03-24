@@ -24,7 +24,6 @@ var move_animator:int=0;					// Animation counter when a piece is moving...
 var mouse_at="";							// Keeps last mouse square at... (just for legal moves suggestion by using particle)
 var message2show="";						// Message to show on GUI
 var engineStatus=0;
-var gameover=false;						// is true when the game is over...
 var chess_strength=3;						// Set strength of chess engine...
 
 /**
@@ -307,6 +306,48 @@ function piecelongtype(figure : String, color : String) : String
 	else if(figure == "K") pieceName = constant.KING_NAME;
 	
 	return pieceName;
+}
+
+/**
+ * TODO
+ */
+function DoEngineMovements():void
+{
+    C0.c0_waitmove=(C0.c0_sidemoves==C0.c0_side);
+
+    
+	if((!flagManager.GetGameOverFlag()) && (engineStatus==0) && (move_animator<4))
+	{
+		if(C0.c0_D_is_check_to_king("w") || C0.c0_D_is_check_to_king("b"))
+		{
+			message2show = "Check+";
+			if( C0.c0_D_is_mate_to_king("w") ) { message2show = "Checkmate! 0:1"; flagManager.SetGameOverFlag(true); }
+			if( C0.c0_D_is_mate_to_king("b") ) { message2show = "Checkmate! 1:0"; flagManager.SetGameOverFlag(true); }
+		}
+		else
+		{
+			if(((C0.c0_sidemoves>0) && C0.c0_D_is_pate_to_king("w")) || ((C0.c0_sidemoves<0) && C0.c0_D_is_pate_to_king("b")))
+				{ message2show = "Stalemate, draw 1/2-1/2"; flagManager.SetGameOverFlag(true); }
+		}
+	}
+
+	if((!flagManager.GetGameOverFlag()) && (C0.c0_moves2do.length==0) && (engineStatus==0))
+	{
+		if(C0.c0_waitmove) message2show="Your move..."; 
+		else if(!(C0.c0_sidemoves==C0.c0_side))
+		{
+			message2show="Calculating...";
+			engineStatus=1;
+		}
+	}
+	
+	if(engineStatus==2)
+	{
+		// Request to other components can be sent via slow SendMessage function., Here it's good, not often.
+		scriptManager.GetScript("valilCES").SendMessage("JSSetDeep",chess_strength.ToString());
+		scriptManager.GetScript("valilCES").SendMessage("JSRequest",C0.c0_get_FEN());
+		engineStatus=3;
+	} 
 }
 
 /**
@@ -624,46 +665,6 @@ function DoPieceMovements(): IEnumerable
 	}
 }
 
-// this routine starts chess engine if needed...
-function DoEngineMovements():void
-{
-    C0.c0_waitmove=(C0.c0_sidemoves==C0.c0_side);
-
-    
-	if((!gameover) && (engineStatus==0) && (move_animator<4))
-	{
-		if(C0.c0_D_is_check_to_king("w") || C0.c0_D_is_check_to_king("b"))
-		{
-			message2show = "Check+";
-			if( C0.c0_D_is_mate_to_king("w") ) { message2show = "Checkmate! 0:1"; gameover=true; }
-			if( C0.c0_D_is_mate_to_king("b") ) { message2show = "Checkmate! 1:0"; gameover=true; }
-		}
-		else
-		{
-			if(((C0.c0_sidemoves>0) && C0.c0_D_is_pate_to_king("w")) || ((C0.c0_sidemoves<0) && C0.c0_D_is_pate_to_king("b")))
-				{ message2show = "Stalemate, draw 1/2-1/2"; gameover=true; }
-		}
-	}
-
-	if((!gameover) && (C0.c0_moves2do.length==0) && (engineStatus==0))
-	{
-		if(C0.c0_waitmove) message2show="Your move..."; 
-		else if(!(C0.c0_sidemoves==C0.c0_side))
-		{
-			message2show="Calculating...";
-			engineStatus=1;
-		}
-	}
-	
-	if(engineStatus==2)
-	{
-		// Request to other components can be sent via slow SendMessage function., Here it's good, not often.
-		scriptManager.GetScript("valilCES").SendMessage("JSSetDeep",chess_strength.ToString());
-		scriptManager.GetScript("valilCES").SendMessage("JSRequest",C0.c0_get_FEN());
-		engineStatus=3;
-	} 
-}
-
 // this call receives answer from the chess engine... (from other object)
 function EngineAnswer(answer:String):void
 {
@@ -735,10 +736,10 @@ function RollBackAction():void
 
 	if((vrMenuController.GetTakeBackFlag() || vrMenuController.GetTakeBackFlag()) 
 		&& (!C0.c0_moving) && (C0.c0_moves2do.length==0) &&
-		((C0.c0_sidemoves==C0.c0_side) || gameover) 
+		((C0.c0_sidemoves==C0.c0_side) || flagManager.GetGameOverFlag()) 
 		&&  (drag1_animator==0) && (move_animator==0))
 	{
-	if(gameover) gameover=false;
+	if(flagManager.GetGameOverFlag()) flagManager.SetGameOverFlag(false);
 	
 	for(var h=0;h<8;h++)
 		for(var v=8;v>0;v--)

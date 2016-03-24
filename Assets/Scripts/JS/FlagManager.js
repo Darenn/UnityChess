@@ -5,11 +5,14 @@
  */
 class FlagManager extends MonoBehaviour
 {	
+	public var gameOverFlag : boolean;
+	
 	/**
 	 * Initializer
 	 */
 	function Start () {
-
+		
+		gameOverFlag = false;
 	}
 	
 	/**
@@ -17,5 +20,13 @@ class FlagManager extends MonoBehaviour
 	 */
 	function Update () {
 
+	}
+	
+	public function GetGameOverFlag() : boolean {
+		return gameOverFlag;
+	}
+	
+	public function SetGameOverFlag(flag : boolean) : void {
+		gameOverFlag = flag;
 	}
 }
