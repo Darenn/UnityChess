@@ -11,8 +11,8 @@ public var prepareSound : AudioClip;
 private var isRunning : boolean;
 
 // Components
-private var audioSource : AudioSource;
-private var animator : Animator;
+protected var audioSource : AudioSource;
+protected var animator : Animator;
 
 function Start() {
 	audioSource = gameObject.GetComponent(AudioSource);

@@ -496,6 +496,9 @@ function DragDetect():void
 					{
 					if(drag1_animator==0)			// If the previous animation is over...
 						{
+						// deselect the the old piece
+						if (GameObject.Find("piece_"+drag1_at) != null)
+							GameObject.Find("piece_"+drag1_at).GetComponent(ActionController).StopPrepare();
 						drag1_at=at;
 						if(drawAnim) 
 							{
@@ -589,7 +592,8 @@ function DoPieceMovements(): IEnumerable
 	
 	// a piece is dragged
 	if(drag1_animator>0) {
-		GameObject.Find("piece_"+drag1_at).transform.position.y-=(5.5-drag1_animator)*0.06;
+		//GameObject.Find("piece_"+drag1_at).transform.position.y-=(5.5-drag1_animator)*0.06;
+		GameObject.Find("piece_"+drag1_at).GetComponent(ActionController).Prepare();
 		drag1_animator--;
 	}
 	
@@ -608,6 +612,7 @@ function DoPieceMovements(): IEnumerable
 			// Say to the piece to run
 			actionController = mObj.GetComponent(ActionController);
 			if (actionController != null && !actionController.IsRunning()) {
+				actionController.StopPrepare();
 				actionController.Run();
 			}		
 			var pieceat : String = ((("QRBN").IndexOf(bc)>=0) ? "p" : (C0.c0_D_what_at(move_to)).Substring(1,1));
