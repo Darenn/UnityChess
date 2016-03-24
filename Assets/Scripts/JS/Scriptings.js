@@ -318,15 +318,18 @@ function piecelongtype(figure : String, color : String) : String
  */
 function PiecePosition(pieceType : String, pieceAt : String) : Vector3
 {
-	var a8Obj = GameObject.Find("black_rook_scaled_a8");
-	var h1Obj = GameObject.Find("white_rook_scaled_h1");
-	var dx=(h1Obj.transform.position.x-a8Obj.transform.position.x)/7;
-	var dy=(h1Obj.transform.position.y-a8Obj.transform.position.y)/7;
-	var dz=(h1Obj.transform.position.z-a8Obj.transform.position.z)/7;
+	var a8Obj = GameObject.Find(constant.BLACK_ROOK);
+	var h1Obj = GameObject.Find(constant.WHITE_ROOK);
 
-	var drx=-(h1Obj.transform.rotation.x-a8Obj.transform.rotation.x)/7;
-	var dry=-(h1Obj.transform.rotation.y-a8Obj.transform.rotation.y)/7;
-	var drz=-(h1Obj.transform.rotation.z-a8Obj.transform.rotation.z)/7;
+	var dx = (h1Obj.transform.position.x - a8Obj.transform.position.x) / 7;
+	var dy = (h1Obj.transform.position.y - a8Obj.transform.position.y) / 7;
+	var dz = (h1Obj.transform.position.z - a8Obj.transform.position.z) / 7;
+
+	var drx =- (h1Obj.transform.rotation.x - a8Obj.transform.rotation.x) / 7;
+	var dry =- (h1Obj.transform.rotation.y - a8Obj.transform.rotation.y) / 7;
+	var drz =- (h1Obj.transform.rotation.z - a8Obj.transform.rotation.z) / 7;
+
+	// var fromObj : GameObject;
 
 	var fromObj = GameObject.Find( ((pieceType.IndexOf("Particle")>=0) ? pieceType :  constant.BOARD_NAME + pieceType) );
 

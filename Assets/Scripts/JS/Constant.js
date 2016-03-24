@@ -31,6 +31,7 @@ public class Constant extends MonoBehaviour
 	public final var WHITE_SIDE =  1;
 	
 	public final var ENGINE_ = 0;
+	public final var ENGINE_WAITING = 1;
 	
 	public final var CASE_NUMBER = new Vector2(8, 8);
 	public final var LAMP_INTENSITY = 0.750f;

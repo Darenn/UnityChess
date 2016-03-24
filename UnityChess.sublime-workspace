@@ -1,0 +1,428 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"if",
+				"ife	if … else"
+			],
+			[
+				"ASS",
+				"ASSERT_LOWER"
+			],
+			[
+				"ex",
+				"exchange"
+			],
+			[
+				"de",
+				"desired"
+			],
+			[
+				"s",
+				"size"
+			],
+			[
+				"m_",
+				"m_memsize"
+			],
+			[
+				"ASSERR",
+				"ASSERT_LOWER"
+			],
+			[
+				"rea",
+				"realptr"
+			],
+			[
+				"Me",
+				"MemoryBlockHeader"
+			],
+			[
+				"size",
+				"sizeof"
+			],
+			[
+				"null",
+				"nullptr"
+			],
+			[
+				"nu",
+				"numeric_limits"
+			],
+			[
+				"m_m",
+				"m_memory"
+			],
+			[
+				"m",
+				"m_memory"
+			],
+			[
+				"m_me",
+				"m_memsize"
+			],
+			[
+				"ptr",
+				"ptr_size"
+			],
+			[
+				"get",
+				"getAllocatedSize"
+			],
+			[
+				"Moe",
+				"MemoryPool"
+			],
+			[
+				"No",
+				"NonCopyable"
+			],
+			[
+				"arg",
+				"argv"
+			],
+			[
+				"Po",
+				"Point2D"
+			],
+			[
+				"ve",
+				"vector_1"
+			],
+			[
+				"vec",
+				"vector_1"
+			],
+			[
+				"vectr",
+				"vector_1"
+			],
+			[
+				"po",
+				"pointIndex"
+			],
+			[
+				"poi",
+				"pointIndex"
+			],
+			[
+				"pi",
+				"point"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 392.0,
+		"last_filter": "Insta",
+		"selected_items":
+		[
+			[
+				"Insta",
+				"Package Control: Install Package"
+			],
+			[
+				"insta",
+				"Package Control: Install Package"
+			],
+			[
+				"git",
+				"Github: Plugin Settings"
+			],
+			[
+				"Instal",
+				"Package Control: Install Package"
+			],
+			[
+				"git ",
+				"Package Control: Install Package"
+			],
+			[
+				"Instak",
+				"Package Control: Install Package"
+			],
+			[
+				"Unity",
+				"Build: New Build System"
+			],
+			[
+				"package control",
+				"Preferences: Package Control Settings – Default"
+			],
+			[
+				"co",
+				"Preferences: Browse Packages"
+			],
+			[
+				"pack",
+				"Preferences: Browse Packages"
+			]
+		],
+		"width": 664.0
+	},
+	"console":
+	{
+		"height": 146.0,
+		"history":
+		[
+			"import urllib.request,os,hashlib; h = '2915d1851351e5ee549c20394736b442' + '8bc59f460fa1548d1514676163dafc88'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by) "
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/C/Users/Vincent/Documents/Workspace/Unity/unitychess"
+	],
+	"file_history":
+	[
+		"/C/Users/Vincent/AppData/Roaming/Sublime Text 3/Packages/User/Github Tools.sublime-settings",
+		"/C/Users/Vincent/Desktop/Unity3D-master/README.md",
+		"/C/Users/Vincent/Documents/Workspace/Unity/unitychess/Assets/Scripts/JS/VRMenuController.js",
+		"/C/Users/Vincent/Documents/Workspace/Unity/unitychess/Assets/Scripts/JS/ActionController.js",
+		"/C/Users/Vincent/AppData/Roaming/Sublime Text 3/Packages/SideBarGit/SideBarGit.sublime-settings",
+		"/C/Users/Vincent/AppData/Roaming/Sublime Text 3/Packages/Package Control/Package Control.sublime-settings",
+		"/C/Users/Vincent/Documents/Workspace/Unity/unitychess/UnityChess.sublime-project",
+		"/C/Users/Vincent/Documents/Workspace/Unity/unitychess/Assets/Scripts/JS/Scriptings.js",
+		"/C/Users/Vincent/Documents/Workspace/Unity/unitychess/Assets/Scripts/JS/Constant.js",
+		"/C/Users/Vincent/Documents/Workspace/Unity/unitychess/Assets/Scripts/JS/Scriptings.js.meta",
+		"/C/Users/Vincent/AppData/Roaming/Sublime Text 3/Packages/User/Plain text.sublime-settings",
+		"/C/Users/Vincent/Desktop/BMU/BackUP",
+		"/C/Users/Vincent/Desktop/BMU/BackUP_2",
+		"/C/Users/Vincent/Documents/Workspace/Unity/chessproject/Assets/Scripts/C#/ValilChessEngine/book.bin",
+		"/C/Users/Vincent/Desktop/BMU/Journal/Journal.txt",
+		"/C/Users/Vincent/Documents/Workspace/CPP/PoolAllocator/src/Assertion.cpp",
+		"/C/Users/Vincent/Documents/Workspace/CPP/PoolAllocator/include/NonCopyable.hpp",
+		"/C/Users/Vincent/Documents/Workspace/CPP/PoolAllocator/src/NonCopyable.cpp",
+		"/C/Users/Vincent/Documents/Workspace/CPP/PoolAllocator/compilation.bat",
+		"/C/wamp/www/Calendar/index.html",
+		"/C/Users/Vincent/Desktop/GameEngine/ConvexShape.hpp",
+		"/C/Users/Vincent/Desktop/GameEngine/Maths.cpp",
+		"/C/Users/Vincent/Desktop/GameEngine/ConvexShape.cpp",
+		"/C/Users/Vincent/Desktop/GameEngine/Physics.cpp",
+		"/C/Users/Vincent/Desktop/GameEngine/Maths.hpp",
+		"/C/Users/Vincent/Desktop/GameEngine/Line.hpp",
+		"/C/Users/Vincent/Desktop/GameEngine/Point2D.hpp",
+		"/C/Users/Vincent/Desktop/GameEngine/Line.cpp",
+		"/C/Users/Vincent/Desktop/GameEngine/Point2D.cpp",
+		"/C/Users/Vincent/Desktop/GameEngine/compilation.bat",
+		"/C/Users/Vincent/Desktop/Physics.cpp",
+		"/C/Users/Vincent/Desktop/Physics.c",
+		"/C/Users/Vincent/Desktop/Calendrier ASP Calendar Trucsweb  www.trucsweb.com.htm",
+		"/C/wamp/www/JoomlaProject/configuration.php",
+		"/C/Users/Vincent/Documents/Workspace/Unity/Omega/Assets/Scripts/script_CharacterController.cs",
+		"/C/Users/Vincent/AppData/Local/Temp/Edit.cshtml",
+		"/C/Users/Vincent/Documents/Workspace/CPP/FreakyMonsters/serveur/src/Gestionnaire/GestionnaireSocket.cpp",
+		"/C/Users/Vincent/Desktop/bookmarks.html",
+		"/C/Users/Vincent/Desktop/main.lua",
+		"/C/Users/Vincent/AppData/Local/Temp/IXP000.TMP/http",
+		"/C/Users/Vincent/Desktop/FreakyMonsters/serveur/src/Gestionnaires/GestionnaireSocket.cpp",
+		"/C/Users/Vincent/Desktop/LargeUInteger/src/main.cpp",
+		"/F/Projets C++/Serveur - Client/srcClient/Main.cpp",
+		"/C/Users/Vincent/Desktop/LargeUInteger/bin/res.hex",
+		"/F/Server - Updater/res/conf/config.conf",
+		"/C/Users/Vincent/Desktop/CasseBrique/src/Music.cpp",
+		"/C/Users/Vincent/Desktop/CasseBrique/src/PlayList.cpp",
+		"/C/Users/Vincent/AppData/Local/Temp/LoginMenu.cpp",
+		"/C/Users/Vincent/Desktop/freakymonsters/client/src/Vues/VueAccueil.cpp",
+		"/C/Users/Vincent/Desktop/freakymonsters/client/include/Vues/Interfaces/BasicInterface.hpp",
+		"/C/Users/Vincent/AppData/Local/Temp/Nemesis.cpp",
+		"/C/Users/Vincent/Desktop/Arcane - Server/AUTH_SERVER/conf/Auth.conf",
+		"/C/Users/Vincent/Desktop/Arcane - Server/MASTER_SERVER/conf/Master.conf",
+		"/F/Mardi/projetC++/Serveur - Client/srcClient/Main.cpp",
+		"/C/Users/Vincent/Desktop/freakymonsters/client/src/Vues/Interfaces/BasicInterface.cpp",
+		"/C/Users/Vincent/Desktop/freakymonsters/client/src/Vues/Interfaces.cpp",
+		"/C/Users/Vincent/Desktop/freakymonsters/client/FreakyMonsters.cpp",
+		"/C/Users/Vincent/Desktop/Arcane - Server/MASTER_SERVER/data/DB_Arcane_World.sql",
+		"/C/Users/Vincent/Desktop/Arcane - Server/MASTER_SERVER/data/DB_Arcane_Users.sql",
+		"/F/Mardi/projetC++/Sound Test 1/main.cpp",
+		"/F/Mardi/projetC++/Kernel/src/Nemesis.cpp",
+		"/F/Mardi/projetC++/ArcaneUnitTest/src/ArcaneUnitTest.cpp",
+		"/F/Mardi/projetC++/CNemesis/src/CNemsis.cpp",
+		"/C/Users/Vincent/Documents/Projects/Matane/WebTmp/tmp3.html",
+		"/F/Projets C++/LargeUInteger/src/main.cpp",
+		"/F/Mardi/projetC++/Anniversaire AD/Anniversaire.cpp",
+		"/F/Projets C++/LargeUInteger/src/LargeUInteger.cpp",
+		"/F/Projets C++/Dialog/test.cpp",
+		"/F/Projets C++/CasseBrique/src/Game.cpp",
+		"/F/Mardi/projetC++/tmp/out.asm",
+		"/F/Mardi/projetC++/tmp/test.c",
+		"/C/Users/Vincent/Documents/Projects/Matane/WebTmp/tmp.html",
+		"/C/Users/Vincent/Documents/Projects/Matane/WebTmp/tmp2.html",
+		"/C/Users/Vincent/Desktop/tmp.html",
+		"/C/Users/Vincent/Desktop/tmp2.html",
+		"/C/Users/Vincent/Desktop/tmp3.html",
+		"/C/Users/Vincent/Desktop/source_client/client/src/AnimatableObject.cpp",
+		"/C/Users/Vincent/Desktop/source_client/client/src/LoginMenu.cpp",
+		"/C/Users/Vincent/Desktop/source_client/updater/connection/FileManager.cpp",
+		"/C/Users/Vincent/Desktop/source_client/updater/connection/FTPManager.cpp",
+		"/C/Users/Vincent/Desktop/source_client/updater/connection/ServerConnection.cpp",
+		"/C/Users/Vincent/Desktop/source_client/client/include/LoginMenu.hpp",
+		"/C/Users/Vincent/Desktop/source_client/client/src/Nemesis.cpp",
+		"/C/Users/Vincent/Desktop/client/client/src/LoginMenu.cpp",
+		"/C/Users/Vincent/Desktop/client/client/include/WaitingRoom.hpp",
+		"/C/Users/Vincent/Desktop/client/client/include/LoginMenu.hpp",
+		"/C/Users/Vincent/Desktop/client/client/src/ManagerGroup.cpp",
+		"/C/Users/Vincent/Desktop/client/client/src/Nemesis.cpp",
+		"/C/Users/Vincent/Desktop/client/client/src/TargetManager.cpp",
+		"/C/Users/Vincent/Desktop/client/client/src/WaitingRoom.cpp",
+		"/C/Users/Vincent/Desktop/client/client/include/ManagerGroup.hpp",
+		"/C/Users/Vincent/Desktop/client/client/include/TargetManager.hpp",
+		"/C/Users/Vincent/Desktop/client/client/src/SplashScreen.cpp",
+		"/C/Users/Vincent/Documents/Projects/server/Game/test/connectorUnitTest/ConnectorUnitTest.cpp",
+		"/C/Users/Vincent/Documents/Projects/server/Game/test/databaseUnitTest/TableUnitTest.cpp",
+		"/C/Users/Vincent/Documents/Projects/server/Game/test/databaseUnitTest/FieldUnitTest.cpp",
+		"/C/Users/Vincent/Documents/Projects/client/client/src/BasicInterface.cpp",
+		"/C/Users/Vincent/Documents/Projects/client/client/src/LoginMenu.cpp",
+		"/C/Users/Vincent/Documents/Projects/client/client/src/TextureManager.cpp",
+		"/C/Users/Vincent/Documents/Projects/client/client/src/Surrounder.cpp",
+		"/C/Users/Vincent/Documents/Projects/client/client/src/TargetManager.cpp",
+		"/C/Users/Vincent/Documents/Projects/client/client/src/TriggerableObject.cpp",
+		"/C/Users/Vincent/Documents/Projects/client/client/src/Updatable.cpp",
+		"/C/Users/Vincent/Documents/Projects/client/client/src/VideoParam.cpp",
+		"/C/Users/Vincent/Documents/Projects/client/client/src/VideoPlayer.cpp",
+		"/C/Users/Vincent/Documents/Projects/client/client/src/VisualObject.cpp",
+		"/C/Users/Vincent/Documents/Projects/client/client/src/WaitingRoom.cpp",
+		"/C/Users/Vincent/Documents/Projects/client/client/src/SplashScreen.cpp",
+		"/C/Users/Vincent/Documents/Projects/client/client/src/Playlist.cpp"
+	],
+	"find":
+	{
+		"height": 26.0
+	},
+	"find_in_files":
+	{
+		"height": 90.0,
+		"where_history":
+		[
+			"C:\\Users\\Vincent\\Desktop\\labyrinthe"
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"Icons"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 26.0
+	},
+	"input":
+	{
+		"height": 34.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "UnityChess.sublime-project",
+	"replace":
+	{
+		"height": 48.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 257.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

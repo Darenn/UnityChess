@@ -14,7 +14,6 @@ private var isRunning : boolean;
 private var audioSource : AudioSource;
 private var animator : Animator;
 
-
 function Start() {
 	audioSource = gameObject.GetComponent(AudioSource);
 	animator = gameObject.GetComponent(Animator);
