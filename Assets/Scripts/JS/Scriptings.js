@@ -50,7 +50,7 @@ function Start ()
 	CreateChessboard();
 	InitiAllPiecesStartPosition();
 
-	C0.c0_side = 1;						// This side is white.   For black set -1
+	C0.c0_side = constant.WHITE_SIDE;	
 	C0.c0_waitmove = true;				// Waiting for mouse drag...
 	C0.c0_set_start_position("");		// Set the initial position...
 	
@@ -61,7 +61,6 @@ function Start ()
 
 /**
  * Called once per Frame
- * TODO
  */
 function Update ()
 {
@@ -173,8 +172,8 @@ function InitPieceStartPosition(pieceType : String, pieceFrom : String) : void
  */
 function HideBlankPieces() : void
 {
-	GameObject.Find(constant.BLACK_ROOK).GetComponent.<Renderer>().enabled = false;
-	GameObject.Find(constant.WHITE_ROOK).GetComponent.<Renderer>().enabled = false;
+	GameObject.Find(constant.BLACK_ROOK).GetComponent(Renderer).enabled = false;
+	GameObject.Find(constant.WHITE_ROOK).GetComponent(Renderer).enabled = false;
 	
 	GameObject.Find(constant.BOARD_NAME + constant.OP_KNIGHT_NAME).GetComponent(Renderer).enabled = false;
 	GameObject.Find(constant.BOARD_NAME + constant.KNIGHT_NAME).GetComponent(Renderer).enabled = false;
@@ -184,8 +183,8 @@ function HideBlankPieces() : void
 	GameObject.Find(constant.BOARD_NAME + constant.ROOK_NAME).GetComponent(Renderer).enabled = false;
 	GameObject.Find(constant.BOARD_NAME + constant.KING_NAME).GetComponent(Renderer).enabled = false;
 
-	GameObject.Find(constant.MOVE_PARTICLE).GetComponent.<Renderer>().enabled = false;
-	GameObject.Find(constant.DRAG_PARTICLE).GetComponent.<Renderer>().enabled = false;
+	GameObject.Find(constant.MOVE_PARTICLE).GetComponent(Renderer).enabled = false;
+	GameObject.Find(constant.DRAG_PARTICLE).GetComponent(Renderer).enabled = false;
 }
 
 /**
@@ -213,6 +212,8 @@ function CreateActiveParticles() : void
 
 /**
  * Create a pieces with their right position
+ *
+ * @return void
  */
 function position2board() : void
 {
@@ -310,13 +311,54 @@ function piecelongtype(figure : String, color : String) : String
 
 /**
  * TODO
+ *
+ * @param
+ * @param
+ * @return 
  */
-function DoEngineMovements():void
+function PiecePosition(pieceType : String, pieceAt : String) : Vector3
 {
-    C0.c0_waitmove=(C0.c0_sidemoves==C0.c0_side);
+	var a8Obj = GameObject.Find("black_rook_scaled_a8");
+	var h1Obj = GameObject.Find("white_rook_scaled_h1");
+	var dx=(h1Obj.transform.position.x-a8Obj.transform.position.x)/7;
+	var dy=(h1Obj.transform.position.y-a8Obj.transform.position.y)/7;
+	var dz=(h1Obj.transform.position.z-a8Obj.transform.position.z)/7;
+
+	var drx=-(h1Obj.transform.rotation.x-a8Obj.transform.rotation.x)/7;
+	var dry=-(h1Obj.transform.rotation.y-a8Obj.transform.rotation.y)/7;
+	var drz=-(h1Obj.transform.rotation.z-a8Obj.transform.rotation.z)/7;
+
+	var fromObj = GameObject.Find( ((pieceType.IndexOf("Particle")>=0) ? pieceType :  constant.BOARD_NAME + pieceType) );
+
+	var h=System.Convert.ToInt32(pieceAt[0])-System.Convert.ToInt32("a"[0]);
+	var v=System.Convert.ToInt32(pieceAt.Substring(1,1));
+	if(C0.c0_side<0)			// Could also work with cameras, anyway this also isn't a bad solution... (Swap board if black)
+		{
+		h=7-h;
+		v=9-v;
+		}
+		
+	// Very according to camera placement...
+	//  The thing is that 2D board 8x8 calculation can't be measured with 3D vectors in a simple way. So, constants were used for existing models...
+	var h1=(7-h)*0.96;
+	var v1=(v-1)*1.04;
+
+	return (fromObj.transform.position+ Vector3(-dx*h1,-dy*0.6*(Mathf.Sqrt(Mathf.Pow(h1,2)+Mathf.Pow(v1,2))),-dz*v1));
+}
+
+/**
+ * This function is called once per frame (Update)
+ * Do something if the chess engine has to do a move
+ *	
+ * TODO -
+ * @return void
+ */
+function DoEngineMovements() : void
+{
+	C0.c0_waitmove = (C0.c0_sidemoves == C0.c0_side);
 
     
-	if((!flagManager.GetGameOverFlag()) && (engineStatus==0) && (move_animator<4))
+	if((!flagManager.GetGameOverFlag()) && (engineStatus == 0) && (move_animator < 4))
 	{
 		if(C0.c0_D_is_check_to_king("w") || C0.c0_D_is_check_to_king("b"))
 		{
@@ -347,40 +389,7 @@ function DoEngineMovements():void
 		scriptManager.GetScript("valilCES").SendMessage("JSSetDeep",chess_strength.ToString());
 		scriptManager.GetScript("valilCES").SendMessage("JSRequest",C0.c0_get_FEN());
 		engineStatus=3;
-	} 
-}
-
-/**
- * TODO
- */
-function PiecePosition(piecetype:String,piece_at:String):Vector3
-{
-	var a8Obj = GameObject.Find("black_rook_scaled_a8");
-	var h1Obj = GameObject.Find("white_rook_scaled_h1");
-	var dx=(h1Obj.transform.position.x-a8Obj.transform.position.x)/7;
-	var dy=(h1Obj.transform.position.y-a8Obj.transform.position.y)/7;
-	var dz=(h1Obj.transform.position.z-a8Obj.transform.position.z)/7;
-
-	var drx=-(h1Obj.transform.rotation.x-a8Obj.transform.rotation.x)/7;
-	var dry=-(h1Obj.transform.rotation.y-a8Obj.transform.rotation.y)/7;
-	var drz=-(h1Obj.transform.rotation.z-a8Obj.transform.rotation.z)/7;
-
-	var fromObj = GameObject.Find( ((piecetype.IndexOf("Particle")>=0) ? piecetype :  constant.BOARD_NAME + piecetype) );
-
-	var h=System.Convert.ToInt32(piece_at[0])-System.Convert.ToInt32("a"[0]);
-	var v=System.Convert.ToInt32(piece_at.Substring(1,1));
-	if(C0.c0_side<0)			// Could also work with cameras, anyway this also isn't a bad solution... (Swap board if black)
-		{
-		h=7-h;
-		v=9-v;
-		}
-		
-	// Very according to camera placement...
-	//  The thing is that 2D board 8x8 calculation can't be measured with 3D vectors in a simple way. So, constants were used for existing models...
-	var h1=(7-h)*0.96;
-	var v1=(v-1)*1.04;
-
-	return (fromObj.transform.position+ Vector3(-dx*h1,-dy*0.6*(Mathf.Sqrt(Mathf.Pow(h1,2)+Mathf.Pow(v1,2))),-dz*v1));
+	}
 }
 
 /**
@@ -438,9 +447,8 @@ function MouseMovement():void
 					}
 				}
 			}
-
-			}
 		}
+	}
 }
 
 /**
