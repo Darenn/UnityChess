@@ -581,7 +581,7 @@ function DoPieceMovements(): IEnumerable
 
 		var animatedObject = GameObject.Find("piece_" + drag1_at).GetComponent(ActionController);
 
-		if(animatedObject != null)
+		if(animatedObject != null && !animatedObject.IsPreparing())
 		{
 			animatedObject.Prepare();
 		}
@@ -604,6 +604,7 @@ function DoPieceMovements(): IEnumerable
 			var bc : String =(((C0.c0_moves2do.length>4) && (C0.c0_moves2do.Substring(4,1)=="[")) ? C0.c0_moves2do.Substring(5,1) : " ");
 			
 			// get the piece relative to the from position
+			Debug.Log("piece_"+move_from);
 			var mObj : GameObject = GameObject.Find("piece_"+move_from);
 			
 			// Say to the piece to run

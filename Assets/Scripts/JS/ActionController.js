@@ -9,6 +9,7 @@ public var dieSound : AudioClip;
 public var prepareSound : AudioClip;
 
 private var isRunning : boolean;
+private var isPreparing : boolean;
 
 // Components
 protected var audioSource : AudioSource;
@@ -20,12 +21,14 @@ function Start() {
 }
 
 function Prepare() {
+	isPreparing = true;
 	animator.SetBool ("IsPreparing", true);
 	audioSource.clip = prepareSound;
 	audioSource.Play ();
 }
 
 function StopPrepare() {
+	isPreparing = false;
 	animator.SetBool ("IsPreparing", false);
 	audioSource.Stop ();
 }
@@ -63,5 +66,9 @@ function Die() {
 
 function IsRunning() : boolean {
 	return isRunning;
+}
+
+function IsPreparing() : boolean {
+	return isPreparing;
 }
 
