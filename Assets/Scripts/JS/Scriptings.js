@@ -17,6 +17,7 @@ private var lightController : LightController;
 private var scriptManager : ScriptManager;
 private var flagManager : FlagManager;
 private var constant : Constant;
+private var case_destination : Vector3;
 
 var toPromote=0;						// Promotion option (0-Q,1-R,2-B,3-N)...
 var drag1_at="";								// square with a piece dragged after the first drag...
@@ -50,14 +51,14 @@ function Start ()
 	lightController.SetLightIntensity(constant.LAMP_INTENSITY);
 	
 	CreateChessboard();
-	InitiAllPiecesStartPosition();
+	//InitiAllPiecesStartPosition();
 
 	C0.c0_side = constant.WHITE_SIDE;	
 	C0.c0_waitmove = true;				// Waiting for mouse drag...
 	C0.c0_set_start_position("");		// Set the initial position...
 	
-	position2board();					// Set current position on the board visually...
-	HideBlankPieces();				    // Hide blank-pieces...
+	//position2board();					// Set current position on the board visually...
+	//HideBlankPieces();				    // Hide blank-pieces...
 	CreateActiveParticles();		    // Active particles are just copies, to keep acurate position on screen...	
 }
 
@@ -322,35 +323,7 @@ function piecelongtype(figure : String, color : String) : String
  */
 function PiecePosition(pieceType : String, pieceAt : String) : Vector3
 {
-	var a8Obj = GameObject.Find(constant.BLACK_ROOK);
-	var h1Obj = GameObject.Find(constant.WHITE_ROOK);
-
-	var dx = (h1Obj.transform.position.x - a8Obj.transform.position.x) / 7;
-	var dy = (h1Obj.transform.position.y - a8Obj.transform.position.y) / 7;
-	var dz = (h1Obj.transform.position.z - a8Obj.transform.position.z) / 7;
-
-	var drx =- (h1Obj.transform.rotation.x - a8Obj.transform.rotation.x) / 7;
-	var dry =- (h1Obj.transform.rotation.y - a8Obj.transform.rotation.y) / 7;
-	var drz =- (h1Obj.transform.rotation.z - a8Obj.transform.rotation.z) / 7;
-
-	// var fromObj : GameObject;
-
-	var fromObj = GameObject.Find( ((pieceType.IndexOf("Particle")>=0) ? pieceType :  constant.BOARD_NAME + pieceType) );
-
-	var h=System.Convert.ToInt32(pieceAt[0])-System.Convert.ToInt32("a"[0]);
-	var v=System.Convert.ToInt32(pieceAt.Substring(1,1));
-	if(C0.c0_side<0)			// Could also work with cameras, anyway this also isn't a bad solution... (Swap board if black)
-		{
-		h=7-h;
-		v=9-v;
-		}
-		
-	// Very according to camera placement...
-	//  The thing is that 2D board 8x8 calculation can't be measured with 3D vectors in a simple way. So, constants were used for existing models...
-	var h1=(7-h)*0.96;
-	var v1=(v-1)*1.04;
-
-	return (fromObj.transform.position+ Vector3(-dx*h1,-dy*0.6*(Mathf.Sqrt(Mathf.Pow(h1,2)+Mathf.Pow(v1,2))),-dz*v1));
+	return case_destination;
 }
 
 /**
@@ -432,8 +405,7 @@ function MouseMovement():void
 		{
 			// TEST
 			highlighter.SetHighlighterPosition(hit.transform.position);
-
-
+			case_destination = hit.transform.position;
 			var at="";
 			for(var h=0;h<8;h++)
 				for(var v=8;v>0;v--)
@@ -623,6 +595,7 @@ function DoPieceMovements(): IEnumerable
 			// locate where is the piece from, and where it goes with chess coordonnates (a2)
 			var move_from : String =C0.c0_moves2do.Substring(0,2);
 			var move_to : String =C0.c0_moves2do.Substring(2,2);
+			case_destination = GameObject.Find(constant.PLANE_BASE + move_to).transform.position;
 			var bc : String =(((C0.c0_moves2do.length>4) && (C0.c0_moves2do.Substring(4,1)=="[")) ? C0.c0_moves2do.Substring(5,1) : " ");
 			
 			// get the piece relative to the from position
