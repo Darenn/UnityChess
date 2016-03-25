@@ -4,6 +4,14 @@
 		"selected_items":
 		[
 			[
+				"AddListen",
+				"UnityEvent.AddListener(call)"
+			],
+			[
+				"Game",
+				"GameObject	*()"
+			],
+			[
 				"if",
 				"ife	if … else"
 			],
@@ -115,6 +123,30 @@
 	},
 	"buffers":
 	[
+		{
+			"file": "Assets/Scripts/JS/Scriptings.js",
+			"settings":
+			{
+				"buffer_size": 26203,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Assets/Scripts/JS/VRMenuController.js",
+			"settings":
+			{
+				"buffer_size": 1960,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "Assets/Scripts/JS/Constant.js",
+			"settings":
+			{
+				"buffer_size": 1134,
+				"line_ending": "Unix"
+			}
+		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -124,9 +156,29 @@
 	"command_palette":
 	{
 		"height": 392.0,
-		"last_filter": "Insta",
+		"last_filter": "",
 		"selected_items":
 		[
+			[
+				"git rep",
+				"Github: Repository"
+			],
+			[
+				"git push",
+				"Git: Push"
+			],
+			[
+				"git commit",
+				"Git: Commit"
+			],
+			[
+				"git A",
+				"Git: Add All"
+			],
+			[
+				"git",
+				"Git: Pull"
+			],
 			[
 				"Insta",
 				"Package Control: Install Package"
@@ -134,10 +186,6 @@
 			[
 				"insta",
 				"Package Control: Install Package"
-			],
-			[
-				"git",
-				"Github: Plugin Settings"
 			],
 			[
 				"Instal",
@@ -168,13 +216,16 @@
 				"Preferences: Browse Packages"
 			]
 		],
-		"width": 664.0
+		"width": 528.0
 	},
 	"console":
 	{
 		"height": 146.0,
 		"history":
 		[
+			"git",
+			"clear()",
+			"git",
 			"import urllib.request,os,hashlib; h = '2915d1851351e5ee549c20394736b442' + '8bc59f460fa1548d1514676163dafc88'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by) "
 		]
 	},
@@ -189,18 +240,24 @@
 	},
 	"expanded_folders":
 	[
-		"/C/Users/Vincent/Documents/Workspace/Unity/unitychess"
+		"/C/Users/Vincent/Documents/Workspace/Unity/unitychess/Assets/Scripts",
+		"/C/Users/Vincent/Documents/Workspace/Unity/unitychess/Assets/Scripts/C#",
+		"/C/Users/Vincent/Documents/Workspace/Unity/unitychess/Assets/Scripts/JS"
 	],
 	"file_history":
 	[
+		"/C/Users/Vincent/Documents/Workspace/Unity/unitychess/.gitignore",
+		"/C/Users/Vincent/Documents/Workspace/Unity/unitychess/Assets/Scripts/JS/ActionControllerKnight.js",
+		"/C/Users/Vincent/AppData/Roaming/Sublime Text 3/Packages/User/Git.sublime-settings",
+		"/C/Users/Vincent/AppData/Roaming/Sublime Text 3/Packages/Git/Git.sublime-settings",
+		"/C/Users/Vincent/Documents/Workspace/Unity/unitychess/Assets/Scripts/JS/Scriptings.js",
+		"/C/Users/Vincent/Documents/Workspace/Unity/unitychess/UnityChess.sublime-project",
 		"/C/Users/Vincent/AppData/Roaming/Sublime Text 3/Packages/User/Github Tools.sublime-settings",
 		"/C/Users/Vincent/Desktop/Unity3D-master/README.md",
 		"/C/Users/Vincent/Documents/Workspace/Unity/unitychess/Assets/Scripts/JS/VRMenuController.js",
 		"/C/Users/Vincent/Documents/Workspace/Unity/unitychess/Assets/Scripts/JS/ActionController.js",
 		"/C/Users/Vincent/AppData/Roaming/Sublime Text 3/Packages/SideBarGit/SideBarGit.sublime-settings",
 		"/C/Users/Vincent/AppData/Roaming/Sublime Text 3/Packages/Package Control/Package Control.sublime-settings",
-		"/C/Users/Vincent/Documents/Workspace/Unity/unitychess/UnityChess.sublime-project",
-		"/C/Users/Vincent/Documents/Workspace/Unity/unitychess/Assets/Scripts/JS/Scriptings.js",
 		"/C/Users/Vincent/Documents/Workspace/Unity/unitychess/Assets/Scripts/JS/Constant.js",
 		"/C/Users/Vincent/Documents/Workspace/Unity/unitychess/Assets/Scripts/JS/Scriptings.js.meta",
 		"/C/Users/Vincent/AppData/Roaming/Sublime Text 3/Packages/User/Plain text.sublime-settings",
@@ -305,7 +362,7 @@
 	],
 	"find":
 	{
-		"height": 26.0
+		"height": 34.0
 	},
 	"find_in_files":
 	{
@@ -320,6 +377,7 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"log",
 			"Icons"
 		],
 		"highlight": true,
@@ -338,8 +396,106 @@
 	"groups":
 	[
 		{
+			"selected": 1,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "Assets/Scripts/JS/Scriptings.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 26203,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								15893,
+								15893
+							]
+						],
+						"settings":
+						{
+							"rulers":
+							[
+								80
+							],
+							"syntax": "Packages/Unity3D-master/Unity3D-master/UnityJavaScript.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 8672.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "Assets/Scripts/JS/VRMenuController.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1960,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								357,
+								357
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Unity3D-master/Unity3D-master/UnityJavaScript.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
+			]
+		},
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 2,
+					"file": "Assets/Scripts/JS/Constant.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1134,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								965,
+								965
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Unity3D-master/Unity3D-master/UnityJavaScript.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				}
 			]
 		}
 	],
@@ -360,11 +516,18 @@
 				0,
 				1,
 				1
+			],
+			[
+				1,
+				0,
+				2,
+				1
 			]
 		],
 		"cols":
 		[
 			0.0,
+			0.622114668652,
 			1.0
 		],
 		"rows":
@@ -377,6 +540,14 @@
 	"output.find_results":
 	{
 		"height": 0.0
+	},
+	"output.git":
+	{
+		"height": 118.0
+	},
+	"output.unsaved_changes":
+	{
+		"height": 118.0
 	},
 	"pinned_build_system": "",
 	"project": "UnityChess.sublime-project",

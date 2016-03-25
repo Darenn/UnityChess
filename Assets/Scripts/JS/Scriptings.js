@@ -12,6 +12,7 @@ public var C0 : c0_4unity_chess = new c0_4unity_chess();
 
 // Member scripts
 private var vrMenuController : VRMenuController;
+private var highlighter : HighlighterController;
 private var lightController : LightController;
 private var scriptManager : ScriptManager;
 private var flagManager : FlagManager;
@@ -32,6 +33,7 @@ var chess_strength=3;						// Set strength of chess engine...
 function Awake()
 {
 	vrMenuController = GetComponent(VRMenuController);
+	highlighter = GetComponent(HighlighterController);
 	lightController = GetComponent(LightController);
 	scriptManager = GetComponent(ScriptManager);
 	flagManager = GetComponent(FlagManager);
@@ -428,6 +430,10 @@ function MouseMovement():void
 
 		if(Physics.Raycast( Camera.main.ScreenPointToRay(Input.mousePosition),  hit, 1000)  && (!(hit.rigidbody==null)))
 		{
+			// TEST
+			highlighter.SetHighlighterPosition(hit.transform.position);
+
+
 			var at="";
 			for(var h=0;h<8;h++)
 				for(var v=8;v>0;v--)
