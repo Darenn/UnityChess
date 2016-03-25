@@ -116,6 +116,8 @@ function CreateChessboard() : void
 					 planeA8.transform.position + position, 
 					 planeA8.transform.rotation);
 
+				// chessboardCase.transform.parent = planeGroup;
+
 				chessboardCase.name = idPiece;
 				chessboardCase.transform.localScale = planeA8.transform.lossyScale;
 			}
@@ -771,9 +773,9 @@ function RollBackAction() : void
 		if(vrMenuController.GetNewGameFlag())
 		{
 			C0.c0_set_start_position("");
-			C0.c0_sidemoves=1;
+			//C0.c0_sidemoves=1;
 			C0.c0_waitmove=false;
-			C0.c0_side=-C0.c0_side;
+			//C0.c0_side=-C0.c0_side;
 			C0.c0_waitmove=(C0.c0_side==C0.c0_sidemoves);
 			vrMenuController.SetNewGameFlag(false);
 
@@ -792,8 +794,12 @@ function RollBackAction() : void
 			chessboardClone.transform.parent = parentObject;
 			chessboardClone.transform.localScale = tmpChessboard.transform.localScale;
 
-			// var scaleChessboard = tmpChessboard.transform.lossyScale;
-			// scaleChessboard = parentObject.transform.lossyScale;
+			// Checking if a rotation (side changement) is needed
+			/*if(C0.c0_side == constant.BLACK_SIDE) {
+				var piecesGroup = GameObject.Find("Pieces");
+				// piecesGroup.transform.Rotate(0, 180, 0);
+				Debug.Log("Side Changement");
+			}*/
 
 			Destroy(tmpChessboard);
 			Debug.Log("DEBUG");	
