@@ -8,6 +8,7 @@ import c0_4unity_chess;
 
 // Main camera
 public var mainCamera : Camera;
+public var chessboard : GameObject;
 public var C0 : c0_4unity_chess = new c0_4unity_chess();
 
 // Member scripts
@@ -17,6 +18,8 @@ private var lightController : LightController;
 private var scriptManager : ScriptManager;
 private var flagManager : FlagManager;
 private var constant : Constant;
+
+
 private var case_destination : Vector3;
 
 var toPromote=0;						// Promotion option (0-Q,1-R,2-B,3-N)...
@@ -741,40 +744,60 @@ engineStatus=0;
 
 
 // Takeback and new game starting is like RollBack - one/all moves.
-function RollBackAction():void
+function RollBackAction() : void
 {
-
-	if((vrMenuController.GetTakeBackFlag() || vrMenuController.GetTakeBackFlag()) 
+	if((vrMenuController.GetNewGameFlag() || vrMenuController.GetTakeBackFlag()) 
 		&& (!C0.c0_moving) && (C0.c0_moves2do.length==0) &&
 		((C0.c0_sidemoves==C0.c0_side) || flagManager.GetGameOverFlag()) 
 		&&  (drag1_animator==0) && (move_animator==0))
 	{
-	if(flagManager.GetGameOverFlag()) flagManager.SetGameOverFlag(false);
-	
-	for(var h=0;h<8;h++)
-		for(var v=8;v>0;v--)
+		if(flagManager.GetGameOverFlag()) flagManager.SetGameOverFlag(false);
+		
+		for(var h=0;h<8;h++)
+			for(var v=8;v>0;v--)
+			{
+			var id="piece_"+System.Convert.ToChar(System.Convert.ToInt32("a"[0])+h)+v.ToString();		// Is this square mouse is over?
+			var qObj=GameObject.Find(id);
+			if(!(qObj==null)) Destroy(qObj);
+			}	
+		if(vrMenuController.GetTakeBackFlag())
 		{
-		var id="piece_"+System.Convert.ToChar(System.Convert.ToInt32("a"[0])+h)+v.ToString();		// Is this square mouse is over?
-		var qObj=GameObject.Find(id);
-		if(!(qObj==null)) Destroy(qObj);
-		}	
-	if(vrMenuController.GetTakeBackFlag())
-	{
-		C0.c0_take_back();
-		if(!(C0.c0_sidemoves==C0.c0_side)) C0.c0_take_back();
-		vrMenuController.SetTakeBackFlag(false);
-	}
-	if(vrMenuController.GetNewGameFlag())
-	{
-		C0.c0_set_start_position("");
-		C0.c0_sidemoves=1;
-		C0.c0_waitmove=false;
-		C0.c0_side=-C0.c0_side;
-		C0.c0_waitmove=(C0.c0_side==C0.c0_sidemoves);
-		vrMenuController.SetNewGameFlag(false);
-	}	
-	
-	position2board();					// Set current position on the board visually...
+			C0.c0_take_back();
+			if(!(C0.c0_sidemoves==C0.c0_side)) C0.c0_take_back();
+			vrMenuController.SetTakeBackFlag(false);
+		}
+
+		// Recreate the chessboard prefab
+		if(vrMenuController.GetNewGameFlag())
+		{
+			C0.c0_set_start_position("");
+			C0.c0_sidemoves=1;
+			C0.c0_waitmove=false;
+			C0.c0_side=-C0.c0_side;
+			C0.c0_waitmove=(C0.c0_side==C0.c0_sidemoves);
+			vrMenuController.SetNewGameFlag(false);
+
+
+
+			var tmpChessboard = GameObject.Find("Chessboard");
+			var parentObject = tmpChessboard.transform.parent;
+
+			Instantiate(chessboard, tmpChessboard.transform.position, 
+									tmpChessboard.transform.rotation);
+			}
+
+			var chessboardClone = GameObject.Find("Chessboard(Clone)");
+			chessboardClone.name = "Chessboard";
+
+			chessboardClone.transform.parent = parentObject;
+			chessboardClone.transform.localScale = tmpChessboard.transform.localScale;
+
+			// var scaleChessboard = tmpChessboard.transform.lossyScale;
+			// scaleChessboard = parentObject.transform.lossyScale;
+
+			Destroy(tmpChessboard);
+			Debug.Log("DEBUG");	
+		// position2board();					// Set current position on the board visually...
 	}
 }
 
