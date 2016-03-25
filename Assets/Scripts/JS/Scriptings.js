@@ -482,7 +482,7 @@ function DragDetect():void
 					if(drag1_animator==0)			// If the previous animation is over...
 						{
 						// deselect the the old piece
-						if (GameObject.Find("piece_"+drag1_at) != null)
+						if (GameObject.Find("piece_"+drag1_at) != null && GameObject.Find("piece_"+drag1_at).GetComponent(ActionController) != null)
 							GameObject.Find("piece_"+drag1_at).GetComponent(ActionController).StopPrepare();
 						drag1_at=at;
 						if(drawAnim) 
