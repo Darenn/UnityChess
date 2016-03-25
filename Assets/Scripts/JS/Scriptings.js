@@ -615,6 +615,8 @@ function DoPieceMovements(): IEnumerable
 
 			var mfrom : Vector3 = PiecePosition(piecetype,move_from);
 			var mto : Vector3 = PiecePosition(piecetype,move_to);
+			// I don't want the piece to go up or down
+			mto.y = mObj.transform.position.y;
 			
 			// The step size is equal to speed times frame time.
 			var step : float = speed * Time.deltaTime;
