@@ -687,52 +687,6 @@ function EngineAnswer(answer:String):void
 var move="";
 if(answer.length>0)
 	{
-	if((answer.length>6) && (answer.Substring(0,7)=="Jester:"))
-		{
-		move=answer.Substring(8,4);
-		C0.c0_become_from_engine = ((answer.length<13)?"Q":(answer.Substring(13,1)).ToUpper());
-		if(move.length>0)
-			{
-			message2show = answer.Substring(0,10)+"-"+answer.Substring(10);
-			C0.c0_move_to(move.Substring(0,2),move.Substring(2,2));
-			C0.c0_sidemoves=-C0.c0_sidemoves;
-			}
-		}
-	else if((answer.length>6) && (answer.Substring(0,7)=="Crafty:"))
-		{
-		move=C0.c0_from_Crafty_standard(answer.Substring(8),(C0.c0_sidemoves>0?"w":"b"));
-		if(move.length>0)
-			{
-			C0.c0_become_from_engine = ((move.length>4)?move.Substring(5,1):"Q");
-			message2show = answer;
-			C0.c0_move_to(move.Substring(0,2),move.Substring(2,2));
-			C0.c0_sidemoves=-C0.c0_sidemoves;
-			}
-		}
-	else if((answer.length>5) && (answer.Substring(0,6)=="Rybka:"))
-		{
-		move=answer.Substring(7,4);
-		C0.c0_become_from_engine = ((answer.length<12)?"Q":(answer.Substring(11,1)).ToUpper());
-		if(move.length>0)
-			{
-			message2show = answer.Substring(0,9)+"-"+answer.Substring(9);
-			C0.c0_move_to(move.Substring(0,2),move.Substring(2,2));
-			C0.c0_sidemoves=-C0.c0_sidemoves;
-			}
-		}
-	else if((answer.length>9) && (answer.Substring(0,10)=="Stockfish:"))
-		{
-		move=answer.Substring(11,4);
-		C0.c0_become_from_engine = ((answer.length<16)?"Q":(answer.Substring(15,1)).ToUpper());
-		if(move.length>0)
-			{
-			message2show = answer.Substring(0,13)+"-"+answer.Substring(13);
-			C0.c0_move_to(move.Substring(0,2),move.Substring(2,2));
-			C0.c0_sidemoves=-C0.c0_sidemoves;
-			}
-		}
-	else
-		{
 		C0.c0_become_from_engine = ((answer.length>5)?answer.Substring(6,1):"Q");
 		if(C0.c0_D_can_be_moved(answer.Substring(0,2),answer.Substring(3,2)))
 			{
@@ -740,7 +694,6 @@ if(answer.length>0)
 			C0.c0_move_to(answer.Substring(0,2),answer.Substring(3,2));
 			C0.c0_sidemoves=-C0.c0_sidemoves;
 			}
-		}
 	}
 engineStatus=0;
 }
