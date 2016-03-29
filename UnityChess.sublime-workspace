@@ -4,6 +4,42 @@
 		"selected_items":
 		[
 			[
+				"highlig",
+				"highlighter	[class]"
+			],
+			[
+				"pare",
+				"parentObject"
+			],
+			[
+				"localSca",
+				"localScale"
+			],
+			[
+				"lossyS",
+				"lossyScale"
+			],
+			[
+				"chess",
+				"chessboard"
+			],
+			[
+				"Insta",
+				"Instantiate	Object.*(original)"
+			],
+			[
+				"tra",
+				"transform	Component.*"
+			],
+			[
+				"transfor",
+				"transform.position	[property]"
+			],
+			[
+				"Hilig",
+				"Highlighter	[class]"
+			],
+			[
 				"AddListen",
 				"UnityEvent.AddListener(call)"
 			],
@@ -127,15 +163,39 @@
 			"file": "Assets/Scripts/JS/Scriptings.js",
 			"settings":
 			{
-				"buffer_size": 26203,
+				"buffer_size": 26399,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "Assets/Scripts/JS/VRMenuController.js",
+			"file": "Assets/Scripts/JS/c0_4unity_chess.js",
 			"settings":
 			{
-				"buffer_size": 1960,
+				"buffer_size": 68952,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Assets/Scripts/C#/ValilScriptObject.cs",
+			"settings":
+			{
+				"buffer_size": 1214,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Assets/Scripts/C#/CameraController.cs",
+			"settings":
+			{
+				"buffer_size": 229,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Assets/Scripts/JS/HighlighterController.js",
+			"settings":
+			{
+				"buffer_size": 944,
 				"line_ending": "Unix"
 			}
 		},
@@ -143,7 +203,15 @@
 			"file": "Assets/Scripts/JS/Constant.js",
 			"settings":
 			{
-				"buffer_size": 1134,
+				"buffer_size": 1024,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Assets/Scripts/JS/FlagManager.js",
+			"settings":
+			{
+				"buffer_size": 449,
 				"line_ending": "Unix"
 			}
 		}
@@ -242,10 +310,12 @@
 	[
 		"/C/Users/Vincent/Documents/Workspace/Unity/unitychess/Assets/Scripts",
 		"/C/Users/Vincent/Documents/Workspace/Unity/unitychess/Assets/Scripts/C#",
+		"/C/Users/Vincent/Documents/Workspace/Unity/unitychess/Assets/Scripts/C#/ValilChessEngine",
 		"/C/Users/Vincent/Documents/Workspace/Unity/unitychess/Assets/Scripts/JS"
 	],
 	"file_history":
 	[
+		"/C/Users/Vincent/Documents/Workspace/Unity/unitychess/Assets/Scripts/JS/VRMenuController.js",
 		"/C/Users/Vincent/Documents/Workspace/Unity/unitychess/.gitignore",
 		"/C/Users/Vincent/Documents/Workspace/Unity/unitychess/Assets/Scripts/JS/ActionControllerKnight.js",
 		"/C/Users/Vincent/AppData/Roaming/Sublime Text 3/Packages/User/Git.sublime-settings",
@@ -254,7 +324,6 @@
 		"/C/Users/Vincent/Documents/Workspace/Unity/unitychess/UnityChess.sublime-project",
 		"/C/Users/Vincent/AppData/Roaming/Sublime Text 3/Packages/User/Github Tools.sublime-settings",
 		"/C/Users/Vincent/Desktop/Unity3D-master/README.md",
-		"/C/Users/Vincent/Documents/Workspace/Unity/unitychess/Assets/Scripts/JS/VRMenuController.js",
 		"/C/Users/Vincent/Documents/Workspace/Unity/unitychess/Assets/Scripts/JS/ActionController.js",
 		"/C/Users/Vincent/AppData/Roaming/Sublime Text 3/Packages/SideBarGit/SideBarGit.sublime-settings",
 		"/C/Users/Vincent/AppData/Roaming/Sublime Text 3/Packages/Package Control/Package Control.sublime-settings",
@@ -377,6 +446,17 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"public",
+			"Valil",
+			"side",
+			"AI",
+			"CreateChessboard",
+			"RollBack",
+			"roll",
+			"position2board",
+			"NewGame",
+			"GetNew",
+			"GetNewGame",
 			"log",
 			"Icons"
 		],
@@ -396,7 +476,7 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 2,
 			"sheets":
 			[
 				{
@@ -405,15 +485,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 26203,
+						"buffer_size": 26399,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								15893,
-								15893
+								9619,
+								9623
 							]
 						],
 						"settings":
@@ -426,27 +506,27 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 8672.0,
+						"translation.y": 5089.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 2,
 					"type": "text"
 				},
 				{
 					"buffer": 1,
-					"file": "Assets/Scripts/JS/VRMenuController.js",
+					"file": "Assets/Scripts/JS/c0_4unity_chess.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1960,
+						"buffer_size": 68952,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								357,
-								357
+								3234,
+								3234
 							]
 						],
 						"settings":
@@ -455,10 +535,95 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 23549.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "Assets/Scripts/C#/ValilScriptObject.cs",
+					"semi_transient": true,
+					"settings":
+					{
+						"buffer_size": 1214,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								74,
+								74
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Unity3D-master/Unity3D-master/UnityC#.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 333.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "Assets/Scripts/C#/CameraController.cs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 229,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								182,
+								182
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Unity3D-master/Unity3D-master/UnityC#.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "Assets/Scripts/JS/HighlighterController.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 944,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								677,
+								677
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Unity3D-master/Unity3D-master/UnityJavaScript.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 162.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
 					"type": "text"
 				}
 			]
@@ -468,20 +633,20 @@
 			"sheets":
 			[
 				{
-					"buffer": 2,
+					"buffer": 5,
 					"file": "Assets/Scripts/JS/Constant.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1134,
+						"buffer_size": 1024,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								965,
-								965
+								804,
+								814
 							]
 						],
 						"settings":
@@ -493,7 +658,36 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "Assets/Scripts/JS/FlagManager.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 449,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Unity3D-master/Unity3D-master/UnityJavaScript.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
 					"type": "text"
 				}
 			]
@@ -527,7 +721,7 @@
 		"cols":
 		[
 			0.0,
-			0.622114668652,
+			0.644672196445,
 			1.0
 		],
 		"rows":
@@ -591,7 +785,7 @@
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 257.0,
+	"side_bar_width": 379.0,
 	"status_bar_visible": true,
 	"template_settings":
 	{
